@@ -13,7 +13,7 @@ public class TeleOp extends Hardware{
     double drivetrainMult = 0.8;
     boolean TankMode = false;
     boolean wasGamepadAPressed = false;
-    double dummyValueTank = 1;
+    double dummyValueTank = 1;t
     double dummyValueMechanum = 0;
 
     @Override public void loop() {
