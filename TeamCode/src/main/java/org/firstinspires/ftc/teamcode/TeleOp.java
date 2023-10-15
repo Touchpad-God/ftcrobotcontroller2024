@@ -13,7 +13,9 @@ public class TeleOp extends Hardware{
     double drivetrainMult = 0.8;
     boolean TankMode = false;
     boolean wasGamepadAPressed = false;
-    boolean dummyValue = 1;
+    double dummyValueTank = 1;
+    double dummyValueMechanum = 0;
+
     @Override public void loop() {
         double rawX = gamepad1.right_stick_x;
         double rawY = -gamepad1.right_stick_y;
@@ -26,6 +28,14 @@ public class TeleOp extends Hardware{
         if (gamepad1.a) {
             if (wasGamepadAPressed) {
                 TankMode = (TankMode=false)
+                if (TankMode) {
+                    servo1.setPosition(dummyValueTank);
+                    servo2.setPosition(dummyValueTank);
+                }
+                else {
+                    servo1.setPosition(dummyValueMechanum);
+                    servo2.setPosition(dummyValueMechanum);
+                }
             }
             boolean wasGamepadAPressed = true;
         } else {
