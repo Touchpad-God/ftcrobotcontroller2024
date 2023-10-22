@@ -18,6 +18,15 @@ public abstract class Hardware extends OpMode {
     protected Servo intakeServo;
     protected Servo servo1;
     protected Servo servo2;
+    protected DcMotor outtakeMotor1;
+    protected DcMotor outtakeMotor2;
+    protected Servo outtakeAssociatedServo1;
+    protected Servo outtakeAssociatedServo2;
+    protected Servo outtakeServoDifferential1;
+    protected Servo outtakeServoDifferential2;
+    protected Servo horizontalSlideServo;
+
+
 
     public BNO055IMU imu;
     public BNO055IMU.Parameters imuParameters;
@@ -32,6 +41,13 @@ public abstract class Hardware extends OpMode {
         intakeIntake = hardwareMap.get(DcMotor.class, "intakeIntake");
         intakeTransfer = hardwareMap.get(DcMotor.class, "intakeTransfer");
         intakeServo = hardwareMap.get(DcMotor.class, "intakeServo");
+        outtakeMotor1 = hardwareMap.get(DcMotor.class, "outtakeMotor1");
+        outtakeMotor2 = hardwareMap.get(DcMotor.class, "outtakeMotor2");
+        outtakeAssociatedServo1 = hardwareMap.get(Servo.class, "outtakeAssociatedServo1");
+        outtakeAssociatedServo2 = hardwareMap.get(Servo.class, "outtakeAssociatedServo2");
+        outtakeServoDifferential1 = hardwareMap.get(Servo.class, "outtakeServoDifferential1");
+        outtakeServoDifferential2 = hardwareMap.get(Servo.class, "outtakeServoDifferential2");
+        horizontalSlideServo = hardwareMap.get(Servo.class, "horizontalSlideServo");
 
         
         motorLf.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
