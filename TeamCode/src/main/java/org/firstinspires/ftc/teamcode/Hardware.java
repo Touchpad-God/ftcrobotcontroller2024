@@ -13,6 +13,11 @@ public abstract class Hardware extends OpMode {
     protected DcMotor motorLb;
     protected DcMotor motorRf;
     protected DcMotor motorRb;
+    protected DcMotor intakeIntake;
+    protected DcMotor intakeTransfer;
+    protected Servo intakeServo;
+    protected Servo servo1;
+    protected Servo servo2;
 
     public BNO055IMU imu;
     public BNO055IMU.Parameters imuParameters;
@@ -24,12 +29,16 @@ public abstract class Hardware extends OpMode {
         motorRb = hardwareMap.get(DcMotor.class, "motorRb");
         servo1 = hardwareMap.get(Servo.class, "motorservo1");
         servo2 = hardwareMap.get(Servo.class, "motorservo2");
+        intakeIntake = hardwareMap.get(DcMotor.class, "intakeIntake");
+        intakeTransfer = hardwareMap.get(DcMotor.class, "intakeTransfer");
+        intakeServo = hardwareMap.get(DcMotor.class, "intakeServo");
 
         
         motorLf.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorLb.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorRf.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorRb.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
+    
         
     
     
