@@ -82,22 +82,22 @@ public class TeleOp extends Hardware{
         } else {
             dpadPressedLast = false;
         }
-        if (locationPixel = 0) {
+        if (locationPixel == 0) {
             intakeServo.setPosition(dummyValueStowed);
         }
-        if (locationPixel = 1) {
+        if (locationPixel == 1) {
             intakeServo.setPosition(dummyValuePixel1);
         }        
-        if (locationPixel = 2) {
+        if (locationPixel == 2) {
             intakeServo.setPosition(dummyValuePixel2);
         }
-        if (locationPixel = 3) {
+        if (locationPixel == 3) {
             intakeServo.setPosition(dummyValuePixel3);
         }
-        if (locationPixel = 4) {
+        if (locationPixel == 4) {
             intakeServo.setPosition(dummyValuePixel4);
         }
-        if (locationPixel = 5) {
+        if (locationPixel == 5) {
             intakeServo.setPosition(dummyValuePixel5);
         }
         
