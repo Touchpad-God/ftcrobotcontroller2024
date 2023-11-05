@@ -16,7 +16,7 @@ public abstract class Hardware extends OpMode {
 
     public BNO055IMU imu;
     public BNO055IMU.Parameters imuParameters;
-    
+
     @Override public void init() {
         motorLf = hardwareMap.get(DcMotor.class, "motorLf");
         motorLb = hardwareMap.get(DcMotor.class, "motorLb");
@@ -25,14 +25,14 @@ public abstract class Hardware extends OpMode {
         servo1 = hardwareMap.get(Servo.class, "motorservo1");
         servo2 = hardwareMap.get(Servo.class, "motorservo2");
 
-        
+
         motorLf.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorLb.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorRf.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorRb.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-        
-    
-    
+
+
+
         // Initialize imu
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imuParameters = new BNO055IMU.Parameters();
@@ -41,15 +41,15 @@ public abstract class Hardware extends OpMode {
         imuParameters.loggingEnabled = false;
         imu.initialize(imuParameters);
     }
-    
+
     @Override public void init_loop() {
         printTelemetry();
     }
-    
+
     @Override public void loop() {
         printTelemetry();
     }
-    
+
     private void printTelemetry() {
         telemetry.addData("motorLf", stringifyMotor(motorLf));
         telemetry.addData("motorLb", stringifyMotor(motorLb));
@@ -58,7 +58,7 @@ public abstract class Hardware extends OpMode {
         telemetry.addData("imu AngularOrientation", imu.getAngularOrientation());
         telemetry.update();
     }
-    
+
     private String stringifyMotor(DcMotor motor) {
         StringBuilder buf = new StringBuilder();
         buf.append(motor.getPower());
@@ -79,7 +79,7 @@ public abstract class Hardware extends OpMode {
 //        }
         return buf.toString();
     }
-    
+
     private String stringifyServo(Servo servo) {
         return servo.getPosition() + ", " + servo.getDirection();
     }

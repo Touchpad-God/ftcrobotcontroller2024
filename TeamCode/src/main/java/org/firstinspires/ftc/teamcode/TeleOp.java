@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -13,7 +14,7 @@ public class TeleOp extends Hardware{
     double drivetrainMult = 0.8;
     boolean TankMode = false;
     boolean wasGamepadAPressed = false;
-    double dummyValueTank = 1;t
+    double dummyValueTank = 1;
     double dummyValueMechanum = 0;
 
     @Override public void loop() {
@@ -27,7 +28,7 @@ public class TeleOp extends Hardware{
         rot = rawRot;
         if (gamepad1.a) {
             if (wasGamepadAPressed) {
-                TankMode = (TankMode=false)
+                TankMode = (TankMode=false);
                 if (TankMode) {
                     servo1.setPosition(dummyValueTank);
                     servo2.setPosition(dummyValueTank);

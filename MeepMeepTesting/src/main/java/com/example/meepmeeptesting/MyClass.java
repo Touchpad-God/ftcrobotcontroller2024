@@ -31,8 +31,8 @@ public class MyClass {
                                     // Intake
                                     // Use AprilTag to get pose
                                 })
-                                .setReversed(true)
-                                .splineTo(new Vector2d(54, 30), Math.toRadians(180))
+//                                .setReversed(true)
+                                .splineTo(new Vector2d(54, 30), Math.toRadians(90))
                                 .splineToSplineHeading(new Pose2d(30, 46, Math.toRadians(90)), Math.toRadians(90))
                                 .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(90))
                                 .lineToConstantHeading(new Vector2d(12, -56))
@@ -57,6 +57,8 @@ public class MyClass {
                                 .splineToSplineHeading(new Pose2d(-36, -56, Math.toRadians(90)), Math.toRadians(0))
                                 .splineToConstantHeading(new Vector2d(-12, -48), Math.toRadians(90))
                                 .splineToConstantHeading(new Vector2d(-12, -24), Math.toRadians(90))
+                                .splineToSplineHeading(new Pose2d(-12, 28, Math.toRadians(90)), Math.toRadians(90))
+                                .splineToSplineHeading(new Pose2d(-30, 46, Math.toRadians(90)), Math.toRadians(90))
                                 .build()
                 );
 
