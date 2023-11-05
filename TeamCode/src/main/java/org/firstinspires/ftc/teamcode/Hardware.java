@@ -13,10 +13,24 @@ public abstract class Hardware extends OpMode {
     protected DcMotor motorLb;
     protected DcMotor motorRf;
     protected DcMotor motorRb;
+    protected DcMotor intakeIntake;
+    protected DcMotor intakeTransfer;
+    protected Servo intakeServo;
+    protected Servo servo1;
+    protected Servo servo2;
+    protected DcMotor outtakeMotor1;
+    protected DcMotor outtakeMotor2;
+    protected Servo outtakeAssociatedServo1;
+    protected Servo outtakeAssociatedServo2;
+    protected Servo outtakeServoDifferential1;
+    protected Servo outtakeServoDifferential2;
+    protected Servo horizontalSlideServo;
+
+
 
     public BNO055IMU imu;
     public BNO055IMU.Parameters imuParameters;
-
+    
     @Override public void init() {
         motorLf = hardwareMap.get(DcMotor.class, "motorLf");
         motorLb = hardwareMap.get(DcMotor.class, "motorLb");
@@ -24,15 +38,26 @@ public abstract class Hardware extends OpMode {
         motorRb = hardwareMap.get(DcMotor.class, "motorRb");
         servo1 = hardwareMap.get(Servo.class, "motorservo1");
         servo2 = hardwareMap.get(Servo.class, "motorservo2");
+        intakeIntake = hardwareMap.get(DcMotor.class, "intakeIntake");
+        intakeTransfer = hardwareMap.get(DcMotor.class, "intakeTransfer");
+        intakeServo = hardwareMap.get(DcMotor.class, "intakeServo");
+        outtakeMotor1 = hardwareMap.get(DcMotor.class, "outtakeMotor1");
+        outtakeMotor2 = hardwareMap.get(DcMotor.class, "outtakeMotor2");
+        outtakeAssociatedServo1 = hardwareMap.get(Servo.class, "outtakeAssociatedServo1");
+        outtakeAssociatedServo2 = hardwareMap.get(Servo.class, "outtakeAssociatedServo2");
+        outtakeServoDifferential1 = hardwareMap.get(Servo.class, "outtakeServoDifferential1");
+        outtakeServoDifferential2 = hardwareMap.get(Servo.class, "outtakeServoDifferential2");
+        horizontalSlideServo = hardwareMap.get(Servo.class, "horizontalSlideServo");
 
-
+        
         motorLf.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorLb.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorRf.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
         motorRb.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
-
-
-
+    
+        
+    
+    
         // Initialize imu
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imuParameters = new BNO055IMU.Parameters();
@@ -41,15 +66,15 @@ public abstract class Hardware extends OpMode {
         imuParameters.loggingEnabled = false;
         imu.initialize(imuParameters);
     }
-
+    
     @Override public void init_loop() {
         printTelemetry();
     }
-
+    
     @Override public void loop() {
         printTelemetry();
     }
-
+    
     private void printTelemetry() {
         telemetry.addData("motorLf", stringifyMotor(motorLf));
         telemetry.addData("motorLb", stringifyMotor(motorLb));
@@ -58,7 +83,7 @@ public abstract class Hardware extends OpMode {
         telemetry.addData("imu AngularOrientation", imu.getAngularOrientation());
         telemetry.update();
     }
-
+    
     private String stringifyMotor(DcMotor motor) {
         StringBuilder buf = new StringBuilder();
         buf.append(motor.getPower());
@@ -79,7 +104,7 @@ public abstract class Hardware extends OpMode {
 //        }
         return buf.toString();
     }
-
+    
     private String stringifyServo(Servo servo) {
         return servo.getPosition() + ", " + servo.getDirection();
     }

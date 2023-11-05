@@ -16,7 +16,15 @@ public class TeleOp extends Hardware{
     boolean wasGamepadAPressed = false;
     double dummyValueTank = 1;
     double dummyValueMechanum = 0;
-
+    double dummyValueStowed = 0;
+    double dummyValuePixel1 = 0.2;
+    double dummyValuePixel2 = 0.4;
+    double dummyValuePixel3 = 0.6;
+    double dummyValuePixel4 = 0.8;
+    double dummyValuePixel5 = 1;
+    double locationPixel = 0;
+    boolean dpadPressedLast = false;
+    boolean isSecondPixelIn = false;
     @Override public void loop() {
         double rawX = gamepad1.right_stick_x;
         double rawY = -gamepad1.right_stick_y;
@@ -53,6 +61,46 @@ public class TeleOp extends Hardware{
             motorRf.setPower((-x -rot) * drivetrainMult);
             motorRb.setPower((+x -rot) * drivetrainMult);
         }
+        if (gamepad1.left_trigger > 0) {
+
+    
+            if (isSecondPixelIn) {
+                intakeIntake.setPower(-0.8);
+                intakeTransfer.setPower(0.8);
+            }
+            else {
+                intakeIntake.setPower(0.8);
+                intakeTransfer.setPower(0.8);
+            }
+        } 
+        if (gamepad1.dpad_up && locationPixel < 5 && dpadPressedLast == false) {
+            locationPixel += 1;
+            dpadPressedLast = true;
+        } else if (gamepad1.dpad_down && locationPixel > 0 && dpadPressedLast == false) {
+            locationPixel -= 1;
+            dpadPressedLast = true;
+        } else {
+            dpadPressedLast = false;
+        }
+        if (locationPixel = 0) {
+            intakeServo.setPosition(dummyValueStowed);
+        }
+        if (locationPixel = 1) {
+            intakeServo.setPosition(dummyValuePixel1);
+        }        
+        if (locationPixel = 2) {
+            intakeServo.setPosition(dummyValuePixel2);
+        }
+        if (locationPixel = 3) {
+            intakeServo.setPosition(dummyValuePixel3);
+        }
+        if (locationPixel = 4) {
+            intakeServo.setPosition(dummyValuePixel4);
+        }
+        if (locationPixel = 5) {
+            intakeServo.setPosition(dummyValuePixel5);
+        }
+        
 
     }
 }
