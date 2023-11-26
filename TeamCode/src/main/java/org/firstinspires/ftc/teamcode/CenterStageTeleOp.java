@@ -43,6 +43,8 @@ public class CenterStageTeleOp extends Hardware{
     double dummyValueClawOpenRight = 0;
     double dummyValueClawClosedLeft = 1;
     double dummyValueClawClosedRight = 1;
+    double dummyValueHorizontalClosed = 0;
+    double dummyValueHorizontalOpen = 1;
     @Override public void loop() {
         if (!firstLoopPassed) {
             outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -174,6 +176,12 @@ public class CenterStageTeleOp extends Hardware{
         if (gamepad2.b) {
             outtakeAssociatedServo1.setPosition(dummyValueClawOpenLeft);
             outtakeAssociatedServo2.setPosition(dummyValueClawOpenRight);
+        }
+        if (gamepad2.x) {
+            horizontalSlideServo.setPosition(dummyValueHorizontalOpen);
+        }
+        if (gamepad2.y) {
+            horizontalSlideServo.setPosition(dummyValueHorizontalClosed);
         }
     }
 }
