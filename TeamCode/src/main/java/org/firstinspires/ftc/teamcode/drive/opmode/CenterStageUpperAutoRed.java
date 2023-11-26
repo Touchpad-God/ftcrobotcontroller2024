@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 
 @Autonomous
-public class CenterStageUpperAuto extends LinearOpMode {
+public class CenterStageUpperAutoRed extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -23,10 +23,10 @@ public class CenterStageUpperAuto extends LinearOpMode {
         TrajectorySequenceBuilder traj = drive.trajectorySequenceBuilder(new Pose2d(36, 12, Math.toRadians(180)))
                 .setReversed(true)
                 .splineTo(new Vector2d(54, 30), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(30, 46, Math.toRadians(90)), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(90))
-                .lineToConstantHeading(new Vector2d(12, -56))
-                .lineToConstantHeading(new Vector2d(12, 36))
+                .splineToSplineHeading(new Pose2d(30, 46, Math.toRadians(270)), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(12, -56), Math.toRadians(270))
+                .lineToConstantHeading(new Vector2d(12, 26))
                 .splineTo(new Vector2d(30, 48), Math.toRadians(90)
                 );
 

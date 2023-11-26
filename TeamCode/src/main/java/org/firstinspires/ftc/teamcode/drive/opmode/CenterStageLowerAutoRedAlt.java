@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 
-@Autonomous
-public class CenterStageLowerAuto extends LinearOpMode {
+public class CenterStageLowerAutoRedAlt extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -22,14 +21,11 @@ public class CenterStageLowerAuto extends LinearOpMode {
 
         TrajectorySequenceBuilder traj = drive.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(180)))
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(48, -48), Math.toRadians(-90))
-                .splineToSplineHeading(new Pose2d(36, -56, Math.toRadians(90)), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(12, -48), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(12, -24), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(12, 28, Math.toRadians(90)), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(30, 46, Math.toRadians(90)), Math.toRadians(90));
-
+                .splineToSplineHeading(new Pose2d(60, -24, Math.toRadians(270)), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(60, 24), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(90));
 
         drive.followTrajectorySequence(traj.build());
+
     }
 }

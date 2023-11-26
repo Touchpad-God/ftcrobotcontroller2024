@@ -63,7 +63,7 @@ public class TeleOp extends Hardware{
         }
         if (gamepad1.left_trigger > 0) {
 
-    
+
             if (isSecondPixelIn) {
                 intakeIntake.setPower(-0.8);
                 intakeTransfer.setPower(0.8);
@@ -72,7 +72,7 @@ public class TeleOp extends Hardware{
                 intakeIntake.setPower(0.8);
                 intakeTransfer.setPower(0.8);
             }
-        } 
+        }
         if (gamepad1.dpad_up && locationPixel < 5 && dpadPressedLast == false) {
             locationPixel += 1;
             dpadPressedLast = true;
@@ -87,7 +87,7 @@ public class TeleOp extends Hardware{
         }
         if (locationPixel == 1) {
             intakeServo.setPosition(dummyValuePixel1);
-        }        
+        }
         if (locationPixel == 2) {
             intakeServo.setPosition(dummyValuePixel2);
         }
@@ -100,7 +100,7 @@ public class TeleOp extends Hardware{
         if (locationPixel == 5) {
             intakeServo.setPosition(dummyValuePixel5);
         }
-        
+
 
     }
 }
