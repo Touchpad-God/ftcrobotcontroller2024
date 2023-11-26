@@ -39,6 +39,10 @@ public class CenterStageTeleOp extends Hardware{
     boolean isDpadPressed = false;
     int IndexPosition = 0;
     boolean firstLoopPassed = false;
+    double dummyValueClawOpenLeft = 0;
+    double dummyValueClawOpenRight = 0;
+    double dummyValueClawClosedLeft = 1;
+    double dummyValueClawClosedRight = 1;
     @Override public void loop() {
         if (!firstLoopPassed) {
             outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -162,6 +166,14 @@ public class CenterStageTeleOp extends Hardware{
         if (gamepad2.right_trigger > 0) {
             outtakeMotor1.setPower(0);
             outtakeMotor2.setPower(0);
+        }
+        if (gamepad2.a) {
+            outtakeAssociatedServo1.setPosition(dummyValueClawClosedLeft);
+            outtakeAssociatedServo2.setPosition(dummyValueClawClosedRight);
+        }
+        if (gamepad2.b) {
+            outtakeAssociatedServo1.setPosition(dummyValueClawOpenLeft);
+            outtakeAssociatedServo2.setPosition(dummyValueClawOpenRight);
         }
     }
 }
