@@ -20,6 +20,14 @@ public class CenterStageTeleOp extends Hardware{
     double locationPixel = 0;
     boolean dpadPressedLast = false;
     boolean isSecondPixelIn = false;
+    double dummyValueLeftleft = 0.5;
+    double dummyValueRightleft = 0.5;
+    double dummyValueLeftright = 0.5;
+    double dummyValueRightright = 0.5;
+    double dummyValueUpleft = 1;
+    double dummyValueUpright = 1;
+    double dummyValueDownleft = 0;
+    double dummyValueDownright = 0;
     @Override public void loop() {
         double rawX = gamepad1.right_stick_x;
         double rawY = -gamepad1.right_stick_y;
@@ -96,6 +104,25 @@ public class CenterStageTeleOp extends Hardware{
             intakeServo.setPosition(dummyValuePixel5);
         }
 
+        if (gamepad2.dpad_down) {
+            outtakeServoDifferential1.setPosition(dummyValueDownleft);
+            outtakeServoDifferential2.setPosition(dummyValueDownright);
 
+        }
+        if (gamepad2.dpad_up) {
+            outtakeServoDifferential1.setPosition(dummyValueUpleft);
+            outtakeServoDifferential2.setPosition(dummyValueUpright);
+
+        }
+        if (gamepad2.dpad_left) {
+            outtakeServoDifferential1.setPosition(dummyValueLeftleft);
+            outtakeServoDifferential2.setPosition(dummyValueLeftright);
+
+        }
+        if (gamepad2.dpad_right) {
+            outtakeServoDifferential1.setPosition(dummyValueRightleft);
+            outtakeServoDifferential2.setPosition(dummyValueRightright);
+
+        }
     }
 }
