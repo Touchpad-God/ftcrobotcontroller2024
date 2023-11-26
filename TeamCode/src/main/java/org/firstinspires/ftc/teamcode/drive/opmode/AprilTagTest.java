@@ -14,6 +14,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 @Autonomous
+@Disabled
 public class AprilTagTest extends LinearOpMode{
 
     private static final boolean USE_WEBCAM = true;
@@ -36,10 +37,6 @@ public class AprilTagTest extends LinearOpMode{
                 .build();
 
         waitForStart();
-
-//        visionPortal.stopStreaming();
-//        sleep(200);
-//        visionPortal.resumeStreaming();
 
         while (!isStopRequested()) {
             telemetry.addData("apriltags detected", Integer.toString(aprilTag.getDetections().size()));

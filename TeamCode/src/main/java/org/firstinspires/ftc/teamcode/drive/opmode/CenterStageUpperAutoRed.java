@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 
 @Autonomous
 public class CenterStageUpperAutoRed extends LinearOpMode {
+    public static final int IMU_DIFF = -90;
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);

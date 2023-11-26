@@ -2,13 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-
 @TeleOp
-public class TeleOp extends Hardware{
+public class CenterStageTeleOp extends Hardware{
     int position = 0;
     int dpadPrev = 0;
     double drivetrainMult = 0.8;
