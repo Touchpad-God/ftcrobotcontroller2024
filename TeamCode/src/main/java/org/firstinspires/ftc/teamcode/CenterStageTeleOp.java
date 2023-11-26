@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import com.qualcomm.robotcore.hardware.*;
+
 
 @TeleOp
 public class CenterStageTeleOp extends Hardware{
@@ -33,14 +35,14 @@ public class CenterStageTeleOp extends Hardware{
     double dummyValueUpright = 1;
     double dummyValueDownleft = 0;
     double dummyValueDownright = 0;
-    double[] armValues = {1, 2, 3, 4, 5};
+    int[] armValues = {1, 2, 3, 4, 5};
     boolean isDpadPressed = false;
     int IndexPosition = 0;
     boolean firstLoopPassed = false;
     @Override public void loop() {
         if (!firstLoopPassed) {
-            outtakeMotor1.setMode(DcMotor.STOP_AND_RESET_ENCODER);
-            outtakeMotor2.setMode(DcMotor.STOP_AND_RESET_ENCODER);
+            outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             firstLoopPassed = true;
         }
         double rawX = gamepad1.right_stick_x;
@@ -148,8 +150,8 @@ public class CenterStageTeleOp extends Hardware{
                 }
                 outtakeMotor1.setTargetPosition(armValues[IndexPosition]);
                 outtakeMotor2.setTargetPosition(-(armValues[IndexPosition]));
-                outtakeMotor1.setMode(DcMotor.RUN_TO_POSITION);
-                outtakeMotor2.setMode(DcMotor.RUN_TO_POSITION);
+                outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 outtakeMotor1.setPower(0.3);
                 outtakeMotor2.setPower(0.3);
 

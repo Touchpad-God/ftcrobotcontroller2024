@@ -1,24 +1,19 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.ftccommon.internal.manualcontrol.parameters.ImuParameters;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 
 @Autonomous
-public class IMUTest extends LinearOpMode {
+public class CorrectAngle extends LinearOpMode {
     public SampleMecanumDrive drive;
     public IMU imu;
-
     @Override
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -32,11 +27,16 @@ public class IMUTest extends LinearOpMode {
 
         waitForStart();
 
-        while (!isStopRequested()) {
+        double currentAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
-            telemetry.addData("Orientation Degrees", Double.toString(
-                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)));
-            telemetry.update();
+        if (currentAngle < 0) {
+            currentAngle += 360;
         }
+
+        TrajectorySequenceBuilder traj =  drive.trajectorySequenceBuilder(new Pose2d())
+                .turn(Math.toRadians(450-currentAngle));
+
+        drive.followTrajectorySequence(traj.build());
+
     }
 }
