@@ -38,10 +38,10 @@ public class CenterStageTeleOp extends Hardware{
     boolean isDpadPressed = false;
     int IndexPosition = 0;
     boolean firstLoopPassed = false;
-    double dummyValueClawOpenLeft = 0;
-    double dummyValueClawOpenRight = 0;
-    double dummyValueClawClosedLeft = 1;
-    double dummyValueClawClosedRight = 1;
+    double dummyValueClawOpenLeft = 0.563;
+    double dummyValueClawOpenRight = 0.4328;
+    double dummyValueClawClosedLeft = 0.45; //nolongerdummy
+    double dummyValueClawClosedRight = 0.5456; //nolongerdummy
     double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
     double dummyValueHorizontalOpen = 0.6844; //nolongerdummy
     @Override public void loop() {
