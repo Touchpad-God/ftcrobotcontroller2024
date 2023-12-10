@@ -26,17 +26,17 @@ public class CenterStageTeleOp extends Hardware{
     double locationPixel = 0;
     boolean dpadPressedLast = false;
     boolean isSecondPixelIn = false;
-    double dummyValueLeftStowed = 0.5;
-    double dummyValueRightStowed = 0.5;
-    double dummyValueLeft0 = 0.5;
-    double dummyValueRight0 = 0.5;
-    double dummyValueLeft60 = 1;
-    double dummyValueRight60 = 1;
-    double dummyValueLeft120 = 0;
-    double dummyValueRight120 = 0;
+    double dummyValueLeftStowed = 0.6683;
+    double dummyValueRightStowed = 0.2483;
+    double dummyValueLeft0 = 0.5217;
+    double dummyValueRight0 = 0.79;
+    double dummyValueLeft60 = 0.3228;
+    double dummyValueRight60 = 0.6067;
+    double dummyValueLeft120 = 0.4178;
+    double dummyValueRight120 = 0.1267;
     double dummyValueLeft180 = 0;
 
-    double dummyValueRight180 = 0;
+    double dummyValueRight180 = 0.245;
     int[] armValues = {1, 2, 3, 4, 5};
     boolean isDpadPressed = false;
     int IndexPosition = 0;
@@ -88,16 +88,16 @@ public class CenterStageTeleOp extends Hardware{
             motorRf.setPower((-x -rot) * drivetrainMult);
             motorRb.setPower((+x -rot) * drivetrainMult);
         }
-        if (gamepad1.left_trigger > 0) {
+        if ((locationPixel==0)) {
 
 
             if (isSecondPixelIn) {
-                intakeIntake.setPower(-0.8);
-                intakeTransfer.setPower(0.8);
+                intakeIntake.setPower(-gamepad1.left_trigger);
+                intakeTransfer.setPower(-gamepad1.left_trigger);
             }
             else {
-                intakeIntake.setPower(0.8);
-                intakeTransfer.setPower(0.8);
+                intakeIntake.setPower(gamepad1.left_trigger);
+                intakeTransfer.setPower(gamepad1.left_trigger);
             }
         }
         if (gamepad1.dpad_up && locationPixel < 5 && dpadPressedLast == false) {
