@@ -48,7 +48,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 11.95; // in
+    public static double TRACK_WIDTH = 12.32; // in
 
 
     /*
@@ -57,9 +57,9 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 0.0153834278221297;
-    public static double kA = 0.003;
-    public static double kStatic = 0.09789;
+    public static double kV = 0.01522;
+    public static double kA = 0.0055;
+    public static double kStatic = 0.11786;
 
 
     /*
@@ -69,19 +69,19 @@ public class DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 70.0;//51.858;
-    public static double MAX_ACCEL = 61.0;
-    public static double MAX_ANG_VEL = 7.0;
-    public static double MAX_ANG_ACCEL = 7.0;
+    public static double MAX_VEL = 54.01836147694584;//51.858;
+    public static double MAX_ACCEL = 54.01836147694584;
+    public static double MAX_ANG_VEL = 2.4873897552490236;
+    public static double MAX_ANG_ACCEL = 2.4873897552490236;
 
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
      */
     public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR =
-            RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+            RevHubOrientationOnRobot.LogoFacingDirection.UP;
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR =
-            RevHubOrientationOnRobot.UsbFacingDirection.UP;
+            RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
 
 
     public static double encoderTicksToInches(double ticks) {

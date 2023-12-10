@@ -102,10 +102,10 @@ public class SampleMecanumDrive extends MecanumDrive {
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "motor_leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "motor_leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "motor_rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "motor_rightFront");
+        leftFront = hardwareMap.get(DcMotorEx.class, "FL");
+        leftRear = hardwareMap.get(DcMotorEx.class, "BL");
+        rightRear = hardwareMap.get(DcMotorEx.class, "FR");
+        rightFront = hardwareMap.get(DcMotorEx.class, "BR");
 
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
@@ -136,7 +136,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
-        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(

@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import com.qualcomm.robotcore.hardware.*;
 
 
@@ -16,14 +13,16 @@ public class CenterStageTeleOp extends Hardware{
     double drivetrainMult = 0.8;
     boolean TankMode = false;
     boolean wasGamepadAPressed = false;
-    double dummyValueTank = 1;
-    double dummyValueMechanum = 0;
-    double dummyValueStowed = 0;
-    double dummyValuePixel1 = 0.2;
-    double dummyValuePixel2 = 0.4;
-    double dummyValuePixel3 = 0.6;
-    double dummyValuePixel4 = 0.8;
-    double dummyValuePixel5 = 1;
+    double tankPosL = 0.8589;
+    double tankPosR = 0.8589; // change
+    double mecanumPosL = 0.3022;
+    double mecanumPosR = 0.3022; // change
+    double intakeStowed = 0.8000;
+    double intakePos1 = 0.4178;
+    double intakePos2 = 0.4267;
+    double intakePos3 = 0.4844;
+    double intakePos4 = 0.5350;
+    double intakePos5 = 1;
     double locationPixel = 0;
     boolean dpadPressedLast = false;
     boolean isSecondPixelIn = false;
@@ -63,12 +62,12 @@ public class CenterStageTeleOp extends Hardware{
             if (wasGamepadAPressed) {
                 TankMode = (TankMode=false);
                 if (TankMode) {
-                    servo1.setPosition(dummyValueTank);
-                    servo2.setPosition(dummyValueTank);
+                    butterflyLeft.setPosition(tankPosL);
+                    butterflyRight.setPosition(tankPosR);
                 }
                 else {
-                    servo1.setPosition(dummyValueMechanum);
-                    servo2.setPosition(dummyValueMechanum);
+                    butterflyLeft.setPosition(mecanumPosL);
+                    butterflyRight.setPosition(mecanumPosR);
                 }
             }
             boolean wasGamepadAPressed = true;
@@ -108,22 +107,22 @@ public class CenterStageTeleOp extends Hardware{
             dpadPressedLast = false;
         }
         if (locationPixel == 0) {
-            intakeServo.setPosition(dummyValueStowed);
+            intakeServo.setPosition(intakeStowed);
         }
         if (locationPixel == 1) {
-            intakeServo.setPosition(dummyValuePixel1);
+            intakeServo.setPosition(intakePos1);
         }
         if (locationPixel == 2) {
-            intakeServo.setPosition(dummyValuePixel2);
+            intakeServo.setPosition(intakePos2);
         }
         if (locationPixel == 3) {
-            intakeServo.setPosition(dummyValuePixel3);
+            intakeServo.setPosition(intakePos3);
         }
         if (locationPixel == 4) {
-            intakeServo.setPosition(dummyValuePixel4);
+            intakeServo.setPosition(intakePos4);
         }
         if (locationPixel == 5) {
-            intakeServo.setPosition(dummyValuePixel5);
+            intakeServo.setPosition(intakePos5);
         }
 
         if (gamepad2.dpad_down) {

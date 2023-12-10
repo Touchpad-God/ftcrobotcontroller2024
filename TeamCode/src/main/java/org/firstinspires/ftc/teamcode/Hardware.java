@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public abstract class Hardware extends OpMode {
@@ -33,16 +36,16 @@ public abstract class Hardware extends OpMode {
 
 
 
-    public BNO055IMU imu;
-    public BNO055IMU.Parameters imuParameters;
+    public IMU imu;
+    public IMU.Parameters imuParameters;
 
     @Override public void init() {
         motorLf = hardwareMap.get(DcMotor.class, "FL");
         motorLb = hardwareMap.get(DcMotor.class, "BL");
         motorRf = hardwareMap.get(DcMotor.class, "FR");
         motorRb = hardwareMap.get(DcMotor.class, "BR");
-        servo1 = hardwareMap.get(Servo.class, "motorservo1");
-        servo2 = hardwareMap.get(Servo.class, "motorservo2");
+//        servo1 = hardwareMap.get(Servo.class, "butterflyL");
+//        servo2 = hardwareMap.get(Servo.class, "butterflyR");
         intakeIntake = hardwareMap.get(DcMotor.class, "intake");
         intakeTransfer = hardwareMap.get(DcMotor.class, "transfer");
         intakeServo = hardwareMap.get(Servo.class, "intakeLift");
@@ -72,11 +75,14 @@ public abstract class Hardware extends OpMode {
 
 
         // Initialize imu
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imuParameters = new BNO055IMU.Parameters();
-        imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imuParameters.loggingEnabled = false;
+        imu = hardwareMap.get(IMU.class, "imu");
+        imuParameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
+        ));
+//        imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+//        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        imuParameters.loggingEnabled = false;
         imu.initialize(imuParameters);
     }
 
@@ -93,7 +99,7 @@ public abstract class Hardware extends OpMode {
         telemetry.addData("motorLb", stringifyMotor(motorLb));
         telemetry.addData("motorRf", stringifyMotor(motorRf));
         telemetry.addData("motorRb", stringifyMotor(motorRb));
-        telemetry.addData("imu AngularOrientation", imu.getAngularOrientation());
+        telemetry.addData("imu AngularOrientation", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         telemetry.update();
     }
 
