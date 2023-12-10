@@ -11,6 +11,13 @@ import com.qualcomm.robotcore.hardware.*;
 
 @TeleOp
 public class ServoTesting extends Hardware {
-    telemetry.addData("IntakeServoposition", );
+    if (gamepad1.a && intakeServo.getPosition() < 1) {
+        intakeServo.setPosition(intakeServo.getPosition()+0.01);
+    }
+    if (gamepad1.b && intakeServo.getPosition() > 0) {
+        intakeServo.setPosition(intakeServo.getPosition()-0.01);
+    }
+    telemetry.addData("Intake Servo Position", intakeServo.getPosition());
+    telemetry.update();
 
 }
