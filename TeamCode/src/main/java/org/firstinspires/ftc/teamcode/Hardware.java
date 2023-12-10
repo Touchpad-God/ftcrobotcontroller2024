@@ -25,6 +25,11 @@ public abstract class Hardware extends OpMode {
     protected Servo outtakeServoDifferential1;
     protected Servo outtakeServoDifferential2;
     protected Servo horizontalSlideServo;
+    protected Servo hangingRight;
+    protected Servo droneServo;
+    protected Servo hangingLeft;
+    protected Servo butterflyLeft;
+    protected Servo butterflyRight;
 
 
 

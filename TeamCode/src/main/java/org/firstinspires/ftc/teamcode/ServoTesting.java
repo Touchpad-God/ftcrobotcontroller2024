@@ -11,5 +11,6 @@ import com.qualcomm.robotcore.hardware.*;
 
 @TeleOp
 public class ServoTesting extends Hardware {
-    Telemetry telemetry = new Telemetry;
+    telemetry.addData("IntakeServoposition", );
+
 }
