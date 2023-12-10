@@ -22,13 +22,13 @@ import com.qualcomm.robotcore.hardware.*;
 public class ServoTesting extends Hardware {
     @Override
     public void loop() {
-        if (gamepad1.a && butterflyRight.getPosition() < 1) {
-            butterflyRight.setPosition(butterflyRight.getPosition()+0.002);
+        if (gamepad1.a && horizontalSlideServo.getPosition() < 1) {
+            horizontalSlideServo.setPosition(horizontalSlideServo.getPosition()+0.002);
         }
-        if (gamepad1.b && butterflyRight.getPosition() > 0) {
-            butterflyRight.setPosition(butterflyRight.getPosition()-0.002);
+        if (gamepad1.b && horizontalSlideServo.getPosition() > 0) {
+            horizontalSlideServo.setPosition(horizontalSlideServo.getPosition()-0.002);
         }
-        telemetry.addData("Intake Servo Position", butterflyRight.getPosition());
+        telemetry.addData("Intake Servo Position", horizontalSlideServo.getPosition());
         telemetry.update();
     }
 

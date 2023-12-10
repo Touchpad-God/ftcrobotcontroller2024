@@ -14,9 +14,9 @@ public class CenterStageTeleOp extends Hardware{
     boolean TankMode = false;
     boolean wasGamepadAPressed = false;
     double tankPosL = 0.8589;
-    double tankPosR = 0.8589; // change
+    double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
-    double mecanumPosR = 0.3022; // change
+    double mecanumPosR = 0.62;
     double intakeStowed = 0.8000;
     double intakePos1 = 0.4178;
     double intakePos2 = 0.4267;
@@ -42,8 +42,8 @@ public class CenterStageTeleOp extends Hardware{
     double dummyValueClawOpenRight = 0;
     double dummyValueClawClosedLeft = 1;
     double dummyValueClawClosedRight = 1;
-    double dummyValueHorizontalClosed = 0;
-    double dummyValueHorizontalOpen = 1;
+    double dummyValueHorizontalClosed = 0; //nolongerdummy
+    double dummyValueHorizontalOpen = 1; //nolongerdummy
     @Override public void loop() {
         if (!firstLoopPassed) {
             outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
