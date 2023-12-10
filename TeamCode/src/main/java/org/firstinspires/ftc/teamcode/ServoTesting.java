@@ -23,12 +23,19 @@ public class ServoTesting extends Hardware {
     @Override
     public void loop() {
         if (gamepad1.a && horizontalSlideServo.getPosition() < 1) {
-            horizontalSlideServo.setPosition(horizontalSlideServo.getPosition()+0.002);
+            outtakeAssociatedServo1.setPosition(horizontalSlideServo.getPosition()+0.002);
         }
         if (gamepad1.b && horizontalSlideServo.getPosition() > 0) {
-            horizontalSlideServo.setPosition(horizontalSlideServo.getPosition()-0.002);
+            outtakeAssociatedServo1.setPosition(horizontalSlideServo.getPosition()-0.002);
         }
-        telemetry.addData("Intake Servo Position", horizontalSlideServo.getPosition());
+        if (gamepad1.x && horizontalSlideServo.getPosition() < 1) {
+            outtakeAssociatedServo2.setPosition(horizontalSlideServo.getPosition()+0.002);
+        }
+        if (gamepad1.y && horizontalSlideServo.getPosition() > 0) {
+            outtakeAssociatedServo2.setPosition(horizontalSlideServo.getPosition()-0.002);
+        }
+        telemetry.addData("servo1 Servo Position", outtakeAssociatedServo1.getPosition());
+        telemetry.addData("servo2 Servo Position", outtakeAssociatedServo2.getPosition());
         telemetry.update();
     }
 

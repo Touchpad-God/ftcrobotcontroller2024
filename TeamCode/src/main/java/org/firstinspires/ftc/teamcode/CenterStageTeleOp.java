@@ -42,8 +42,8 @@ public class CenterStageTeleOp extends Hardware{
     double dummyValueClawOpenRight = 0;
     double dummyValueClawClosedLeft = 1;
     double dummyValueClawClosedRight = 1;
-    double dummyValueHorizontalClosed = 0; //nolongerdummy
-    double dummyValueHorizontalOpen = 1; //nolongerdummy
+    double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
+    double dummyValueHorizontalOpen = 0.6844; //nolongerdummy
     @Override public void loop() {
         if (!firstLoopPassed) {
             outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
