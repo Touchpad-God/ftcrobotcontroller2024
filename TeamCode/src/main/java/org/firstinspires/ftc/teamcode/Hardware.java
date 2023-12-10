@@ -32,22 +32,30 @@ public abstract class Hardware extends OpMode {
     public BNO055IMU.Parameters imuParameters;
 
     @Override public void init() {
-        motorLf = hardwareMap.get(DcMotor.class, "motorLf");
-        motorLb = hardwareMap.get(DcMotor.class, "motorLb");
-        motorRf = hardwareMap.get(DcMotor.class, "motorRf");
-        motorRb = hardwareMap.get(DcMotor.class, "motorRb");
+        motorLf = hardwareMap.get(DcMotor.class, "FL");
+        motorLb = hardwareMap.get(DcMotor.class, "BL");
+        motorRf = hardwareMap.get(DcMotor.class, "FR");
+        motorRb = hardwareMap.get(DcMotor.class, "BR");
         servo1 = hardwareMap.get(Servo.class, "motorservo1");
         servo2 = hardwareMap.get(Servo.class, "motorservo2");
-        intakeIntake = hardwareMap.get(DcMotor.class, "intakeIntake");
-        intakeTransfer = hardwareMap.get(DcMotor.class, "intakeTransfer");
-        intakeServo = hardwareMap.get(Servo.class, "intakeServo");
-        outtakeMotor1 = hardwareMap.get(DcMotor.class, "outtakeMotor1");
-        outtakeMotor2 = hardwareMap.get(DcMotor.class, "outtakeMotor2");
-        outtakeAssociatedServo1 = hardwareMap.get(Servo.class, "outtakeAssociatedServo1");
-        outtakeAssociatedServo2 = hardwareMap.get(Servo.class, "outtakeAssociatedServo2");
-        outtakeServoDifferential1 = hardwareMap.get(Servo.class, "outtakeServoDifferential1");
-        outtakeServoDifferential2 = hardwareMap.get(Servo.class, "outtakeServoDifferential2");
-        horizontalSlideServo = hardwareMap.get(Servo.class, "horizontalSlideServo");
+        intakeIntake = hardwareMap.get(DcMotor.class, "intake");
+        intakeTransfer = hardwareMap.get(DcMotor.class, "transfer");
+        intakeServo = hardwareMap.get(Servo.class, "intakeLift");
+        outtakeMotor1 = hardwareMap.get(DcMotor.class, "liftR");
+        outtakeMotor2 = hardwareMap.get(DcMotor.class, "liftL");
+        outtakeAssociatedServo1 = hardwareMap.get(Servo.class, "clawL");
+        outtakeAssociatedServo2 = hardwareMap.get(Servo.class, "clawR");
+        outtakeServoDifferential1 = hardwareMap.get(Servo.class, "armL");
+        outtakeServoDifferential2 = hardwareMap.get(Servo.class, "armR");
+        horizontalSlideServo = hardwareMap.get(Servo.class, "horizontal");
+        hangingRight = hardwareMap.get(Servo.class, "hangR");
+        droneServo = hardwareMap.get(Servo.class, "drone");
+        hangingLeft = hardwareMap.get(Servo.class, "hangL");
+        butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
+        butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
+
+
+
 
 
         motorLf.setZeroPowerBehavior(ZeroPowerBehavior.BRAKE);
