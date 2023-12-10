@@ -63,7 +63,7 @@ public class CenterStageTeleOp extends Hardware{
         rot = rawRot;
         if (gamepad1.a) {
             if (wasGamepadAPressed) {
-                TankMode = (TankMode=false);
+                TankMode = (TankMode==false);
                 if (TankMode) {
                     butterflyLeft.setPosition(tankPosL);
                     butterflyRight.setPosition(tankPosR);
@@ -92,12 +92,12 @@ public class CenterStageTeleOp extends Hardware{
 
 
             if (isSecondPixelIn) {
-                intakeIntake.setPower(-gamepad1.left_trigger);
-                intakeTransfer.setPower(-gamepad1.left_trigger);
-            }
-            else {
                 intakeIntake.setPower(gamepad1.left_trigger);
                 intakeTransfer.setPower(gamepad1.left_trigger);
+            }
+            else {
+                intakeIntake.setPower(-gamepad1.left_trigger);
+                intakeTransfer.setPower(-gamepad1.left_trigger);
             }
         }
         if (gamepad1.dpad_up && locationPixel < 5 && dpadPressedLast == false) {
