@@ -26,14 +26,17 @@ public class CenterStageTeleOp extends Hardware{
     double locationPixel = 0;
     boolean dpadPressedLast = false;
     boolean isSecondPixelIn = false;
-    double dummyValueLeftleft = 0.5;
-    double dummyValueRightleft = 0.5;
-    double dummyValueLeftright = 0.5;
-    double dummyValueRightright = 0.5;
-    double dummyValueUpleft = 1;
-    double dummyValueUpright = 1;
-    double dummyValueDownleft = 0;
-    double dummyValueDownright = 0;
+    double dummyValueLeftStowed = 0.5;
+    double dummyValueRightStowed = 0.5;
+    double dummyValueLeft0 = 0.5;
+    double dummyValueRight0 = 0.5;
+    double dummyValueLeft60 = 1;
+    double dummyValueRight60 = 1;
+    double dummyValueLeft120 = 0;
+    double dummyValueRight120 = 0;
+    double dummyValueLeft180 = 0;
+
+    double dummyValueRight180 = 0;
     int[] armValues = {1, 2, 3, 4, 5};
     boolean isDpadPressed = false;
     int IndexPosition = 0;
@@ -124,27 +127,27 @@ public class CenterStageTeleOp extends Hardware{
         if (locationPixel == 5) {
             intakeServo.setPosition(intakePos5);
         }
-
-        if (gamepad2.dpad_down) {
-            outtakeServoDifferential1.setPosition(dummyValueDownleft);
-            outtakeServoDifferential2.setPosition(dummyValueDownright);
-
-        }
-        if (gamepad2.dpad_up) {
-            outtakeServoDifferential1.setPosition(dummyValueUpleft);
-            outtakeServoDifferential2.setPosition(dummyValueUpright);
-
-        }
-        if (gamepad2.dpad_left) {
-            outtakeServoDifferential1.setPosition(dummyValueLeftleft);
-            outtakeServoDifferential2.setPosition(dummyValueLeftright);
-
-        }
-        if (gamepad2.dpad_right) {
-            outtakeServoDifferential1.setPosition(dummyValueRightleft);
-            outtakeServoDifferential2.setPosition(dummyValueRightright);
-
-        }
+//
+//        if (gamepad2.dpad_down) {
+//            outtakeServoDifferential1.setPosition(dummyValueDownleft);
+//            outtakeServoDifferential2.setPosition(dummyValueDownright);
+//
+//        }
+//        if (gamepad2.dpad_up) {
+//            outtakeServoDifferential1.setPosition(dummyValueUpleft);
+//            outtakeServoDifferential2.setPosition(dummyValueUpright);
+//
+//        }
+//        if (gamepad2.dpad_left) {
+//            outtakeServoDifferential1.setPosition(dummyValueLeftleft);
+//            outtakeServoDifferential2.setPosition(dummyValueLeftright);
+//
+//        }
+//        if (gamepad2.dpad_right) {
+//            outtakeServoDifferential1.setPosition(dummyValueRightleft);
+//            outtakeServoDifferential2.setPosition(dummyValueRightright);
+//
+//        }
         if (gamepad2.left_trigger > 0) {
             if (!isDpadPressed) {
                 isDpadPressed = true;
