@@ -18,12 +18,12 @@ public class CenterStageTeleOp extends Hardware{
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
     double intakeStowed = 0.8000;
-    double intakePos1 = 0.4178;
+    double intakePos1 = 0.4150;
     double intakePos2 = 0.4267;
     double intakePos3 = 0.4844;
     double intakePos4 = 0.5350;
-    double intakePos5 = 1;
-    double locationPixel = 0;
+    double intakePos5 = 0.580;
+    int locationPixel = 5;
     boolean dpadPressedLast = false;
     boolean isSecondPixelIn = false;
     double dummyValueLeftStowed = 0.6683;
@@ -47,86 +47,64 @@ public class CenterStageTeleOp extends Hardware{
     double dummyValueClawClosedRight = 0.5456; //nolongerdummy
     double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
     double dummyValueHorizontalOpen = 0.6844; //nolongerdummy
+    double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     @Override public void loop() {
         if (!firstLoopPassed) {
             outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             firstLoopPassed = true;
         }
-        double rawX = gamepad1.right_stick_x;
-        double rawY = -gamepad1.right_stick_y;
-        double rawRot = gamepad1.left_stick_x;
+        double rawX = gamepad1.left_stick_x;
+        double rawY = -gamepad1.left_stick_y;
+        double rawRot = gamepad1.right_stick_x;
 
         double x, y, rot;
         x = rawX;
         y = rawY;
         rot = rawRot;
-        if (gamepad1.a) {
-            if (wasGamepadAPressed) {
-                TankMode = (TankMode==false);
-                if (TankMode) {
-                    butterflyLeft.setPosition(tankPosL);
-                    butterflyRight.setPosition(tankPosR);
-                }
-                else {
-                    butterflyLeft.setPosition(mecanumPosL);
-                    butterflyRight.setPosition(mecanumPosR);
-                }
+        if (gamepad1.a && !wasGamepadAPressed) {
+            TankMode = !TankMode;
+            if (TankMode) {
+                butterflyLeft.setPosition(tankPosL);
+                butterflyRight.setPosition(tankPosR);
             }
-            boolean wasGamepadAPressed = true;
-        } else {
-            wasGamepadAPressed = false;
+            else {
+                butterflyLeft.setPosition(mecanumPosL);
+                butterflyRight.setPosition(mecanumPosR);
+            }
         }
+        wasGamepadAPressed = gamepad1.a;
         if (TankMode == false) {
             motorLf.setPower((-x -y -rot) * drivetrainMult);
             motorLb.setPower((+x -y -rot) * drivetrainMult);
             motorRf.setPower((-x +y -rot) * drivetrainMult);
             motorRb.setPower((+x +y -rot) * drivetrainMult);
         } else {
-            motorLf.setPower((-x -rot) * drivetrainMult);
-            motorLb.setPower((+x -rot) * drivetrainMult);
-            motorRf.setPower((-x -rot) * drivetrainMult);
-            motorRb.setPower((+x -rot) * drivetrainMult);
+            motorLf.setPower((-y -rot) * drivetrainMult);
+            motorLb.setPower((-y -rot) * drivetrainMult);
+            motorRf.setPower((+y -rot) * drivetrainMult);
+            motorRb.setPower((+y -rot) * drivetrainMult);
         }
-        if ((locationPixel==0)) {
-
-
+        if (locationPixel != 5) {
             if (isSecondPixelIn) {
                 intakeIntake.setPower(gamepad1.left_trigger);
-                intakeTransfer.setPower(gamepad1.left_trigger);
+                intakeTransfer.setPower(-gamepad1.left_trigger);
             }
             else {
                 intakeIntake.setPower(-gamepad1.left_trigger);
-                intakeTransfer.setPower(-gamepad1.left_trigger);
+                intakeTransfer.setPower(gamepad1.left_trigger);
             }
         }
-        if (gamepad1.dpad_up && locationPixel < 5 && dpadPressedLast == false) {
-            locationPixel += 1;
+        if (gamepad1.dpad_up && locationPixel < 5 && !dpadPressedLast) {
+            locationPixel++;
             dpadPressedLast = true;
-        } else if (gamepad1.dpad_down && locationPixel > 0 && dpadPressedLast == false) {
-            locationPixel -= 1;
+        } else if (gamepad1.dpad_down && locationPixel > 0 && !dpadPressedLast) {
+            locationPixel--;
             dpadPressedLast = true;
-        } else {
-            dpadPressedLast = false;
         }
-        if (locationPixel == 0) {
-            intakeServo.setPosition(intakeStowed);
-        }
-        if (locationPixel == 1) {
-            intakeServo.setPosition(intakePos1);
-        }
-        if (locationPixel == 2) {
-            intakeServo.setPosition(intakePos2);
-        }
-        if (locationPixel == 3) {
-            intakeServo.setPosition(intakePos3);
-        }
-        if (locationPixel == 4) {
-            intakeServo.setPosition(intakePos4);
-        }
-        if (locationPixel == 5) {
-            intakeServo.setPosition(intakePos5);
-        }
+        dpadPressedLast = (gamepad1.dpad_down || gamepad1.dpad_up);
+        telemetry.addData("locationPixel", locationPixel);
+        intakeServo.setPosition(intakePositions[locationPixel]);
 //
 //        if (gamepad2.dpad_down) {
 //            outtakeServoDifferential1.setPosition(dummyValueDownleft);
@@ -160,8 +138,8 @@ public class CenterStageTeleOp extends Hardware{
                 outtakeMotor2.setTargetPosition(-(armValues[IndexPosition]));
                 outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                outtakeMotor1.setPower(0.3);
-                outtakeMotor2.setPower(0.3);
+                outtakeMotor1.setPower(0.8);
+                outtakeMotor2.setPower(0.8);
 
             }
         } else {
@@ -185,5 +163,6 @@ public class CenterStageTeleOp extends Hardware{
         if (gamepad2.y) {
             horizontalSlideServo.setPosition(dummyValueHorizontalClosed);
         }
+        telemetry.update();
     }
 }

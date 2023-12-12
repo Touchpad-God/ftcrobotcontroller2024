@@ -104,8 +104,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         leftFront = hardwareMap.get(DcMotorEx.class, "FL");
         leftRear = hardwareMap.get(DcMotorEx.class, "BL");
-        rightRear = hardwareMap.get(DcMotorEx.class, "FR");
-        rightFront = hardwareMap.get(DcMotorEx.class, "BR");
+        rightRear = hardwareMap.get(DcMotorEx.class, "BR");
+        rightFront = hardwareMap.get(DcMotorEx.class, "FR");
 
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
