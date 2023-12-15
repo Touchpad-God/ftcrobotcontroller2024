@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static com.sun.tools.doclint.Entity.not;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
@@ -18,6 +20,7 @@ public class CenterStageTeleOp extends Hardware{
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
     double intakeStowed = 0.8000;
+    boolean wasGamepad2Apressed = false;
     double intakePos1 = 0.4150;
     double intakePos2 = 0.4267;
     double intakePos3 = 0.4844;
@@ -35,6 +38,7 @@ public class CenterStageTeleOp extends Hardware{
     double dummyValueLeft120 = 0.4178;
     double dummyValueRight120 = 0.1267;
     double dummyValueLeft180 = 0;
+    int hangingState = 0;
 
     double dummyValueRight180 = 0.245;
     int[] armValues = {1, 2, 3, 4, 5};
@@ -43,6 +47,11 @@ public class CenterStageTeleOp extends Hardware{
     boolean firstLoopPassed = false;
     double dummyValueClawOpenLeft = 0.563;
     double dummyValueClawOpenRight = 0.4328;
+    double dummyValueDroneLauncherNot = 0;
+    boolean droneServoLaunched = false;
+    double dummyValueDroneLauncherLaunch = 1;
+    boolean gamepad1x = false;
+    boolean gamepad1y = false;
     double dummyValueClawClosedLeft = 0.45; //nolongerdummy
     double dummyValueClawClosedRight = 0.5456; //nolongerdummy
     double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
@@ -62,6 +71,18 @@ public class CenterStageTeleOp extends Hardware{
         x = rawX;
         y = rawY;
         rot = rawRot;
+        if (gamepad1.right_trigger > 0 && !wasGamepad2Apressed) {
+            droneServoLaunched = (!droneServoLaunched);
+            if (droneServoLaunched) {
+                droneServo.setPosition(dummyValueDroneLauncherLaunch);
+            }
+            else {
+                droneServo.setPosition(dummyValueDroneLauncherNot);
+            }
+            wasGamepad2Apressed = true;
+        } else if (gamepad1.right_trigger == 0) {
+            wasGamepad2Apressed = false;
+        }
         if (gamepad1.a && !wasGamepadAPressed) {
             TankMode = !TankMode;
             if (TankMode) {
@@ -74,6 +95,18 @@ public class CenterStageTeleOp extends Hardware{
             }
         }
         wasGamepadAPressed = gamepad1.a;
+        if (gamepad1.x && !gamepad1x && hangingState < 2) {
+            hangingState += 1;
+            gamepad1x = true;
+        } else if (!gamepad1.x) {
+            gamepad1x = false;
+        }
+        if (gamepad1.y && !gamepad1y && hangingState > 0) {
+            hangingState -= 1;
+            gamepad1y = true;
+        } else if (!gamepad1.y) {
+            gamepad1y = false;
+        }
         if (TankMode == false) {
             motorLf.setPower((-x -y -rot) * drivetrainMult);
             motorLb.setPower((+x -y -rot) * drivetrainMult);

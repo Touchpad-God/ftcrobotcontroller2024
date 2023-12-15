@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
@@ -33,6 +34,9 @@ public abstract class Hardware extends OpMode {
     protected Servo hangingLeft;
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
+    protected RevColorSensorV3 color1;
+    protected RevColorSensorV3 color2;
+    protected DigitalChannel beam;
 
 
 
@@ -61,6 +65,9 @@ public abstract class Hardware extends OpMode {
         hangingLeft = hardwareMap.get(Servo.class, "hangL");
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
+        color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
+        color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
+        beam = hardwareMap.get(DigitalChannel.class, "beam");
 
 
 
@@ -84,6 +91,7 @@ public abstract class Hardware extends OpMode {
 //        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
 //        imuParameters.loggingEnabled = false;
         imu.initialize(imuParameters);
+        beam.setMode(DigitalChannel.Mode.INPUT);
     }
 
     @Override public void init_loop() {
