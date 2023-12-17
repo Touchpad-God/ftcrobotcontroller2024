@@ -32,15 +32,15 @@ public class Sensors {
         float[] HSVValues = new float[3];
         Color.RGBToHSV(color1red, color1green, color1blue, HSVValues);
         if (color1.getDistance(DistanceUnit.CM) < 0.9) {
-            if (HSVValues[0] > 75 && HSVValues[0] < 100) {
-                pixel1 = "yellow";
+            }
+            if (HSVValues[1] > 0.5) {
+                pixel1 = "white";
             } else if (HSVValues[0] > 120 && HSVValues[0] < 140) {
                 pixel1 = "green";
             } else if (HSVValues[0] > 190 && HSVValues[0] < 220) {
                 pixel1 = "purple";
-            } else if (HSVValues[1] > 0.5) {
-                pixel1 = "white";
-            }
+            } else if (HSVValues[0] > 75 && HSVValues[0] < 100) {
+            pixel1 = "yellow";
         } else {
             pixel1 = "none";
         }
