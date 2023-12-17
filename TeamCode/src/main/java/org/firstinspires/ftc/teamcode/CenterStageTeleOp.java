@@ -26,6 +26,9 @@ public class CenterStageTeleOp extends Hardware{
     double intakePos3 = 0.4844;
     double intakePos4 = 0.5350;
     double intakePos5 = 0.580;
+    int outtakeNumber = 0;
+    boolean gamepad1dpadleft = false;
+    boolean gamepad1dpadright = false;
     int locationPixel = 5;
     boolean dpadPressedLast = false;
     boolean isSecondPixelIn = false;
@@ -52,6 +55,7 @@ public class CenterStageTeleOp extends Hardware{
     double dummyValueDroneLauncherLaunch = 1;
     boolean gamepad1x = false;
     boolean gamepad1y = false;
+    Outtake outtake;
     double dummyValueClawClosedLeft = 0.45; //nolongerdummy
     double dummyValueClawClosedRight = 0.5456; //nolongerdummy
     double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
@@ -59,8 +63,7 @@ public class CenterStageTeleOp extends Hardware{
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     @Override public void loop() {
         if (!firstLoopPassed) {
-            outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            Outtake outtake = new Outtake(hardwareMap);
             firstLoopPassed = true;
         }
         double rawX = gamepad1.left_stick_x;
@@ -197,5 +200,18 @@ public class CenterStageTeleOp extends Hardware{
             horizontalSlideServo.setPosition(dummyValueHorizontalClosed);
         }
         telemetry.update();
+        if (gamepad1.dpad_left && !gamepad1dpadleft && outtakeNumber > 0) {
+            outtakeNumber -= 1;
+            gamepad1dpadleft = true;
+            outtake.setPosition(outtakeNumber);
+        }
+        gamepad1dpadleft = gamepad1.dpad_left;
+        if (gamepad1.dpad_right && !gamepad1dpadright && outtakeNumber < 15) {
+            outtakeNumber += 1;
+            gamepad1dpadright = true;
+            outtake.setPosition(outtakeNumber);
+        }
+        gamepad1dpadleft = gamepad1.dpad_left;
+
     }
 }

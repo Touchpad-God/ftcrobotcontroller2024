@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -32,6 +33,7 @@ public abstract class Hardware extends OpMode {
     protected Servo hangingRight;
     protected Servo droneServo;
     protected Servo hangingLeft;
+    protected RevBlinkinLedDriver led;
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
     protected RevColorSensorV3 color1;
@@ -62,6 +64,7 @@ public abstract class Hardware extends OpMode {
         horizontalSlideServo = hardwareMap.get(Servo.class, "horizontal");
         hangingRight = hardwareMap.get(Servo.class, "hangR");
         droneServo = hardwareMap.get(Servo.class, "drone");
+        led = hardwareMap.get(RevBlinkinLedDriver.class, "led");
         hangingLeft = hardwareMap.get(Servo.class, "hangL");
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");

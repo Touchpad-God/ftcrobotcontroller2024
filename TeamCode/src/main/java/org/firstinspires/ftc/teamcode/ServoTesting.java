@@ -20,23 +20,25 @@ import com.qualcomm.robotcore.hardware.*;
 
 @TeleOp
 public class ServoTesting extends Hardware {
+    Sensors sensor = new Sensors();
     @Override
     public void loop() {
-        if (gamepad1.a && outtakeServoDifferential1.getPosition() < 1) {
-            outtakeServoDifferential1.setPosition(outtakeServoDifferential1.getPosition()+0.002);
-        }
-        if (gamepad1.b && outtakeServoDifferential1.getPosition() > 0) {
-            outtakeServoDifferential1.setPosition(outtakeServoDifferential1.getPosition()-0.002);
-        }
-        if (gamepad1.x && outtakeServoDifferential2.getPosition() < 1) {
-            outtakeServoDifferential2.setPosition(outtakeServoDifferential2.getPosition()+0.002);
-        }
-        if (gamepad1.y && outtakeServoDifferential2.getPosition() > 0) {
-            outtakeServoDifferential2.setPosition(outtakeServoDifferential2.getPosition()-0.002);
-        }
-        telemetry.addData("servo1 Servo Position", outtakeServoDifferential1.getPosition());
-        telemetry.addData("servo2 Servo Position", outtakeServoDifferential2.getPosition());
-        telemetry.update();
+        sensor.runSensorsTelemetry();
+//        if (gamepad1.a && outtakeServoDifferential1.getPosition() < 1) {
+//            outtakeServoDifferential1.setPosition(outtakeServoDifferential1.getPosition()+0.002);
+//        }
+//        if (gamepad1.b && outtakeServoDifferential1.getPosition() > 0) {
+//            outtakeServoDifferential1.setPosition(outtakeServoDifferential1.getPosition()-0.002);
+//        }
+//        if (gamepad1.x && outtakeServoDifferential2.getPosition() < 1) {
+//            outtakeServoDifferential2.setPosition(outtakeServoDifferential2.getPosition()+0.002);
+//        }
+//        if (gamepad1.y && outtakeServoDifferential2.getPosition() > 0) {
+//            outtakeServoDifferential2.setPosition(outtakeServoDifferential2.getPosition()-0.002);
+//        }
+//        telemetry.addData("servo1 Servo Position", outtakeServoDifferential1.getPosition());
+//        telemetry.addData("servo2 Servo Position", outtakeServoDifferential2.getPosition());
+//        telemetry.update();
     }
 
 }
