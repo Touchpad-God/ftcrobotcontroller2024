@@ -38,13 +38,15 @@ public class Sensors {
                 pixel1 = "green";
             } else if (HSVValues[0] > 190 && HSVValues[0] < 220) {
                 pixel1 = "purple";
+            } else if (HSVValues[1] > 0.5) {
+                pixel1 = "white";
             }
         } else {
             pixel1 = "none";
         }
         float[] HSVValues2 = new float[3];
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
-        if (color1.getDistance(DistanceUnit.CM) < 0.9) {
+        if (color2.getDistance(DistanceUnit.CM) < 0.9) {
 
             if (HSVValues2[0] > 75 && HSVValues2[0] < 100) {
                 pixel2 = "yellow";
@@ -52,6 +54,8 @@ public class Sensors {
                 pixel2 = "green";
             } else if (HSVValues2[0] > 190 && HSVValues2[0] < 220) {
                 pixel2 = "purple";
+            } else if (HSVValues2[1] > 0.5) {
+                pixel2 = "white";
             }
         } else {
             pixel2 = "none";
@@ -59,7 +63,7 @@ public class Sensors {
         telemetry.addData("Sensor 1 Pixel", pixel1);
         telemetry.addData("Sensor 2 Pixel", pixel2);
         telemetry.addData("Sensor 1 Saturation", HSVValues[1]);
-        telemetry.addData("Sensor 2 Saturation", HSVValues[1]);
+        telemetry.addData("Sensor 2 Saturation", HSVValues2[1]);
         telemetry.update();
 
 
