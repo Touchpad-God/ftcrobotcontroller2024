@@ -36,8 +36,8 @@ public abstract class Hardware extends OpMode {
     protected RevBlinkinLedDriver led;
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
-    protected RevColorSensorV3  color1;
-    protected RevColorSensorV3 color2;
+//    protected RevColorSensorV3  color1;
+//    protected RevColorSensorV3 color2;
     protected DigitalChannel beam;
 
 
@@ -68,8 +68,8 @@ public abstract class Hardware extends OpMode {
         hangingLeft = hardwareMap.get(Servo.class, "hangL");
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
-        color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
-        color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
+//        color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
+//        color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
         beam = hardwareMap.get(DigitalChannel.class, "beam");
 
 

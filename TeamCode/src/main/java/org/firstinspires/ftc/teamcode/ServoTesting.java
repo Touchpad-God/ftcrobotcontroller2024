@@ -24,7 +24,7 @@ public class ServoTesting extends Hardware {
     @Override
     public void init() {
         super.init();
-        sensor = new Sensors();
+        sensor = new Sensors(hardwareMap, telemetry);
     }
     @Override
     public void loop() {

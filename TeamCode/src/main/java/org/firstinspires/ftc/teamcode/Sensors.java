@@ -1,12 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 
-public class Sensors extends Hardware {
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+public class Sensors {
     public String pixel1;
     public String pixel2;
-    public Sensors() {
+    RevColorSensorV3 color1;
+    RevColorSensorV3 color2;
+    Telemetry telemetry;
+
+    public Sensors(HardwareMap hardwareMap, Telemetry telemetry1) {
+        color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
+        color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
+
         pixel1 = "null";
         pixel2 = "null";
+        telemetry = telemetry1;
     }
     public void runSensors() {
         int color1green = color1.green();
