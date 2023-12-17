@@ -40,7 +40,7 @@ public class Sensors {
             pixel1 = "purple";
         }
         float[] HSVValues2 = new float[3];
-        Color.RGBToHSV(color2red, color2green, color2blue, HSVValues);
+        Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
         if (HSVValues2[0] > 75 && HSVValues2[0] < 100) {
             pixel2 = "yellow";
         }
