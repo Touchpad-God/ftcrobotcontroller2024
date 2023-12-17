@@ -16,15 +16,9 @@ public class Outtake extends Hardware {
         outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
 
 
-    @Override
-    public void init() {
-
-        super.init();
-    }
 
     public void setPosition(int outtakeNumber) {
         outtakeMotor1.setTargetPosition(-(Math.multiplyExact(outtakeNumber, outtakeOffset)+192));

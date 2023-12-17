@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 public class Intake extends Hardware {
     public enum IntakeState {INTAKING, STOWED, BEAMNOCOLOR, BOTHCOLOR, IDLE}
     Timer timer = new Timer();
@@ -13,7 +15,12 @@ public class Intake extends Hardware {
     boolean dpadPressedLast = false;
     private IntakeState intakeState = IntakeState.STOWED;
     public void run() {
-
+        switch(intakeState) {
+            case IDLE:
+                break;
+            case INTAKING:
+                break;
+        }
     }
 
 }

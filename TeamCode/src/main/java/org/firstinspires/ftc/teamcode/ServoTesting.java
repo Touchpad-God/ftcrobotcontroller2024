@@ -20,14 +20,14 @@ import com.qualcomm.robotcore.hardware.*;
 
 @TeleOp
 public class ServoTesting extends Hardware {
-    boolean firstLoopPassed = false;
     Sensors sensor;
     @Override
+    public void init() {
+        super.init();
+        sensor = new Sensors();
+    }
+    @Override
     public void loop() {
-        if (!firstLoopPassed) {
-            Sensors sensor = new Sensors();
-            firstLoopPassed = true;
-        }
         sensor.runSensors();
 //        if (gamepad1.a && outtakeServoDifferential1.getPosition() < 1) {
 //            outtakeServoDifferential1.setPosition(outtakeServoDifferential1.getPosition()+0.002);

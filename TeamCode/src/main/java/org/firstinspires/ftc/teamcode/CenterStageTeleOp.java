@@ -47,7 +47,6 @@ public class CenterStageTeleOp extends Hardware{
     int[] armValues = {1, 2, 3, 4, 5};
     boolean isDpadPressed = false;
     int IndexPosition = 0;
-    boolean firstLoopPassed = false;
     double dummyValueClawOpenLeft = 0.563;
     double dummyValueClawOpenRight = 0.4328;
     double dummyValueDroneLauncherNot = 0;
@@ -61,11 +60,11 @@ public class CenterStageTeleOp extends Hardware{
     double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
     double dummyValueHorizontalOpen = 0.6844; //nolongerdummy
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
+    @Override public void init() {
+        super.init();
+        outtake = new Outtake(hardwareMap);
+    }
     @Override public void loop() {
-        if (!firstLoopPassed) {
-            Outtake outtake = new Outtake(hardwareMap);
-            firstLoopPassed = true;
-        }
         double rawX = gamepad1.left_stick_x;
         double rawY = -gamepad1.left_stick_y;
         double rawRot = gamepad1.right_stick_x;

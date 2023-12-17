@@ -36,7 +36,7 @@ public abstract class Hardware extends OpMode {
     protected RevBlinkinLedDriver led;
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
-    protected RevColorSensorV3 color1;
+    protected RevColorSensorV3  color1;
     protected RevColorSensorV3 color2;
     protected DigitalChannel beam;
 
