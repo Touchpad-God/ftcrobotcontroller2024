@@ -55,6 +55,8 @@ public class CenterStageTeleOp extends Hardware{
     boolean gamepad1x = false;
     boolean gamepad1y = false;
     Outtake outtake;
+    Intake intake;
+    IntakeOuttake intakeOuttake;
     double dummyValueClawClosedLeft = 0.45; //nolongerdummy
     double dummyValueClawClosedRight = 0.5456; //nolongerdummy
     double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
@@ -62,8 +64,17 @@ public class CenterStageTeleOp extends Hardware{
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     @Override public void init() {
         super.init();
-        outtake = new Outtake(hardwareMap);
+//        outtake = new Outtake();
+        intake = new Intake();
+        intakeOuttake = new IntakeOuttake();
+
     }
+
+    @Override
+    public void init_loop() {
+        intakeServo.setPosition(intakeStowed);
+    }
+
     @Override public void loop() {
         double rawX = gamepad1.left_stick_x;
         double rawY = -gamepad1.left_stick_y;
@@ -120,15 +131,8 @@ public class CenterStageTeleOp extends Hardware{
             motorRf.setPower((+y -rot) * drivetrainMult);
             motorRb.setPower((+y -rot) * drivetrainMult);
         }
-        if (locationPixel != 5) {
-            if (isSecondPixelIn) {
-                intakeIntake.setPower(gamepad1.left_trigger);
-                intakeTransfer.setPower(-gamepad1.left_trigger);
-            }
-            else {
-                intakeIntake.setPower(-gamepad1.left_trigger);
-                intakeTransfer.setPower(gamepad1.left_trigger);
-            }
+        if (locationPixel != 5 && gamepad1.left_trigger > 0.1) {
+            intake.run();
         }
         if (gamepad1.dpad_up && locationPixel < 5 && !dpadPressedLast) {
             locationPixel++;

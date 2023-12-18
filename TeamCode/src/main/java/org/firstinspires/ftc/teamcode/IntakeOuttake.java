@@ -2,10 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 
 public class IntakeOuttake extends Hardware {
+    Intake intake;
+    Outtake outtake;
     Timer timer = new Timer();
+
+
     public IntakeOuttake() {
-        Intake intake = new Intake();
-        Outtake outtake = new Outtake(hardwareMap);
+        intake = new Intake();
+        outtake = new Outtake();
 
     }
 }

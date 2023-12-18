@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 @Autonomous
 public class CenterStageUpperAutoRed extends LinearOpMode {
     public static final int IMU_DIFF = -90;
+    TrajectorySequenceBuilder traj;
+    int location;
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -19,17 +21,41 @@ public class CenterStageUpperAutoRed extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        drive.setPoseEstimate(new Pose2d(36, 12, Math.toRadians(180)));
+        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).forward(21).build());
 
-        TrajectorySequenceBuilder traj = drive.trajectorySequenceBuilder(new Pose2d(36, 12, Math.toRadians(180)))
-                .setReversed(true)
-                .splineTo(new Vector2d(54, 30), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(30, 46, Math.toRadians(270)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(12, -56), Math.toRadians(270))
-                .lineToConstantHeading(new Vector2d(12, 26))
-                .splineTo(new Vector2d(30, 48), Math.toRadians(90)
-                );
+        drive.setPoseEstimate(new Pose2d(36, 12, Math.toRadians(0)));
+
+        if (location == 1) { // center
+            traj = drive.trajectorySequenceBuilder(new Pose2d(36, 12, Math.toRadians(0)))
+                    .setReversed(true)
+                    .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270)))
+                    .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(12, -56), Math.toRadians(270))
+                    .lineToConstantHeading(new Vector2d(12, 26))
+                    .splineTo(new Vector2d(30, 48), Math.toRadians(90)
+                    );
+        } else if (location == 2) { // left
+            traj = drive.trajectorySequenceBuilder(new Pose2d(36, 12, Math.toRadians(0)))
+                    .setReversed(true)
+                    .turn(Math.toRadians(90))
+                    .lineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270)))
+                    .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(12, -56), Math.toRadians(270))
+                    .lineToConstantHeading(new Vector2d(12, 26))
+                    .splineTo(new Vector2d(30, 48), Math.toRadians(90)
+                    );
+        } else { //right
+            traj = drive.trajectorySequenceBuilder(new Pose2d(36, 12, Math.toRadians(0)))
+                    .setReversed(true)
+                    .turn(Math.toRadians(-90))
+                    .splineToConstantHeading(new Vector2d(48, 24), Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180))
+                    .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(12, -56), Math.toRadians(270))
+                    .lineToConstantHeading(new Vector2d(12, 26))
+                    .splineTo(new Vector2d(30, 48), Math.toRadians(90)
+                    );
+        }
 
         drive.followTrajectorySequence(traj.build());
     }

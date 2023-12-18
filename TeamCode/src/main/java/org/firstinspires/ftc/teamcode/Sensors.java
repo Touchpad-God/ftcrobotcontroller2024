@@ -7,21 +7,23 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-public class Sensors {
-    public String pixel1;
-    public String pixel2;
+public class Sensors extends Hardware {
+    private String pixel1;
+    private String pixel2;
     RevColorSensorV3 color1;
     RevColorSensorV3 color2;
-    Telemetry telemetry;
 
-    public Sensors(HardwareMap hardwareMap, Telemetry telemetry1) {
+    @Override
+    public void init() {
+        super.init();
+
         color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
         color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
 
-        pixel1 = "null";
-        pixel2 = "null";
-        telemetry = telemetry1;
+        pixel1 = null;
+        pixel2 = null;
     }
+
     public void runSensors() {
         int color1green = color1.green();
         int color1blue = color1.blue();
@@ -42,7 +44,7 @@ public class Sensors {
             } else if (HSVValues[0] > 75 && HSVValues[0] < 100) {
             pixel1 = "yellow";
         } else {
-            pixel1 = "none";
+            pixel1 = null;
         }
         float[] HSVValues2 = new float[3];
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
@@ -58,7 +60,7 @@ public class Sensors {
                 pixel2 = "white";
             }
         } else {
-            pixel2 = "none";
+            pixel2 = null;
         }
         telemetry.addData("Sensor 1 Pixel", pixel1);
         telemetry.addData("Sensor 2 Pixel", pixel2);
@@ -66,7 +68,13 @@ public class Sensors {
         telemetry.addData("Sensor 2 Saturation", HSVValues2[1]);
         telemetry.update();
 
+    }
 
+    public String getPixel1() {
+        return pixel1;
+    }
 
+    public String getPixel2() {
+        return pixel2;
     }
 }
