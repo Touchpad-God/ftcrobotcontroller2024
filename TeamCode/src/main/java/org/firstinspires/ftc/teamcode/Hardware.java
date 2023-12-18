@@ -50,8 +50,6 @@ public abstract class Hardware extends OpMode {
         motorLb = hardwareMap.get(DcMotor.class, "BL");
         motorRf = hardwareMap.get(DcMotor.class, "FR");
         motorRb = hardwareMap.get(DcMotor.class, "BR");
-//        servo1 = hardwareMap.get(Servo.class, "butterflyL");
-//        servo2 = hardwareMap.get(Servo.class, "butterflyR");
         intakeIntake = hardwareMap.get(DcMotor.class, "intake");
         intakeTransfer = hardwareMap.get(DcMotor.class, "transfer");
         intakeServo = hardwareMap.get(Servo.class, "intakeLift");
