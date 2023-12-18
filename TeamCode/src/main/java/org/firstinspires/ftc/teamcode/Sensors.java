@@ -24,7 +24,8 @@ public class Sensors extends Hardware {
         pixel2 = null;
     }
 
-    public void runSensors() {
+    @Override
+    public void loop() {
         int color1green = color1.green();
         int color1blue = color1.blue();
         int color1red = color1.red();

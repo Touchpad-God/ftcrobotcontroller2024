@@ -21,8 +21,6 @@ public abstract class Hardware extends OpMode {
     protected DcMotor intakeIntake;
     protected DcMotor intakeTransfer;
     protected Servo intakeServo;
-    protected Servo servo1;
-    protected Servo servo2;
     protected DcMotor outtakeMotor1;
     protected DcMotor outtakeMotor2;
     protected Servo outtakeAssociatedServo1;
@@ -40,6 +38,60 @@ public abstract class Hardware extends OpMode {
 //    protected RevColorSensorV3 color2;
     protected DigitalChannel beam;
 
+    int position = 0;
+    int dpadPrev = 0;
+    double drivetrainMult = 0.8;
+    boolean TankMode = false;
+    boolean wasGamepadAPressed = false;
+    double tankPosL = 0.8589;
+    double tankPosR = 0.0478;
+    double mecanumPosL = 0.3022;
+    double mecanumPosR = 0.62;
+    double intakeStowed = 0.8000;
+    boolean wasGamepad2Apressed = false;
+    double intakePos1 = 0.4150;
+    double intakePos2 = 0.4267;
+    double intakePos3 = 0.4844;
+    double intakePos4 = 0.5350;
+    double intakePos5 = 0.580;
+    int outtakeNumber = 0;
+    boolean gamepad1dpadleft = false;
+    boolean gamepad1dpadright = false;
+    int locationPixel = 5;
+    boolean dpadPressedLast = false;
+    boolean isSecondPixelIn = false;
+    double dummyValueLeftStowed = 0.6683;
+    double dummyValueRightStowed = 0.2483;
+    double dummyValueLeft0 = 0.5217;
+    double dummyValueRight0 = 0.79;
+    double dummyValueLeft60 = 0.3228;
+    double dummyValueRight60 = 0.6067;
+    double dummyValueLeft120 = 0.4178;
+    double dummyValueRight120 = 0.1267;
+    double dummyValueLeft180 = 0;
+    int hangingState = 0;
+
+    double dummyValueRight180 = 0.245;
+    int[] armValues = {1, 2, 3, 4, 5};
+    boolean isDpadPressed = false;
+    int IndexPosition = 0;
+    double dummyValueClawOpenLeft = 0.563;
+    double dummyValueClawOpenRight = 0.4328;
+    double dummyValueDroneLauncherNot = 0;
+    boolean droneServoLaunched = false;
+    double dummyValueDroneLauncherLaunch = 1;
+    boolean gamepad1x = false;
+    boolean gamepad1y = false;
+    Outtake outtake;
+    Intake intake;
+    IntakeOuttake intakeOuttake;
+    double dummyValueClawClosedLeft = 0.45; //nolongerdummy
+    double dummyValueClawClosedRight = 0.5456; //nolongerdummy
+    double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
+    double dummyValueHorizontalOpen = 0.6844; //nolongerdummy
+    double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
+    public static double intakePower = 1.0;
+    public static double transferPower = 1.0;
 
 
     public IMU imu;

@@ -24,11 +24,11 @@ public class ServoTesting extends Hardware {
     @Override
     public void init() {
         super.init();
-        sensor = new Sensors(hardwareMap, telemetry);
+        sensor = new Sensors();
     }
     @Override
     public void loop() {
-        sensor.runSensors();
+        sensor.loop();
 //        if (gamepad1.a && outtakeServoDifferential1.getPosition() < 1) {
 //            outtakeServoDifferential1.setPosition(outtakeServoDifferential1.getPosition()+0.002);
 //        }
