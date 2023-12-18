@@ -11,8 +11,8 @@ public class Outtake extends Hardware {
     Timer timer = new Timer();
     int outtakeOffset = 78;
 
-    public static double kP = 0.0;
-    public static double kI = 0.0;
+    public static double kP = 10.0;
+    public static double kI = 3.0;
     public static double kD = 0.0;
     public static double MAX_I = 1.0;
     public static double MIN_I = -1.0;
