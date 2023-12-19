@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public abstract class Hardware extends OpMode {
+public class Hardware extends OpMode {
     protected DcMotor motorLf;
     protected DcMotor motorLb;
     protected DcMotor motorRf;
@@ -34,8 +34,8 @@ public abstract class Hardware extends OpMode {
     protected RevBlinkinLedDriver led;
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
-//    protected RevColorSensorV3  color1;
-//    protected RevColorSensorV3 color2;
+    protected RevColorSensorV3  color1;
+    protected RevColorSensorV3 color2;
     protected DigitalChannel beam;
 
     int position = 0;
@@ -92,7 +92,12 @@ public abstract class Hardware extends OpMode {
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     public static double intakePower = 1.0;
     public static double transferPower = 1.0;
-
+    String pixel1 = null;
+    String pixel2 = null;
+    public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE}
+    public IntakeState intakeState = IntakeState.IDLE;
+    public int beambreakDetections = 0;
+    public boolean beambreakPrev = true;
 
     public IMU imu;
     public IMU.Parameters imuParameters;
@@ -118,8 +123,8 @@ public abstract class Hardware extends OpMode {
         hangingLeft = hardwareMap.get(Servo.class, "hangL");
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
-//        color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
-//        color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
+        color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
+        color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
         beam = hardwareMap.get(DigitalChannel.class, "beam");
 
 
@@ -140,9 +145,6 @@ public abstract class Hardware extends OpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
         ));
-//        imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-//        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        imuParameters.loggingEnabled = false;
         imu.initialize(imuParameters);
         beam.setMode(DigitalChannel.Mode.INPUT);
     }

@@ -20,12 +20,14 @@ public class Sensors extends Hardware {
         color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
         color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
 
-        pixel1 = null;
-        pixel2 = null;
+//        pixel1 = null;
+//        pixel2 = null;
     }
 
     @Override
     public void loop() {
+        String pixel1 = null;
+        String pixel2 = null;
         int color1green = color1.green();
         int color1blue = color1.blue();
         int color1red = color1.red();
@@ -44,8 +46,6 @@ public class Sensors extends Hardware {
                 pixel1 = "purple";
             } else if (HSVValues[0] > 75 && HSVValues[0] < 100) {
             pixel1 = "yellow";
-        } else {
-            pixel1 = null;
         }
         float[] HSVValues2 = new float[3];
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
@@ -60,8 +60,6 @@ public class Sensors extends Hardware {
             } else if (HSVValues2[1] > 0.5) {
                 pixel2 = "white";
             }
-        } else {
-            pixel2 = null;
         }
         telemetry.addData("Sensor 1 Pixel", pixel1);
         telemetry.addData("Sensor 2 Pixel", pixel2);

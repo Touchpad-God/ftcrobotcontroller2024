@@ -2,10 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import static com.sun.tools.doclint.Entity.not;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 import com.qualcomm.robotcore.hardware.*;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 @TeleOp
@@ -14,7 +18,7 @@ public class CenterStageTeleOp extends Hardware{
     @Override public void init() {
         super.init();
 //        outtake = new Outtake();
-        intake = new Intake();
+//        intake = new Intake();
         intakeOuttake = new IntakeOuttake();
 
     }
@@ -22,6 +26,9 @@ public class CenterStageTeleOp extends Hardware{
     @Override
     public void init_loop() {
         intakeServo.setPosition(intakeStowed);
+        butterflyLeft.setPosition(mecanumPosL);
+        butterflyRight.setPosition(mecanumPosR);
+
     }
 
     @Override public void loop() {
@@ -69,7 +76,7 @@ public class CenterStageTeleOp extends Hardware{
         } else if (!gamepad1.y) {
             gamepad1y = false;
         }
-        if (TankMode == false) {
+        if (!TankMode) {
             motorLf.setPower((-x -y -rot) * drivetrainMult);
             motorLb.setPower((+x -y -rot) * drivetrainMult);
             motorRf.setPower((-x +y -rot) * drivetrainMult);
@@ -80,12 +87,11 @@ public class CenterStageTeleOp extends Hardware{
             motorRf.setPower((+y -rot) * drivetrainMult);
             motorRb.setPower((+y -rot) * drivetrainMult);
         }
-        if (locationPixel != 5 && gamepad1.right_trigger > 0.1) {
-            if (intake.getMode().equals(Intake.IntakeState.IDLE)) {
-                intake.setMode(Intake.IntakeState.INTAKING);
-                intake.loop();
-            }
-        }
+//        if (locationPixel != 5 && gamepad1.right_trigger > 0.1) {
+//            if (intakeState.equals(IntakeState.IDLE)) {
+//                intakeState = IntakeState.INTAKING;
+//            }
+//        }
         if (gamepad1.dpad_up && locationPixel < 5 && !dpadPressedLast) {
             locationPixel++;
             dpadPressedLast = true;
@@ -117,56 +123,58 @@ public class CenterStageTeleOp extends Hardware{
 //            outtakeServoDifferential2.setPosition(dummyValueRightright);
 //
 //        }
-        if (gamepad2.left_trigger > 0) {
-            if (!isDpadPressed) {
-                isDpadPressed = true;
-                if (IndexPosition < armValues.length-1) {
-                    IndexPosition += 1;
-                } else {
-                    IndexPosition = 0;
-                }
-                outtakeMotor1.setTargetPosition(armValues[IndexPosition]);
-                outtakeMotor2.setTargetPosition(-(armValues[IndexPosition]));
-                outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                outtakeMotor1.setPower(0.8);
-                outtakeMotor2.setPower(0.8);
-
-            }
-        } else {
-            isDpadPressed = false;
-        }
-        if (gamepad2.right_trigger > 0) {
-            outtakeMotor1.setPower(0);
-            outtakeMotor2.setPower(0);
-        }
-        if (gamepad2.a) {
-            outtakeAssociatedServo1.setPosition(dummyValueClawClosedLeft);
-            outtakeAssociatedServo2.setPosition(dummyValueClawClosedRight);
-        }
-        if (gamepad2.b) {
-            outtakeAssociatedServo1.setPosition(dummyValueClawOpenLeft);
-            outtakeAssociatedServo2.setPosition(dummyValueClawOpenRight);
-        }
-        if (gamepad2.x) {
-            horizontalSlideServo.setPosition(dummyValueHorizontalOpen);
-        }
-        if (gamepad2.y) {
-            horizontalSlideServo.setPosition(dummyValueHorizontalClosed);
-        }
-        telemetry.update();
-        if (gamepad1.dpad_left && !gamepad1dpadleft && outtakeNumber > 0) {
-            outtakeNumber -= 1;
-            gamepad1dpadleft = true;
-            outtake.setPosition(outtakeNumber);
-        }
-        gamepad1dpadleft = gamepad1.dpad_left;
-        if (gamepad1.dpad_right && !gamepad1dpadright && outtakeNumber < 15) {
-            outtakeNumber += 1;
-            gamepad1dpadright = true;
-            outtake.setPosition(outtakeNumber);
-        }
-        gamepad1dpadleft = gamepad1.dpad_left;
+//        if (gamepad2.left_trigger > 0) {
+//            if (!isDpadPressed) {
+//                isDpadPressed = true;
+//                if (IndexPosition < armValues.length-1) {
+//                    IndexPosition += 1;
+//                } else {
+//                    IndexPosition = 0;
+//                }
+//                outtakeMotor1.setTargetPosition(armValues[IndexPosition]);
+//                outtakeMotor2.setTargetPosition(-(armValues[IndexPosition]));
+//                outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                outtakeMotor1.setPower(0.8);
+//                outtakeMotor2.setPower(0.8);
+//
+//            }
+//        } else {
+//            isDpadPressed = false;
+//        }
+//        if (gamepad2.right_trigger > 0) {
+//            outtakeMotor1.setPower(0);
+//            outtakeMotor2.setPower(0);
+//        }
+//        if (gamepad2.a) {
+//            outtakeAssociatedServo1.setPosition(dummyValueClawClosedLeft);
+//            outtakeAssociatedServo2.setPosition(dummyValueClawClosedRight);
+//        }
+//        if (gamepad2.b) {
+//            outtakeAssociatedServo1.setPosition(dummyValueClawOpenLeft);
+//            outtakeAssociatedServo2.setPosition(dummyValueClawOpenRight);
+//        }
+//        if (gamepad2.x) {
+//            horizontalSlideServo.setPosition(dummyValueHorizontalOpen);
+//        }
+//        if (gamepad2.y) {
+//            horizontalSlideServo.setPosition(dummyValueHorizontalClosed);
+//        }
+//        telemetry.update();
+//        if (gamepad1.dpad_left && !gamepad1dpadleft && outtakeNumber > 0) {
+//            outtakeNumber -= 1;
+//            gamepad1dpadleft = true;
+//            outtake.setPosition(outtakeNumber);
+//        }
+//        gamepad1dpadleft = gamepad1.dpad_left;
+//        if (gamepad1.dpad_right && !gamepad1dpadright && outtakeNumber < 15) {
+//            outtakeNumber += 1;
+//            gamepad1dpadright = true;
+//            outtake.setPosition(outtakeNumber);
+//        }
+//        gamepad1dpadleft = gamepad1.dpad_left;
+//
+//    }
 
     }
 }

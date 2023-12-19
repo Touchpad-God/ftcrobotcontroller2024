@@ -8,8 +8,8 @@ public class IntakeOuttake extends Hardware {
 
 
     public IntakeOuttake() {
-        intake = new Intake();
-        outtake = new Outtake();
+//        intake = new Intake();
+//        outtake = new Outtake();
 
     }
 }
