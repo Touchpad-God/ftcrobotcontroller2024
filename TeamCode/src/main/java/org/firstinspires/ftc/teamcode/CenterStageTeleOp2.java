@@ -45,8 +45,8 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            x = -gamepad1.left_stick_x;
-            y = gamepad1.left_stick_y;
+            x = gamepad1.left_stick_x;
+            y = -gamepad1.left_stick_y;
             rot = gamepad1.right_stick_x;
 
             if (gamepad1.a && !wasGamepadAPressed) {

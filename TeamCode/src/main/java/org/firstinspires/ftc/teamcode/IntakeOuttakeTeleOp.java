@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -12,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-
+@Config
 public class IntakeOuttakeTeleOp {
     // intake hardware components
     protected DcMotor intakeIntake;
@@ -22,13 +23,13 @@ public class IntakeOuttakeTeleOp {
     protected RevColorSensorV3 color2;
     protected DigitalChannel beam;
 
-    // outtake hardware components
+    // outtake/transfer hardware components
     protected DcMotor outtakeMotor1;
     protected DcMotor outtakeMotor2;
-    protected Servo claw1;
-    protected Servo claw2;
-    protected Servo differential1;
-    protected Servo differential2;
+    protected Servo clawLeft;
+    protected Servo clawRight;
+    protected Servo differentialLeft;
+    protected Servo differentialRight;
     protected Servo horizontalSlideServo;
 
     protected Telemetry telemetry;
@@ -49,7 +50,7 @@ public class IntakeOuttakeTeleOp {
     public int beambreakDetections = 0;
     public boolean beambreakPrev = true;
 
-    // outtake constants
+    // outtake/transfer constants
     double leftStowed = 0.6683;
     double rightStowed = 0.2483;
     double left0 = 0.5217;
@@ -68,11 +69,12 @@ public class IntakeOuttakeTeleOp {
     double clawEngagedRight = 0.4328;
     double horizontalClosed = 0.1406;
     double horizontalOpen = 0.6844;
+    int outtakeOffset = 78;
 
     // pid for outtake motors
-    public static double outtakekP = 10.0;
-    public static double outtakekI = 3.0;
-    public static double outtakekD = 0.0;
+    public static double outtakekP = 0.022;
+    public static double outtakekI = 0.00000;
+    public static double outtakekD = 0.000018;
     public static double outtakeMAX_I = 1.0;
     public static double outtakeMIN_I = -1.0;
 
@@ -82,10 +84,12 @@ public class IntakeOuttakeTeleOp {
 
     // state machine initialization
     public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE}
-    public enum OuttakeState {TRANSFERRING, READY, RETURN, POS1, POS2, POS3, DROPPED, IDLE}
+    public enum OuttakeState {READY, RETURN, POS1, POS2, POS3, DROPPED, IDLE}
+    public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
     public IntakeState intakeState = IntakeState.IDLE;
     public OuttakeState outtakeState = OuttakeState.IDLE;
-    public Outtake outtake = new Outtake();
+    public TransferState transferState = TransferState.IDLE;
+    public int outtakeTicks = 0;
 
 
     // initialize intake and outtake, reset all hardware
@@ -104,39 +108,54 @@ public class IntakeOuttakeTeleOp {
         // outtake
         outtakeMotor1 = hardwareMap.get(DcMotor.class, "liftR");
         outtakeMotor2 = hardwareMap.get(DcMotor.class, "liftL");
-        claw1 = hardwareMap.get(Servo.class, "clawL");
-        claw2 = hardwareMap.get(Servo.class, "clawR");
-        differential1 = hardwareMap.get(Servo.class, "armL");
-        differential2 = hardwareMap.get(Servo.class, "armR");
+        clawLeft = hardwareMap.get(Servo.class, "clawL");
+        clawRight = hardwareMap.get(Servo.class, "clawR");
+        differentialLeft = hardwareMap.get(Servo.class, "armL");
+        differentialRight = hardwareMap.get(Servo.class, "armR");
         horizontalSlideServo = hardwareMap.get(Servo.class, "horizontal");
 
         outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        claw1.setPosition(1);
-        claw2.setPosition(1);
-        differential1.setPosition(1);
-        differential2.setPosition(1);
+        outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        clawLeft.setPosition(clawClosedLeft);
+        clawRight.setPosition(clawClosedRight);
+        differentialLeft.setPosition(leftStowed);
+        differentialRight.setPosition(rightStowed);
         horizontalSlideServo.setPosition(horizontalClosed);
 
     }
 
     public void update(Gamepad gamepad1, Gamepad gamepad2, double currTime) {
+        sensors();
         if (locationPixel != 5 && gamepad1.right_trigger > 0.1) {
             if (intakeState == IntakeState.IDLE) {
                 intakeState = IntakeState.INTAKING;
             }
+        } else if (gamepad1.right_trigger < 0.1) {
+            intakeState = IntakeState.BOTHCOLOR;
         }
-        intake();
+        if (gamepad1.y && (intakeState == IntakeState.BOTHCOLOR || intakeState == IntakeState.IDLE)) {
+            transferState = TransferState.MOTORS;
+        }
+        if (gamepad1.x && outtakeState == OuttakeState.READY) {
+            outtakeState = OuttakeState.DROPPED;
+        }
+
+
+        transfer(currTime);
+        intake(currTime);
         outtake(currTime);
     }
 
-    public void intake() {
+    public void intake(double currTime) {
         switch(intakeState) {
             case IDLE:
                 break;
             case INTAKING:
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
+
                 if (!beam.getState() && beambreakPrev) {
                     beambreakDetections++;
                 }
@@ -146,7 +165,6 @@ public class IntakeOuttakeTeleOp {
                 beambreakPrev = beam.getState();
                 break;
             case BEAMNOCOLOR:
-                sensors();
                 if (pixel1 != null && pixel2 != null) {
                     intakeState = IntakeState.BOTHCOLOR;
                     intakeIntake.setPower(-intakePower);
@@ -158,21 +176,53 @@ public class IntakeOuttakeTeleOp {
                 intakeIntake.setPower(0);
                 intakeTransfer.setPower(0);
                 intakeState = IntakeState.IDLE;
-                outtakeState = OuttakeState.TRANSFERRING;
+                beambreakDetections = 0;
                 break;
 
 
         }
     }
 
+    public void transfer(double currTime) {
+        if (!(intakeState == IntakeState.IDLE)) {
+            intakeState = IntakeState.IDLE;
+        }
+        switch (transferState) {
+            case IDLE:
+                break;
+            case MOTORS:
+                outtakeTicks = -5;
+                clawLeft.setPosition(clawEngagedLeft);
+                clawRight.setPosition(clawEngagedRight);
+                if (outtakeMotor1.getCurrentPosition() > 2 && outtakeMotor2.getCurrentPosition() < -2) {
+                    transferState = TransferState.ON;
+                }
+                break;
+            case ON:
+                outtakeTicks = 130;
+                break;
+            case OUT:
+                outtakeState = OuttakeState.READY;
+                transferState = TransferState.RETRACT;
+                break;
+            case RETRACT:
+                if (outtakeState == OuttakeState.IDLE) {
+                    // do stuff
+                }
+                break;
+
+        }
+        runTo(outtakeTicks, currTime);
+
+    }
+
     public void outtake(double currTime) {
         switch (outtakeState) {
             case IDLE:
                 break;
-            case TRANSFERRING:
-                break;
             case READY:
-                break;
+                differentialLeft.setPosition(left0);
+                differentialRight.setPosition(right0);
             case RETURN:
                 break;
             case POS1:
@@ -182,6 +232,8 @@ public class IntakeOuttakeTeleOp {
             case POS3:
                 break;
             case DROPPED:
+                clawLeft.setPosition(clawClosedLeft);
+                clawRight.setPosition(clawClosedRight);
         }
 
     }
@@ -230,6 +282,10 @@ public class IntakeOuttakeTeleOp {
 //        telemetry.update();
     }
 
+    public void setPosition(int outtakeNumber, double currTime) {
+        runTo(Math.multiplyExact(outtakeNumber, outtakeOffset)+192, currTime);
+    }
+
     public void runTo(int ticks, double currTime) {
         int error = outtakeMotor2.getCurrentPosition() - ticks;
         if (outtakeprevTime == 0.0) {
@@ -241,8 +297,8 @@ public class IntakeOuttakeTeleOp {
         outtakei += outtakekI * error * (currTime - outtakeprevTime);
         double d = outtakekD * (error - outtakeprevError) / (currTime - outtakeprevTime);
 
-        outtakeMotor1.setPower(-(p + outtakei + d));
-        outtakeMotor2.setPower(p + outtakei + d);
+        outtakeMotor1.setPower(p + outtakei + d);
+        outtakeMotor2.setPower(-(p + outtakei + d));
 
         outtakeprevTime = currTime;
         outtakeprevError = error;
