@@ -1,15 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import static com.sun.tools.doclint.Entity.not;
-
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-
-import com.qualcomm.robotcore.hardware.*;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 @TeleOp
@@ -46,7 +37,7 @@ public class CenterStageTeleOp extends Hardware{
                 droneServo.setPosition(dummyValueDroneLauncherLaunch);
             }
             else {
-                droneServo.setPosition(dummyValueDroneLauncherNot);
+                droneServo.setPosition(droneLauncherNot);
             }
             wasGamepad2Apressed = true;
         } else if (gamepad1.right_trigger == 0) {

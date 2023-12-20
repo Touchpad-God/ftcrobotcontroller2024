@@ -4,7 +4,6 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,15 +12,28 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+
 public class IntakeOuttakeTeleOp {
+    // intake hardware components
     protected DcMotor intakeIntake;
     protected DcMotor intakeTransfer;
     protected Servo intakeServo;
     protected RevColorSensorV3 color1;
     protected RevColorSensorV3 color2;
     protected DigitalChannel beam;
+
+    // outtake hardware components
+    protected DcMotor outtakeMotor1;
+    protected DcMotor outtakeMotor2;
+    protected Servo claw1;
+    protected Servo claw2;
+    protected Servo differential1;
+    protected Servo differential2;
+    protected Servo horizontalSlideServo;
+
     protected Telemetry telemetry;
 
+    // intake constants
     double intakeStowed = 0.8000;
     double intakePos1 = 0.4150;
     double intakePos2 = 0.4267;
@@ -34,12 +46,51 @@ public class IntakeOuttakeTeleOp {
     public static double transferPower = 1.0;
     public String pixel1 = null;
     public String pixel2 = null;
-    public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE}
-    public IntakeState intakeState = IntakeState.IDLE;
     public int beambreakDetections = 0;
     public boolean beambreakPrev = true;
 
+    // outtake constants
+    double leftStowed = 0.6683;
+    double rightStowed = 0.2483;
+    double left0 = 0.5217;
+    double right0 = 0.79;
+    double left60 = 0.3228;
+    double right60 = 0.6067;
+    double left120 = 0.4178;
+    double right120 = 0.1267;
+    double left180 = 0;
+    double right180 = 0.245;
+    int[] armValues = {1, 2, 3, 4, 5};
+    double[] rotPositions = {0.5217, 0.79, 0.3228, 0.6067, 0.4178, 0.1267};
+    double clawClosedLeft = 0.45;
+    double clawClosedRight = 0.5456;
+    double clawEngagedLeft = 0.563;
+    double clawEngagedRight = 0.4328;
+    double horizontalClosed = 0.1406;
+    double horizontalOpen = 0.6844;
+
+    // pid for outtake motors
+    public static double outtakekP = 10.0;
+    public static double outtakekI = 3.0;
+    public static double outtakekD = 0.0;
+    public static double outtakeMAX_I = 1.0;
+    public static double outtakeMIN_I = -1.0;
+
+    private double outtakei = 0.0;
+    private double outtakeprevTime = 0.0;
+    private double outtakeprevError = 0.0;
+
+    // state machine initialization
+    public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE}
+    public enum OuttakeState {TRANSFERRING, READY, RETURN, POS1, POS2, POS3, DROPPED, IDLE}
+    public IntakeState intakeState = IntakeState.IDLE;
+    public OuttakeState outtakeState = OuttakeState.IDLE;
+    public Outtake outtake = new Outtake();
+
+
+    // initialize intake and outtake, reset all hardware
     public IntakeOuttakeTeleOp(HardwareMap hardwareMap) {
+        // intake
         intakeIntake = hardwareMap.get(DcMotor.class, "intake");
         intakeTransfer = hardwareMap.get(DcMotor.class, "transfer");
         intakeServo = hardwareMap.get(Servo.class, "intakeLift");
@@ -47,18 +98,36 @@ public class IntakeOuttakeTeleOp {
         color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
         beam = hardwareMap.get(DigitalChannel.class, "beam");
 
-        intakeIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeIntake.setDirection(DcMotor.Direction.REVERSE);
         intakeServo.setPosition(intakeStowed);
+
+        // outtake
+        outtakeMotor1 = hardwareMap.get(DcMotor.class, "liftR");
+        outtakeMotor2 = hardwareMap.get(DcMotor.class, "liftL");
+        claw1 = hardwareMap.get(Servo.class, "clawL");
+        claw2 = hardwareMap.get(Servo.class, "clawR");
+        differential1 = hardwareMap.get(Servo.class, "armL");
+        differential2 = hardwareMap.get(Servo.class, "armR");
+        horizontalSlideServo = hardwareMap.get(Servo.class, "horizontal");
+
+        outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        claw1.setPosition(1);
+        claw2.setPosition(1);
+        differential1.setPosition(1);
+        differential2.setPosition(1);
+        horizontalSlideServo.setPosition(horizontalClosed);
 
     }
 
-    public void update(Gamepad gamepad1) {
+    public void update(Gamepad gamepad1, Gamepad gamepad2, double currTime) {
         if (locationPixel != 5 && gamepad1.right_trigger > 0.1) {
             if (intakeState == IntakeState.IDLE) {
                 intakeState = IntakeState.INTAKING;
             }
         }
         intake();
+        outtake(currTime);
     }
 
     public void intake() {
@@ -89,10 +158,32 @@ public class IntakeOuttakeTeleOp {
                 intakeIntake.setPower(0);
                 intakeTransfer.setPower(0);
                 intakeState = IntakeState.IDLE;
+                outtakeState = OuttakeState.TRANSFERRING;
                 break;
 
 
         }
+    }
+
+    public void outtake(double currTime) {
+        switch (outtakeState) {
+            case IDLE:
+                break;
+            case TRANSFERRING:
+                break;
+            case READY:
+                break;
+            case RETURN:
+                break;
+            case POS1:
+                break;
+            case POS2:
+                break;
+            case POS3:
+                break;
+            case DROPPED:
+        }
+
     }
 
     public void sensors() {
@@ -139,5 +230,23 @@ public class IntakeOuttakeTeleOp {
 //        telemetry.update();
     }
 
+    public void runTo(int ticks, double currTime) {
+        int error = outtakeMotor2.getCurrentPosition() - ticks;
+        if (outtakeprevTime == 0.0) {
+            outtakeprevTime = currTime;
+            outtakeprevError = error;
+        }
+
+        double p = outtakekP * error;
+        outtakei += outtakekI * error * (currTime - outtakeprevTime);
+        double d = outtakekD * (error - outtakeprevError) / (currTime - outtakeprevTime);
+
+        outtakeMotor1.setPower(-(p + outtakei + d));
+        outtakeMotor2.setPower(p + outtakei + d);
+
+        outtakeprevTime = currTime;
+        outtakeprevError = error;
+
+    }
 
 }

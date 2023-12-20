@@ -85,7 +85,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
             intakeOuttake.intakeServo.setPosition(intakeOuttake.intakePositions[intakeOuttake.locationPixel]);
 
-            intakeOuttake.update(gamepad1);
+            intakeOuttake.update(gamepad1, gamepad2, getRuntime());
 
 
         }

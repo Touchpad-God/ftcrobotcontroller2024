@@ -1,17 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class Hardware extends OpMode {
     protected DcMotor motorLf;
@@ -60,24 +56,24 @@ public class Hardware extends OpMode {
     int locationPixel = 5;
     boolean dpadPressedLast = false;
     boolean isSecondPixelIn = false;
-    double dummyValueLeftStowed = 0.6683;
-    double dummyValueRightStowed = 0.2483;
-    double dummyValueLeft0 = 0.5217;
-    double dummyValueRight0 = 0.79;
-    double dummyValueLeft60 = 0.3228;
-    double dummyValueRight60 = 0.6067;
-    double dummyValueLeft120 = 0.4178;
-    double dummyValueRight120 = 0.1267;
-    double dummyValueLeft180 = 0;
+    double leftStowed = 0.6683;
+    double rightStowed = 0.2483;
+    double left0 = 0.5217;
+    double right0 = 0.79;
+    double left60 = 0.3228;
+    double right60 = 0.6067;
+    double lLeft120 = 0.4178;
+    double right120 = 0.1267;
+    double left180 = 0;
     int hangingState = 0;
 
     double dummyValueRight180 = 0.245;
     int[] armValues = {1, 2, 3, 4, 5};
     boolean isDpadPressed = false;
     int IndexPosition = 0;
-    double dummyValueClawOpenLeft = 0.563;
-    double dummyValueClawOpenRight = 0.4328;
-    double dummyValueDroneLauncherNot = 0;
+    double clawOpenLeft = 0.563;
+    double clawOpenRight = 0.4328;
+    double droneLauncherNot = 0;
     boolean droneServoLaunched = false;
     double dummyValueDroneLauncherLaunch = 1;
     boolean gamepad1x = false;
@@ -85,10 +81,10 @@ public class Hardware extends OpMode {
     Outtake outtake;
     Intake intake;
     IntakeOuttake intakeOuttake;
-    double dummyValueClawClosedLeft = 0.45; //nolongerdummy
-    double dummyValueClawClosedRight = 0.5456; //nolongerdummy
-    double dummyValueHorizontalClosed = 0.1406; //nolongerdummy
-    double dummyValueHorizontalOpen = 0.6844; //nolongerdummy
+    double clawClosedLeft = 0.45; //nolongerdummy
+    double clawClosedRight = 0.5456; //nolongerdummy
+    double horizontalClosed = 0.1406; //nolongerdummy
+    double horizontalOpen = 0.6844; //nolongerdummy
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     public static double intakePower = 1.0;
     public static double transferPower = 1.0;
