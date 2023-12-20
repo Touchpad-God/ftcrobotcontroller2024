@@ -30,10 +30,12 @@ public class RunToTest extends OpMode {
     public static double kD = 0.0;
     public static double MAX_I = 1.0;
     public static double MIN_I = -1.0;
+    public static int target = 0;
 
     private double i = 0.0;
     private double prevTime = 0.0;
     private double prevError = 0.0;
+
 
     @Override
     public void init() {
@@ -50,7 +52,7 @@ public class RunToTest extends OpMode {
 
         telemetry.put("x", outtakeMotor1.getCurrentPosition());
         telemetry.put("y", 100);
-        runTo(100);
+        runTo(target);
         dash.sendTelemetryPacket(telemetry);
     }
 

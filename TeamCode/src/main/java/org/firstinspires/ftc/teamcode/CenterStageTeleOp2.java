@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @TeleOp
 public class CenterStageTeleOp2 extends LinearOpMode {
     protected DcMotor motorLf;
@@ -13,7 +15,6 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     protected DcMotor motorRb;
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
-
     double tankPosL = 0.8589;
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
@@ -45,6 +46,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            telemetry.addData("Outtake ticks", intakeOuttake.outtakeTicks);
             x = gamepad1.left_stick_x;
             y = -gamepad1.left_stick_y;
             rot = gamepad1.right_stick_x;
@@ -85,7 +87,8 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
             intakeOuttake.intakeServo.setPosition(intakeOuttake.intakePositions[intakeOuttake.locationPixel]);
 
-            intakeOuttake.update(gamepad1, gamepad2, getRuntime());
+            intakeOuttake.update(gamepad1, gamepad2, telemetry, getRuntime());
+            telemetry.update();
 
 
         }

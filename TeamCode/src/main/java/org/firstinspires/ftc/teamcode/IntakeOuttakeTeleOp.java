@@ -32,8 +32,6 @@ public class IntakeOuttakeTeleOp {
     protected Servo differentialRight;
     protected Servo horizontalSlideServo;
 
-    protected Telemetry telemetry;
-
     // intake constants
     double intakeStowed = 0.8000;
     double intakePos1 = 0.4150;
@@ -72,9 +70,9 @@ public class IntakeOuttakeTeleOp {
     int outtakeOffset = 78;
 
     // pid for outtake motors
-    public static double outtakekP = 0.022;
+    public static double outtakekP = 0.03;
     public static double outtakekI = 0.00000;
-    public static double outtakekD = 0.000018;
+    public static double outtakekD = 0.0008;
     public static double outtakeMAX_I = 1.0;
     public static double outtakeMIN_I = -1.0;
 
@@ -126,7 +124,7 @@ public class IntakeOuttakeTeleOp {
 
     }
 
-    public void update(Gamepad gamepad1, Gamepad gamepad2, double currTime) {
+    public void update(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, double currTime) {
         sensors();
         if (locationPixel != 5 && gamepad1.right_trigger > 0.1) {
             if (intakeState == IntakeState.IDLE) {
@@ -146,6 +144,7 @@ public class IntakeOuttakeTeleOp {
         transfer(currTime);
         intake(currTime);
         outtake(currTime);
+        runTo(outtakeTicks, currTime);
     }
 
     public void intake(double currTime) {
@@ -153,6 +152,7 @@ public class IntakeOuttakeTeleOp {
             case IDLE:
                 break;
             case INTAKING:
+                outtakeTicks = 25;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
 
@@ -184,7 +184,7 @@ public class IntakeOuttakeTeleOp {
     }
 
     public void transfer(double currTime) {
-        if (!(intakeState == IntakeState.IDLE)) {
+        if (!(transferState == TransferState.IDLE) && !(intakeState == IntakeState.IDLE)) {
             intakeState = IntakeState.IDLE;
         }
         switch (transferState) {
@@ -194,12 +194,15 @@ public class IntakeOuttakeTeleOp {
                 outtakeTicks = -5;
                 clawLeft.setPosition(clawEngagedLeft);
                 clawRight.setPosition(clawEngagedRight);
-                if (outtakeMotor1.getCurrentPosition() > 2 && outtakeMotor2.getCurrentPosition() < -2) {
+                if (outtakeMotor1.getCurrentPosition() < -2 && outtakeMotor2.getCurrentPosition() > 2) {
                     transferState = TransferState.ON;
                 }
                 break;
             case ON:
-                outtakeTicks = 130;
+                outtakeTicks = 200;
+                if (outtakeMotor1.getCurrentPosition() < -190 && outtakeMotor2.getCurrentPosition() > 190) {
+                    transferState = TransferState.OUT;
+                }
                 break;
             case OUT:
                 outtakeState = OuttakeState.READY;
@@ -212,7 +215,6 @@ public class IntakeOuttakeTeleOp {
                 break;
 
         }
-        runTo(outtakeTicks, currTime);
 
     }
 
@@ -223,6 +225,7 @@ public class IntakeOuttakeTeleOp {
             case READY:
                 differentialLeft.setPosition(left0);
                 differentialRight.setPosition(right0);
+                break;
             case RETURN:
                 break;
             case POS1:
@@ -234,6 +237,7 @@ public class IntakeOuttakeTeleOp {
             case DROPPED:
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
+                break;
         }
 
     }
