@@ -7,6 +7,35 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+/*
+TODO:
+
+For teleop:
+Very important:
+ - Outtake level selection
+ - Outtake pivot selection
+ - Outtake extend when lifting, not when transfering
+ - Outtake horizontal extension
+ - Automatic transfer when color sensors detect pixels
+ - White pixel detection
+ - Drivetrain slow mode
+ - Ejecting
+ - Hanging
+ - Drone
+
+Fairly important:
+ - Driver-centric driving (depends on who's driver 1)
+ - LED integration wtih color sensors
+ - Lift intake when not intaking
+
+
+Nice to have:
+ - Live localization
+ - Cubic drivetrain controls
+ - Independant outtake claw controls
+
+*/
+
 @TeleOp
 public class CenterStageTeleOp2 extends LinearOpMode {
     protected DcMotor motorLf;
