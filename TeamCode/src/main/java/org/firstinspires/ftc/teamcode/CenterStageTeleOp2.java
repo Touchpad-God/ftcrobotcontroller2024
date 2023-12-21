@@ -13,6 +13,7 @@ TODO:
 For teleop:
 Very important:
  - Outtake level selection
+ - Outtake level memory
  - Outtake pivot selection
  - Outtake extend when lifting, not when transfering
  - Outtake horizontal extension
