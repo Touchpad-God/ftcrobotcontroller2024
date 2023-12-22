@@ -13,6 +13,38 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+/*
+
+TODO:
+
+For teleop:
+Very important:
+ - Outtake level selection (done)
+ - Outtake level memory (done)
+ - Outtake pivot selection (done)
+ - Outtake extend when lifting, not when transfering (done)
+ - Outtake horizontal extension (done)
+ - Automatic transfer when color sensors detect pixels (done)
+ - White pixel detection (done)
+ - Drivetrain slow mode (done)
+ - Ejecting
+ - Hanging
+ - Drone
+ - Beam break sensor threading (done)
+
+Fairly important:
+ - Driver-centric driving (depends on who's driver 1)
+ - LED integration wtih color sensors
+ - Lift intake when not intaking
+
+
+Nice to have:
+ - Live localization
+ - Cubic drivetrain controls (done)
+ - Independant outtake claw controls
+
+*/
+
 @Config
 public class IntakeOuttakeTeleOp {
     // intake hardware components
@@ -21,7 +53,7 @@ public class IntakeOuttakeTeleOp {
     protected Servo intakeServo;
     protected RevColorSensorV3 color1;
     protected RevColorSensorV3 color2;
-    protected DigitalChannel beam;
+    protected BeamBreak beam;
 
     // outtake/transfer hardware components
     protected DcMotor outtakeMotor1;
@@ -108,7 +140,7 @@ public class IntakeOuttakeTeleOp {
         intakeServo = hardwareMap.get(Servo.class, "intakeLift");
         color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
         color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
-        beam = hardwareMap.get(DigitalChannel.class, "beam");
+        beam = new BeamBreak();
 
         intakeIntake.setDirection(DcMotor.Direction.REVERSE);
         intakeServo.setPosition(intakeStowed);
@@ -134,6 +166,9 @@ public class IntakeOuttakeTeleOp {
 
         timer.markReady();
 
+        Thread beamThread = new Thread(beam);
+        beamThread.start();
+
     }
 
     public void update(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, double currTime) {
@@ -155,7 +190,7 @@ public class IntakeOuttakeTeleOp {
         if ((gamepad1.x && !gamepad1Prev.x) && outtakeState == OuttakeState.READY) {
             outtakeState = OuttakeState.DROPPED;
         }
-        if (gamepad2.dpad_up && !gamepad2Prev.dpad_up) {
+        if (gamepad2.right_bumper && !gamepad2Prev.right_bumper) {
             outtakePos++;
             if (outtakePos > OUTTAKEMAX) {
                 outtakePos--;
@@ -163,7 +198,7 @@ public class IntakeOuttakeTeleOp {
             setPosition(outtakePos);
             outtakeState = OuttakeState.READY;
         }
-        else if (gamepad2.dpad_down && !gamepad2Prev.dpad_down) {
+        else if (gamepad2.left_bumper && !gamepad2Prev.left_bumper) {
             outtakePos--;
             if (outtakePos < 0) {
                 outtakePos = 0;
