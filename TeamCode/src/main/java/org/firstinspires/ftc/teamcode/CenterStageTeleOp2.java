@@ -12,17 +12,18 @@ TODO:
 
 For teleop:
 Very important:
- - Outtake level selection
- - Outtake level memory
- - Outtake pivot selection
- - Outtake extend when lifting, not when transfering
- - Outtake horizontal extension
- - Automatic transfer when color sensors detect pixels
- - White pixel detection
+ - Outtake level selection (done)
+ - Outtake level memory (done)
+ - Outtake pivot selection (done)
+ - Outtake extend when lifting, not when transfering (done)
+ - Outtake horizontal extension (done)
+ - Automatic transfer when color sensors detect pixels (done)
+ - White pixel detection (done)
  - Drivetrain slow mode
  - Ejecting
  - Hanging
  - Drone
+ - Beam break sensor threading
 
 Fairly important:
  - Driver-centric driving (depends on who's driver 1)
