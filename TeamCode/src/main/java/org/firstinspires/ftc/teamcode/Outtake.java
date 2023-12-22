@@ -22,7 +22,7 @@ public class Outtake extends Hardware {
     private double prevError = 0.0;
 
 
-    public OuttakeState outtakeState =  OuttakeState.HOME;
+    public OuttakeState outtakeState = OuttakeState.HOME;
 
     @Override
     public void init() {
