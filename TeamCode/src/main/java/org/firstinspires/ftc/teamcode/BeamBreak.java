@@ -3,19 +3,37 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+// TODO: Fix this damn thing. I have no idea why it doesn't work.
+
 public class BeamBreak implements Runnable {
-    private volatile boolean status = False;
+    private volatile boolean status = false;
+    private boolean prevStatus = false;
     private DigitalChannel beam;
     private boolean running;
+    private volatile int detections;
 
     public BeamBreak(HardwareMap hardwareMap) {
         this.beam = hardwareMap.get(DigitalChannel.class, "beam");
+        this.detections = 0;
     }
 
+    @Override
     public void run() {
         while (running) {
             this.status = beam.getState();
+            if (this.status && !this.prevStatus) {
+                this.detections++;
+            }
+            this.prevStatus = this.status;
         }
+    }
+
+    public int getDetections() {
+        return this.detections;
+    }
+
+    public void resetDetections() {
+        this.detections = 0;
     }
 
     public boolean getState() {

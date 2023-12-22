@@ -78,7 +78,6 @@ public class IntakeOuttakeTeleOp {
     public String pixel1 = null;
     public String pixel2 = null;
     public int beambreakDetections = 0;
-    public boolean beambreakPrev = true;
 
     // outtake/transfer constants
     double leftStowed = 0.6683;
@@ -87,11 +86,11 @@ public class IntakeOuttakeTeleOp {
     double right0 = 0.79;
     double left60 = 0.3228;
     double right60 = 0.6067;
-    double left120 = 0.4178;
-    double right120 = 0.1267;
+    double left120 = 0.1267;
+    double right120 = 0.4178;
     double left180 = 0;
     double right180 = 0.245;
-    int[] armValues = {1, 2, 3, 4, 5};
+    double[][] pivotPositions = {{left0, right0}, {left60, right60}, {left120, right120}, {left180, right180}};
     double[] rotPositions = {0.5217, 0.79, 0.3228, 0.6067, 0.4178, 0.1267};
     double clawClosedLeft = 0.45;
     double clawClosedRight = 0.5456;
@@ -116,14 +115,14 @@ public class IntakeOuttakeTeleOp {
 
     // state machine initialization
     public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP}
-    public enum OuttakeState {READY, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, DROPPED, IDLE}
+    public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, DROPPED, IDLE}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
     public IntakeState intakeState = IntakeState.IDLE;
     public OuttakeState outtakeState = OuttakeState.IDLE;
     public TransferState transferState = TransferState.IDLE;
     public int outtakeTicks = 0;
 
-    public int clawRotaton = 0;
+    public int clawRotation = 0;
 
     private OuttakeState[] clawRotStates = new OuttakeState[] {OuttakeState.POS0, OuttakeState.POS1, OuttakeState.POS2, OuttakeState.POS3};
 
@@ -140,7 +139,7 @@ public class IntakeOuttakeTeleOp {
         intakeServo = hardwareMap.get(Servo.class, "intakeLift");
         color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
         color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
-        beam = new BeamBreak();
+        beam = new BeamBreak(hardwareMap);
 
         intakeIntake.setDirection(DcMotor.Direction.REVERSE);
         intakeServo.setPosition(intakeStowed);
@@ -177,17 +176,17 @@ public class IntakeOuttakeTeleOp {
             gamepad2Prev = gamepad2; // this is a hack. hopefully we can do this in a better way;
         }
         sensors();
-        if (locationPixel != 5 && gamepad1.right_trigger > 0.1) {
+        if (locationPixel != 5 && gamepad2.right_trigger > 0.1) {
             if (intakeState == IntakeState.IDLE) {
                 intakeState = IntakeState.INTAKING;
             }
-        } else if (gamepad1.right_trigger < 0.1 && !(gamepad1Prev.right_trigger < 0.1)) {
+        } else if (gamepad2.right_trigger < 0.1 && !(gamepad2Prev.right_trigger < 0.1)) {
             intakeState = IntakeState.STOP;
         }
-        if (((gamepad1.y && !gamepad1Prev.y) || (pixel1 != null && pixel2 != null && beambreakDetections > 0)) && intakeState == IntakeState.IDLE) {
+        if ((gamepad2.y && !gamepad2Prev.y) || (pixel1 != null && pixel2 != null && beam.getDetections() > 0) && intakeState == IntakeState.IDLE) {
             transferState = TransferState.MOTORS;
         }
-        if ((gamepad1.x && !gamepad1Prev.x) && outtakeState == OuttakeState.READY) {
+        if ((gamepad2.x && !gamepad2Prev.x) && outtakeState == OuttakeState.RAISEDWAITING) {
             outtakeState = OuttakeState.DROPPED;
         }
         if (gamepad2.right_bumper && !gamepad2Prev.right_bumper) {
@@ -205,21 +204,21 @@ public class IntakeOuttakeTeleOp {
             }
             setPosition(outtakePos);
         }
-        if (outtakeState = OuttakeState.READY && outtakeRaised()) {
-            if (gamead2.dpad_left && !gamepad2Prev.dpad_left) {
-                clawRotaton--;
-                if (clawRotaton < 0) {
-                    clawRotaton = 0;
+        if (outtakeState == OuttakeState.RAISEDWAITING && outtakeRaised()) {
+            if (gamepad2.dpad_left && !gamepad2Prev.dpad_left) {
+                clawRotation--;
+                if (clawRotation < 0) {
+                    clawRotation = 0;
                 }
-                outtakeState = clawRotStates[clawRotation];
             }
             else if (gamepad2.dpad_right && !gamepad2Prev.dpad_right) {
                 clawRotation++;
                 if (clawRotation > 3) {
                     clawRotation = 3;
                 }
-                outtakeState = clawRotStates[clawRotation];
             }
+            differentialLeft.setPosition(pivotPositions[clawRotation][0]);
+            differentialRight.setPosition(pivotPositions[clawRotation][1]);
         }
 
         intake(currTime);
@@ -232,9 +231,12 @@ public class IntakeOuttakeTeleOp {
 
         telemetry.addData("Pixel 1", pixel1);
         telemetry.addData("Pixel 2", pixel2);
-        telemetry.addData("Beam break detections", beambreakDetections);
+        telemetry.addData("Beam break detections", beam.getDetections());
+        telemetry.addData("Beam break state", beam.getState());
         telemetry.addData("Outtake pixel index", outtakePos);
         telemetry.addData("Outtake target position", outtakeTicks);
+        telemetry.addData("Outtake current position", outtakeMotor2.getCurrentPosition());
+        telemetry.addData("Outtake claw pivot position", clawRotation);
         telemetry.addData("Timer ready", timer.finished());
         telemetry.addData("Intake state", intakeState);
         telemetry.addData("Transfer state", transferState);
@@ -254,13 +256,9 @@ public class IntakeOuttakeTeleOp {
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
 
-                if (!beam.getState() && beambreakPrev) {
-                    beambreakDetections++;
-                }
-                if (beambreakDetections >= 2) {
+                if (beam.getDetections() >= 2) {
                     intakeState = IntakeState.BEAMNOCOLOR;
                 }
-                beambreakPrev = beam.getState();
                 break;
             case BEAMNOCOLOR:
                 if (pixel1 != null && pixel2 != null) {
@@ -302,8 +300,8 @@ public class IntakeOuttakeTeleOp {
                     clawRight.setPosition(clawEngagedRight);
                     outtakeTicks = 0;
                     timer.markReady();
+                    beam.resetDetections();
                 }
-                beambreakDetections = 0;
                 break;
             case ON:
                 outtakeTicks = 200;
@@ -336,6 +334,9 @@ public class IntakeOuttakeTeleOp {
                 differentialLeft.setPosition(left0);
                 differentialRight.setPosition(right0);
                 horizontalSlideServo.setPosition(horizontalOpen);
+                outtakeState = OuttakeState.RAISEDWAITING;
+                break;
+            case RAISEDWAITING:
                 break;
             case RETRACT:
                 timer.start(300);
@@ -457,7 +458,7 @@ public class IntakeOuttakeTeleOp {
         outtakeMotor1.setPower(p + outtakei + d);
         outtakeMotor2.setPower(-(p + outtakei + d));
 
-        if (outtakeMotor2.getCurrentPosition() < 5 && ticks < 5){
+        if (outtakeMotor2.getCurrentPosition() < 7 && ticks < 7){
             outtakeMotor1.setPower(0);
             outtakeMotor2.setPower(0);
         }

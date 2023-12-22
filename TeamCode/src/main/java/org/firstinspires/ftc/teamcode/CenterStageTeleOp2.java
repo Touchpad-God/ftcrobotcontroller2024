@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 TODO moved to IntakeOuttakeTeleOp.java
 */
 
-@Config
 @TeleOp
 public class CenterStageTeleOp2 extends LinearOpMode {
     protected DcMotor motorLf;
@@ -27,7 +26,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     boolean tankMode = false;
     boolean wasGamepadAPressed = false;
     boolean dpadPressedLast = false;
-    boolean leftStickPressedLast = false;
+    boolean rightStickPressedLast = false;
 
     boolean slowMode = false;
 
@@ -92,11 +91,11 @@ public class CenterStageTeleOp2 extends LinearOpMode {
                 intakeOuttake.locationPixel--;
             }
 
-            if (gamepad1.left_stick_button && !leftStickPressedLast) {
+            if (gamepad1.right_stick_button && !rightStickPressedLast) {
                 slowMode = !slowMode;
             }
 
-            leftStickPressedLast = gamepad1.left_stick_button;
+            rightStickPressedLast = gamepad1.right_stick_button;
             dpadPressedLast = (gamepad1.dpad_down || gamepad1.dpad_up);
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
             intakeOuttake.intakeServo.setPosition(intakeOuttake.intakePositions[intakeOuttake.locationPixel]);
