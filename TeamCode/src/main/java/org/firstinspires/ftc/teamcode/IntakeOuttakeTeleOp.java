@@ -84,12 +84,16 @@ public class IntakeOuttakeTeleOp {
 
     // state machine initialization
     public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP}
-    public enum OuttakeState {READY, RETRACT, RETURN, DOWN, POS1, POS2, POS3, DROPPED, IDLE}
+    public enum OuttakeState {READY, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, DROPPED, IDLE}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
     public IntakeState intakeState = IntakeState.IDLE;
     public OuttakeState outtakeState = OuttakeState.IDLE;
     public TransferState transferState = TransferState.IDLE;
     public int outtakeTicks = 0;
+
+    public int clawRotaton = 0;
+
+    private OuttakeState[] clawRotStates = new OuttakeState[] {OuttakeState.POS0, OuttakeState.POS1, OuttakeState.POS2, OuttakeState.POS3};
 
     private final Timer timer = new Timer();
 
@@ -165,6 +169,22 @@ public class IntakeOuttakeTeleOp {
                 outtakePos = 0;
             }
             setPosition(outtakePos);
+        }
+        if (outtakeState = OuttakeState.READY && outtakeRaised()) {
+            if (gamead2.dpad_left && !gamepad2Prev.dpad_left) {
+                clawRotaton--;
+                if (clawRotaton < 0) {
+                    clawRotaton = 0;
+                }
+                outtakeState = clawRotStates[clawRotation];
+            }
+            else if (gamepad2.dpad_right && !gamepad2Prev.dpad_right) {
+                clawRotation++;
+                if (clawRotation > 3) {
+                    clawRotation = 3;
+                }
+                outtakeState = clawRotStates[clawRotation];
+            }
         }
 
         intake(currTime);
@@ -304,6 +324,11 @@ public class IntakeOuttakeTeleOp {
                 if (outtakeMotor2.getCurrentPosition() < 10) {
                     outtakeState = outtakeState.IDLE;
                 }
+                break;
+            case POS0:
+                differentialLeft.setPosition(left0);
+                differentialRight.setPosition(right0);
+                outtakeState = OuttakeState.IDLE;
                 break;
             case POS1:
                 differentialLeft.setPosition(left60);
