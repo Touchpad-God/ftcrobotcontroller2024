@@ -196,7 +196,8 @@ public class IntakeOuttakeTeleOp {
                 outtakePos--;
             }
             setPosition(outtakePos);
-            outtakeState = OuttakeState.READY;
+            if (transferState == TransferState.IDLE)
+                outtakeState = OuttakeState.READY;
         }
         else if (gamepad2.left_bumper && !gamepad2Prev.left_bumper) {
             outtakePos--;
@@ -204,6 +205,8 @@ public class IntakeOuttakeTeleOp {
                 outtakePos = 0;
             }
             setPosition(outtakePos);
+            if (transferState == TransferState.IDLE)
+                outtakeState = OuttakeState.READY;
         }
         if (outtakeState == OuttakeState.RAISEDWAITING && outtakeRaised()) {
             if (gamepad2.dpad_left && !gamepad2Prev.dpad_left) {
