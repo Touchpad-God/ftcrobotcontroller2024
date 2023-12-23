@@ -9,7 +9,7 @@ public class BeamBreak implements Runnable {
     private volatile boolean status = false;
     private boolean prevStatus = false;
     private DigitalChannel beam;
-    private boolean running;
+    private boolean running = true;
     private volatile int detections;
 
     public BeamBreak(HardwareMap hardwareMap) {
@@ -17,7 +17,6 @@ public class BeamBreak implements Runnable {
         this.detections = 0;
     }
 
-    @Override
     public void run() {
         while (running) {
             this.status = beam.getState();
