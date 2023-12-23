@@ -95,8 +95,8 @@ public class IntakeOuttakeTeleOp {
     double[] rotPositions = {0.5217, 0.79, 0.3228, 0.6067, 0.4178, 0.1267};
     double clawClosedLeft = 0.45;
     double clawClosedRight = 0.5456;
-    double clawEngagedLeft = 0.573;
-    double clawEngagedRight = 0.4228;
+    double clawEngagedLeft = 0.585;
+    double clawEngagedRight = 0.4128;
     double horizontalClosed = 0.1406;
     double horizontalOpen = 0.6844;
     int outtakeOffset = 78;
@@ -104,9 +104,9 @@ public class IntakeOuttakeTeleOp {
     final int OUTTAKEMAX = 20;
 
     // pid for outtake motors
-    public static double outtakekP = 0.03;
+    public static double outtakekP = 0.035;
     public static double outtakekI = 0.00000;
-    public static double outtakekD = 0.0008;
+    public static double outtakekD = 0.0009;
     public static double outtakeMAX_I = 1.0;
     public static double outtakeMIN_I = -1.0;
 
@@ -207,15 +207,15 @@ public class IntakeOuttakeTeleOp {
         }
         if (outtakeState == OuttakeState.RAISEDWAITING && outtakeRaised()) {
             if (gamepad2.dpad_left && !gamepad2Prev.dpad_left) {
-                clawRotation--;
-                if (clawRotation < 0) {
-                    clawRotation = 0;
-                }
-            }
-            else if (gamepad2.dpad_right && !gamepad2Prev.dpad_right) {
                 clawRotation++;
                 if (clawRotation > 3) {
                     clawRotation = 3;
+                }
+            }
+            else if (gamepad2.dpad_right && !gamepad2Prev.dpad_right) {
+                clawRotation--;
+                if (clawRotation < 0) {
+                    clawRotation = 0;
                 }
             }
             differentialLeft.setPosition(pivotPositions[clawRotation][0]);
@@ -359,7 +359,7 @@ public class IntakeOuttakeTeleOp {
             case DOWN:
                 outtakeTicks = 0;
                 if (outtakeMotor2.getCurrentPosition() < 10) {
-                    outtakeState = outtakeState.IDLE;
+                    outtakeState = OuttakeState.IDLE;
                 }
                 break;
             case POS0:

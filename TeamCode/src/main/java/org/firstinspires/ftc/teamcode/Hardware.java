@@ -34,8 +34,6 @@ public class Hardware extends OpMode {
     protected RevColorSensorV3 color2;
     protected DigitalChannel beam;
 
-    int position = 0;
-    int dpadPrev = 0;
     double drivetrainMult = 0.8;
     boolean TankMode = false;
     boolean wasGamepadAPressed = false;

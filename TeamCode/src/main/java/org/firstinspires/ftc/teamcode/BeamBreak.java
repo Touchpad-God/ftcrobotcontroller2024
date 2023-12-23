@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-// TODO: Fix this damn thing. I have no idea why it doesn't work.
+// TODO: Debounce this thing
 
 public class BeamBreak implements Runnable {
     private volatile boolean status = false;
