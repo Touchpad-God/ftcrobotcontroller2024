@@ -27,7 +27,8 @@ Very important:
  - Automatic transfer when color sensors detect pixels (done)
  - White pixel detection (done)
  - Drivetrain slow mode (done)
- - Ejecting
+ - Ejecting/autoejecting
+ - Beam break sensor denoising?
  - Hanging
  - Drone
  - Beam break sensor threading (done)

@@ -31,7 +31,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     boolean slowMode = false;
 
     public static double fast = 0.8;
-    public static double slow = 0.3;
+    public static double slow = 0.5;
 
     double x, y, rot;
     @Override
@@ -96,7 +96,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             }
 
             rightStickPressedLast = gamepad1.right_stick_button;
-            dpadPressedLast = (gamepad1.dpad_down || gamepad1.dpad_up);
+            dpadPressedLast = (gamepad2.dpad_down || gamepad2.dpad_up);
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
             intakeOuttake.intakeServo.setPosition(intakeOuttake.intakePositions[intakeOuttake.locationPixel]);
 
