@@ -32,6 +32,7 @@ Very important:
  - Hanging
  - Drone
  - Beam break sensor threading (done)
+ - Tune da outtake PID
 
 Fairly important:
  - Driver-centric driving (depends on who's driver 1)
