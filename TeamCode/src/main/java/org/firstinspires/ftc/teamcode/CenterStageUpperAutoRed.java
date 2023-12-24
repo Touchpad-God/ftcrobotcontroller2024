@@ -60,6 +60,9 @@ public class CenterStageUpperAutoRed extends LinearOpMode {
                     .addDisplacementMarker(() -> {
                         intakeOuttake.setCurrTime(getRuntime());
                         intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                            idle();
+                        }
                     }
 //                    .splineToConstantHeading(new Vector2d(48, 24), Math.toRadians(90))
 //                    .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180)
