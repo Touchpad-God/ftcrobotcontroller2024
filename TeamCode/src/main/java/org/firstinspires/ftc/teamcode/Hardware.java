@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
 import com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public abstract class Hardware extends OpMode {
+public class Hardware extends OpMode {
     protected DcMotor motorLf;
     protected DcMotor motorLb;
     protected DcMotor motorRf;
@@ -19,8 +17,6 @@ public abstract class Hardware extends OpMode {
     protected DcMotor intakeIntake;
     protected DcMotor intakeTransfer;
     protected Servo intakeServo;
-    protected Servo servo1;
-    protected Servo servo2;
     protected DcMotor outtakeMotor1;
     protected DcMotor outtakeMotor2;
     protected Servo outtakeAssociatedServo1;
@@ -31,10 +27,71 @@ public abstract class Hardware extends OpMode {
     protected Servo hangingRight;
     protected Servo droneServo;
     protected Servo hangingLeft;
+    protected RevBlinkinLedDriver led;
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
+    protected RevColorSensorV3  color1;
+    protected RevColorSensorV3 color2;
+    protected DigitalChannel beam;
 
+    double drivetrainMult = 0.8;
+    boolean TankMode = false;
+    boolean wasGamepadAPressed = false;
+    double tankPosL = 0.8589;
+    double tankPosR = 0.0478;
+    double mecanumPosL = 0.3022;
+    double mecanumPosR = 0.62;
+    double intakeStowed = 0.8000;
+    boolean wasGamepad2Apressed = false;
+    double intakePos1 = 0.4150;
+    double intakePos2 = 0.4267;
+    double intakePos3 = 0.4844;
+    double intakePos4 = 0.5350;
+    double intakePos5 = 0.580;
+    int outtakeNumber = 0;
+    boolean gamepad1dpadleft = false;
+    boolean gamepad1dpadright = false;
+    int locationPixel = 5;
+    boolean dpadPressedLast = false;
+    boolean isSecondPixelIn = false;
+    double leftStowed = 0.6683;
+    double rightStowed = 0.2483;
+    double left0 = 0.5217;
+    double right0 = 0.79;
+    double left60 = 0.3228;
+    double right60 = 0.6067;
+    double lLeft120 = 0.4178;
+    double right120 = 0.1267;
+    double left180 = 0;
+    int hangingState = 0;
 
+    double dummyValueRight180 = 0.245;
+    int[] armValues = {1, 2, 3, 4, 5};
+    boolean isDpadPressed = false;
+    int IndexPosition = 0;
+    double clawOpenLeft = 0.563;
+    double clawOpenRight = 0.4328;
+    double droneLauncherNot = 0;
+    boolean droneServoLaunched = false;
+    double dummyValueDroneLauncherLaunch = 1;
+    boolean gamepad1x = false;
+    boolean gamepad1y = false;
+    Outtake outtake;
+    Intake intake;
+    IntakeOuttake intakeOuttake;
+    double clawClosedLeft = 0.45; //nolongerdummy
+    double clawClosedRight = 0.5456; //nolongerdummy
+    double horizontalClosed = 0.1406; //nolongerdummy
+    double horizontalOpen = 0.6844; //nolongerdummy
+    double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
+    public static double intakePower = 1.0;
+    public static double transferPower = 1.0;
+    String pixel1 = null;
+    String pixel2 = null;
+    public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE}
+    public IntakeState intakeState = IntakeState.IDLE;
+    public int beambreakDetections = 0;
+    public boolean beambreakPrev = true;
 
     public IMU imu;
     public IMU.Parameters imuParameters;
@@ -44,8 +101,6 @@ public abstract class Hardware extends OpMode {
         motorLb = hardwareMap.get(DcMotor.class, "BL");
         motorRf = hardwareMap.get(DcMotor.class, "FR");
         motorRb = hardwareMap.get(DcMotor.class, "BR");
-//        servo1 = hardwareMap.get(Servo.class, "butterflyL");
-//        servo2 = hardwareMap.get(Servo.class, "butterflyR");
         intakeIntake = hardwareMap.get(DcMotor.class, "intake");
         intakeTransfer = hardwareMap.get(DcMotor.class, "transfer");
         intakeServo = hardwareMap.get(Servo.class, "intakeLift");
@@ -58,9 +113,13 @@ public abstract class Hardware extends OpMode {
         horizontalSlideServo = hardwareMap.get(Servo.class, "horizontal");
         hangingRight = hardwareMap.get(Servo.class, "hangR");
         droneServo = hardwareMap.get(Servo.class, "drone");
+        led = hardwareMap.get(RevBlinkinLedDriver.class, "led");
         hangingLeft = hardwareMap.get(Servo.class, "hangL");
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
+        color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
+        color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
+        beam = hardwareMap.get(DigitalChannel.class, "beam");
 
 
 
@@ -80,10 +139,8 @@ public abstract class Hardware extends OpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
         ));
-//        imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-//        imuParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        imuParameters.loggingEnabled = false;
         imu.initialize(imuParameters);
+        beam.setMode(DigitalChannel.Mode.INPUT);
     }
 
     @Override public void init_loop() {
