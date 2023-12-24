@@ -95,7 +95,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
             if (outtakePos > OUTTAKEMAX) {
                 outtakePos--;
             }
-            if (transferState == TransferState.IDLE)
+            if (outtakeState == OuttakeState.IDLE)
                 outtakeState = OuttakeState.READY;
         }
         else if (gamepad2.left_bumper && !gamepad2Prev.left_bumper) {
@@ -104,7 +104,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
             if (outtakePos < 0) {
                 outtakePos = 0;
             }
-            if (transferState == TransferState.IDLE)
+            if (outtakeState == OuttakeState.IDLE)
                 outtakeState = OuttakeState.READY;
         }
         if (outtakeState == OuttakeState.RAISEDWAITING && outtakeRaised()) {
@@ -122,6 +122,14 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
             }
             differentialLeft.setPosition(pivotPositions[clawRotation][0]);
             differentialRight.setPosition(pivotPositions[clawRotation][1]);
+        }
+        if (gamepad2.dpad_down && !gamepad2Prev.dpad_down) {
+            if (locationPixel != 0) locationPixel--;
+            intakeServo.setPosition(intakePositions[locationPixel]);
+        }
+        else if (gamepad2.dpad_up && !gamepad2Prev.dpad_up) {
+            if (locationPixel != 5) locationPixel++;
+            intakeServo.setPosition(intakePositions[locationPixel]);
         }
 
         if (clawRotation < 2) {

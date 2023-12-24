@@ -85,20 +85,12 @@ public class CenterStageTeleOp2 extends LinearOpMode {
                 motorRb.setPower((+y -rot) * drivetrainMult);
             }
 
-            if (gamepad2.dpad_up && intakeOuttake.locationPixel < 5 && !dpadPressedLast) {
-                intakeOuttake.locationPixel++;
-            } else if (gamepad2.dpad_down && intakeOuttake.locationPixel > 0 && !dpadPressedLast) {
-                intakeOuttake.locationPixel--;
-            }
-
             if (gamepad1.right_stick_button && !rightStickPressedLast) {
                 slowMode = !slowMode;
             }
 
             rightStickPressedLast = gamepad1.right_stick_button;
-            dpadPressedLast = (gamepad2.dpad_down || gamepad2.dpad_up);
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
-            intakeOuttake.intakeServo.setPosition(intakeOuttake.intakePositions[intakeOuttake.locationPixel]);
 
             intakeOuttake.update(gamepad1, gamepad2, telemetry, getRuntime());
             telemetry.update();

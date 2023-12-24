@@ -183,6 +183,7 @@ public class IntakeOuttake {
                 outtakeTicks = -5;
                 if (timer.finished()) {
                     transferState = TransferState.IDLE; // used to be TransferState.ON
+                    outtakeState = OuttakeState.IDLE;
                     clawLeft.setPosition(clawEngagedLeft);
                     clawRight.setPosition(clawEngagedRight);
                     outtakeTicks = 0;
