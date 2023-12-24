@@ -49,3 +49,5 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
         drive.followTrajectorySequence(traj.build());
     }
 }
+
+

@@ -8,27 +8,38 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 
+/*
+*
+* 1. create a separate thread to constantly call getRunTime() and pass into IntakeOuttake
+* 2.
+*
+* */
+
 @Autonomous
-public class CenterStageUpperAutoRed extends LinearOpMode {
+public class CenterStageUpperAutoRed extends LinearOpMode{
     public static final int IMU_DIFF = -90;
     TrajectorySequenceBuilder traj;
     int location;
+    static double currTime;
+    static IntakeOuttakeAuto intakeOuttake;
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-
         waitForStart();
 
-        IntakeOuttakeAuto intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
+        intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
         Thread inOutThread = new Thread(intakeOuttake);
+        Thread time = new Thread(new Time());
+        time.start();
         inOutThread.start();
         intakeOuttake.setCurrTime(getRuntime());
         intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         if (isStopRequested()) return;
 
-        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).forward(-21).build());
+        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).forward(-25).build());
 
         drive.setPoseEstimate(new Pose2d(36, 12, Math.toRadians(0)));
 
@@ -92,4 +103,19 @@ public class CenterStageUpperAutoRed extends LinearOpMode {
         drive.followTrajectorySequence(traj.build());
         intakeOuttake.stop();
     }
+
 }
+
+class Time implements Runnable {
+    public double nowTime, startTime;
+    public Time() {
+        this.startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public void run() {
+        nowTime = System.currentTimeMillis() - startTime;
+        IntakeOuttakeAuto.currTime = nowTime;
+    }
+}
+
