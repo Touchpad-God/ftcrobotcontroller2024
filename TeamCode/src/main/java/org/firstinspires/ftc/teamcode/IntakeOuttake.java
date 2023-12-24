@@ -45,6 +45,8 @@ public class IntakeOuttake {
     // outtake/transfer constants
     double leftStowed = 0.6683;
     double rightStowed = 0.2483;
+    double leftHorizonatal = 0.52022857143;
+    double rightHorizontal = 0.40189999999;
     double left0 = 0.5217;
     double right0 = 0.79;
     double left60 = 0.3228;
@@ -78,7 +80,7 @@ public class IntakeOuttake {
 
     // state machine initialization
     public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
-    public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, DROPPED, IDLE}
+    public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
     public IntakeState intakeState = IntakeState.IDLE;
     public OuttakeState outtakeState = OuttakeState.IDLE;
@@ -263,6 +265,12 @@ public class IntakeOuttake {
                 differentialRight.setPosition(right180);
                 outtakeState = OuttakeState.IDLE;
                 break;
+            case POS4:
+                differentialLeft.setPosition(leftHorizonatal);
+                differentialRight.setPosition(rightHorizontal);
+                if (0.51 < differentialLeft.getPosition() && differentialLeft.getPosition() < 0.53) {
+                    outtakeState = OuttakeState.AUTODROP;
+                }
             case DROPPED:
                 timer.start(200);
                 clawLeft.setPosition(clawClosedLeft);
@@ -272,6 +280,15 @@ public class IntakeOuttake {
                     timer.markReady();
                 }
                 break;
+            case AUTORAISED:
+                outtakeTicks = 120;
+                if (outtakeRaised()) {
+                    outtakeState = OuttakeState.POS4;
+                }
+                break;
+            case AUTODROP:
+                clawLeft.setPosition(clawClosedLeft);
+                outtakeState = OuttakeState.POS1;
         }
 
     }
