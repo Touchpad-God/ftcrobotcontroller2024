@@ -27,12 +27,12 @@ Very important:
  - Automatic transfer when color sensors detect pixels (done)
  - White pixel detection (done)
  - Drivetrain slow mode (done)
- - Ejecting/autoejecting
+ - Ejecting/autoejecting (done)
  - Beam break sensor denoising?
  - Hanging
  - Drone
  - Beam break sensor threading (done)
- - Tune da outtake PID
+ - Tune da outtake PID (done)
 
 Fairly important:
  - Driver-centric driving (depends on who's driver 1)
@@ -179,12 +179,23 @@ public class IntakeOuttakeTeleOp {
         }
         sensors();
         if (locationPixel != 5 && gamepad2.right_trigger > 0.1) {
-            if (intakeState == IntakeState.IDLE) {
+            if (pixel1 != null && pixel2 != null && beam.getDetections() > 0) {
+                intakeState = IntakeState.EJECTING;
+            }
+            else if (intakeState == IntakeState.IDLE) {
                 intakeState = IntakeState.INTAKING;
             }
-        } else if (gamepad2.right_trigger < 0.1 && !(gamepad2Prev.right_trigger < 0.1)) {
+        } else if (gamepad2.right_trigger <= 0.1 && !(gamepad2Prev.right_trigger <= 0.1)) {
             intakeState = IntakeState.STOP;
         }
+        if (locationPixel != 5 && gamepad2.left_trigger > 0.1) {
+            if (intakeState == IntakeState.IDLE) {
+                intakeState = IntakeState.EJECTING;
+            }
+        } else if (gamepad2.left_trigger <= 0.1 && !(gamepad2Prev.left_trigger <= 0.1)) {
+            intakeState = IntakeState.STOP;
+        }
+
         if ((gamepad2.y && !gamepad2Prev.y) || (pixel1 != null && pixel2 != null && beam.getDetections() > 0) && intakeState == IntakeState.IDLE) {
             transferState = TransferState.MOTORS;
         }
@@ -192,20 +203,20 @@ public class IntakeOuttakeTeleOp {
             outtakeState = OuttakeState.DROPPED;
         }
         if (gamepad2.right_bumper && !gamepad2Prev.right_bumper) {
+            setPosition(outtakePos);
             outtakePos++;
             if (outtakePos > OUTTAKEMAX) {
                 outtakePos--;
             }
-            setPosition(outtakePos);
             if (transferState == TransferState.IDLE)
                 outtakeState = OuttakeState.READY;
         }
         else if (gamepad2.left_bumper && !gamepad2Prev.left_bumper) {
+            setPosition(outtakePos);
             outtakePos--;
             if (outtakePos < 0) {
                 outtakePos = 0;
             }
-            setPosition(outtakePos);
             if (transferState == TransferState.IDLE)
                 outtakeState = OuttakeState.READY;
         }
@@ -287,7 +298,7 @@ public class IntakeOuttakeTeleOp {
             case EJECTING:
                 intakeIntake.setPower(-intakePower);
                 intakeTransfer.setPower(-transferPower);
-                intakeServo.setPosition(intakePositions[5]);
+                intakeServo.setPosition(intakePositions[4]);
 
         }
     }
