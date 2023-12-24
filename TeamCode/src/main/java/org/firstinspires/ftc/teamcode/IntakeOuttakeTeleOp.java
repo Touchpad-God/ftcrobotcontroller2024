@@ -36,7 +36,7 @@ Very important:
 
 Fairly important:
  - Driver-centric driving (depends on who's driver 1)
- - LED integration wtih color sensors
+ - LED integration wtih color sensors (done)
  - Lift intake when not intaking
 
 
@@ -51,11 +51,12 @@ Nice to have:
 public class IntakeOuttakeTeleOp extends IntakeOuttake{
     private Gamepad gamepad1Prev = new Gamepad();
     private Gamepad gamepad2Prev = new Gamepad();
+    LEDStrip blinky;
 
     // initialize intake and outtake, reset all hardware
     public IntakeOuttakeTeleOp(HardwareMap hardwareMap) {
         super(hardwareMap);
-
+        blinky = new LEDStrip(hardwareMap);
     }
 
     public void update(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, double currTime) {
@@ -123,9 +124,15 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
             differentialRight.setPosition(pivotPositions[clawRotation][1]);
         }
 
+        if (clawRotation < 2) {
+            blinky.updatePixels(pixel1, pixel2);
+        } else {
+            blinky.updatePixels(pixel2, pixel1);
+        }
         intake(currTime);
         transfer(currTime);
         outtake(currTime);
+        blinky.update();
         runTo(outtakeTicks, currTime);
 
         gamepad1Prev.copy(gamepad1);
