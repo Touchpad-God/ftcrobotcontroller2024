@@ -18,7 +18,7 @@ class LEDStrip {
 
     public enum BLINKYBLINKY {PATTERN1, PAUSE1, PATTERN2A, PAUSE2, PATTERN2B, PAUSE3}
 
-    public BLINKYBLINKY ledState;
+    public BLINKYBLINKY ledState = BLINKYBLINKY.PATTERN1;
 
     private Timer timer = new Timer();
 

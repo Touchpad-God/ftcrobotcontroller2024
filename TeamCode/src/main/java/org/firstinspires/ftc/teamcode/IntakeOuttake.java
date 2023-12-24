@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -9,8 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+@Config
 public class IntakeOuttake {
-    // intake hardware components
+    // intake hardware componentss
     protected DcMotor intakeIntake;
     protected DcMotor intakeTransfer;
     protected Servo intakeServo;
@@ -34,7 +36,7 @@ public class IntakeOuttake {
     double intakePos3 = 0.4844;
     double intakePos4 = 0.5350;
     double intakePos5 = 0.580;
-    int locationPixel = 5;
+    int locationPixel = 0;
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     public static double intakePower = 1.0;
     public static double transferPower = 1.0;
@@ -45,6 +47,8 @@ public class IntakeOuttake {
     // outtake/transfer constants
     double leftStowed = 0.6683;
     double rightStowed = 0.2483;
+    double leftHorizonatal = 0.52022857143;
+    double rightHorizontal = 0.40189999999;
     double left0 = 0.5217;
     double right0 = 0.79;
     double left60 = 0.3228;
@@ -66,11 +70,12 @@ public class IntakeOuttake {
     final int OUTTAKEMAX = 20;
 
     // pid for outtake motors
-    public static double outtakekP = 0.035;
-    public static double outtakekI = 0.00000;
-    public static double outtakekD = 0.0009;
-    public static double outtakeMAX_I = 1.0;
-    public static double outtakeMIN_I = -1.0;
+    public static double highP = 0.04;
+    public static double highI = 0.00000;
+    public static double highD = 0.0012;
+    public static double lowP = 0.01;
+    public static double lowI = 0.0;
+    public static double lowD = 0.0002;
 
     private double outtakei = 0.0;
     private double outtakeprevTime = 0.0;
@@ -78,12 +83,12 @@ public class IntakeOuttake {
 
     // state machine initialization
     public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
-    public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, DROPPED, IDLE}
+    public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
     public IntakeState intakeState = IntakeState.IDLE;
     public OuttakeState outtakeState = OuttakeState.IDLE;
     public TransferState transferState = TransferState.IDLE;
-    public int outtakeTicks = 0;
+    public volatile int outtakeTicks = 0;
 
     public int clawRotation = 0;
 
@@ -263,6 +268,12 @@ public class IntakeOuttake {
                 differentialRight.setPosition(right180);
                 outtakeState = OuttakeState.IDLE;
                 break;
+            case POS4:
+                differentialLeft.setPosition(leftHorizonatal);
+                differentialRight.setPosition(rightHorizontal);
+                if (0.51 < differentialLeft.getPosition() && differentialLeft.getPosition() < 0.53) {
+                    outtakeState = OuttakeState.AUTODROP;
+                }
             case DROPPED:
                 timer.start(200);
                 clawLeft.setPosition(clawClosedLeft);
@@ -272,6 +283,15 @@ public class IntakeOuttake {
                     timer.markReady();
                 }
                 break;
+            case AUTORAISED:
+                outtakeTicks = 120;
+                if (outtakeRaised()) {
+                    outtakeState = OuttakeState.POS4;
+                }
+                break;
+            case AUTODROP:
+                clawLeft.setPosition(clawClosedLeft);
+                outtakeState = OuttakeState.POS1;
         }
 
     }
@@ -332,6 +352,16 @@ public class IntakeOuttake {
         if (outtakeprevTime == 0.0) {
             outtakeprevTime = currTime;
             outtakeprevError = error;
+        }
+        double outtakekP, outtakekI, outtakekD;
+        if (ticks > 650) {
+            outtakekP = highP;
+            outtakekI = highI;
+            outtakekD = highD;
+        } else {
+            outtakekP = lowP;
+            outtakekI = lowI;
+            outtakekD = lowD;
         }
 
         double p = outtakekP * error;

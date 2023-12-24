@@ -1,17 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Color;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /*
 
@@ -66,7 +58,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         }
         sensors();
         if (locationPixel != 5 && gamepad2.right_trigger > 0.1) {
-            if (pixel1 != null && pixel2 != null && beam.getDetections() > 0) {
+            if (!pixel1.equals("") && !pixel2.equals("") && beam.getDetections() > 0) {
                 intakeState = IntakeState.EJECTING;
             }
             else if (intakeState == IntakeState.IDLE) {
@@ -90,22 +82,24 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
             outtakeState = OuttakeState.DROPPED;
         }
         if (gamepad2.right_bumper && !gamepad2Prev.right_bumper) {
-            setPosition(outtakePos);
-            outtakePos++;
             if (outtakePos > OUTTAKEMAX) {
                 outtakePos--;
             }
             if (outtakeState == OuttakeState.IDLE)
                 outtakeState = OuttakeState.READY;
+            else
+                outtakePos++;
+            setPosition(outtakePos);
         }
         else if (gamepad2.left_bumper && !gamepad2Prev.left_bumper) {
-            setPosition(outtakePos);
-            outtakePos--;
             if (outtakePos < 0) {
                 outtakePos = 0;
             }
             if (outtakeState == OuttakeState.IDLE)
                 outtakeState = OuttakeState.READY;
+            else
+                outtakePos--;
+            setPosition(outtakePos);
         }
         if (outtakeState == OuttakeState.RAISEDWAITING && outtakeRaised()) {
             if (gamepad2.dpad_left && !gamepad2Prev.dpad_left) {
