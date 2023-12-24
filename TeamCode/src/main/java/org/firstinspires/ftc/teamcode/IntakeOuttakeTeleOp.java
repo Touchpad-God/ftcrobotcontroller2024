@@ -105,9 +105,9 @@ public class IntakeOuttakeTeleOp {
     final int OUTTAKEMAX = 20;
 
     // pid for outtake motors
-    public static double outtakekP = 0.035;
+    public static double outtakekP = 0.04;
     public static double outtakekI = 0.00000;
-    public static double outtakekD = 0.0009;
+    public static double outtakekD = 0.0012;
     public static double outtakeMAX_I = 1.0;
     public static double outtakeMIN_I = -1.0;
 
@@ -116,7 +116,7 @@ public class IntakeOuttakeTeleOp {
     private double outtakeprevError = 0.0;
 
     // state machine initialization
-    public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP}
+    public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, EJECTING, STOP}
     public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, DROPPED, IDLE}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
     public IntakeState intakeState = IntakeState.IDLE;
@@ -284,7 +284,10 @@ public class IntakeOuttakeTeleOp {
                 intakeTransfer.setPower(0);
                 intakeState = IntakeState.IDLE;
                 break;
-
+            case EJECTING:
+                intakeIntake.setPower(-intakePower);
+                intakeTransfer.setPower(-transferPower);
+                intakeServo.setPosition(intakePositions[5]);
 
         }
     }
