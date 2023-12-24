@@ -58,7 +58,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         }
         sensors();
         if (locationPixel != 5 && gamepad2.right_trigger > 0.1) {
-            if (pixel1 != null && pixel2 != null && beam.getDetections() > 0) {
+            if (!pixel1.equals("") && !pixel2.equals("") && beam.getDetections() > 0) {
                 intakeState = IntakeState.EJECTING;
             }
             else if (intakeState == IntakeState.IDLE) {
