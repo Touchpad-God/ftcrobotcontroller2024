@@ -66,9 +66,9 @@ public class IntakeOuttake {
     final int OUTTAKEMAX = 20;
 
     // pid for outtake motors
-    public static double outtakekP = 0.035;
+    public static double outtakekP = 0.04;
     public static double outtakekI = 0.00000;
-    public static double outtakekD = 0.0009;
+    public static double outtakekD = 0.0012;
     public static double outtakeMAX_I = 1.0;
     public static double outtakeMIN_I = -1.0;
 
