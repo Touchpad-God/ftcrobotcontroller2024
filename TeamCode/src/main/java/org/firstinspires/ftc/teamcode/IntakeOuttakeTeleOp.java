@@ -463,7 +463,7 @@ public class IntakeOuttakeTeleOp {
         outtakeMotor1.setPower(p + outtakei + d);
         outtakeMotor2.setPower(-(p + outtakei + d));
 
-        if (outtakeMotor2.getCurrentPosition() < 7 && ticks < 7){
+        if (outtakeMotor2.getCurrentPosition() < 7 && ticks < 7 && ticks > -1){
             outtakeMotor1.setPower(0);
             outtakeMotor2.setPower(0);
         }
