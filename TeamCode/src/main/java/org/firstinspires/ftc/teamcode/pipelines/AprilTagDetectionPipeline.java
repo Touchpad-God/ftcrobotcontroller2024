@@ -38,6 +38,10 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
     double tagsizeX = 0.1126;
     double tagsizeY = 0.1126;
 
+    //position
+    public enum TAGPOSITION {LEFT, CENTER, RIGHT};
+    public TAGPOSITION tagposition;
+
     public AprilTagDetectionPipeline(Telemetry telemetry){
         this.telemetry = telemetry;
         constructMatrix();
@@ -45,6 +49,8 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input){
+        tagposition = TAGPOSITION.LEFT;
+
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
 
         detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
@@ -53,8 +59,12 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
 
         for(org.openftc.apriltag.AprilTagDetection detection: detections){
             Pose pose = aprilTagPoseToOpenCvPose(detection.pose);
-            tagCenters.add(drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix));
+            tagCenters.add(drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix));
         }
+
+        Imgproc.line(input, new Point(0, 100), new Point(tagsizeX * 640, 100), new Scalar(255, 255, 255));
+
+        telemetry.addData("tagSize", tagsizeY/2.0);
 
         String points = "";
         for(Point p: tagCenters){
@@ -92,7 +102,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
         cameraMatrix.put(2,2,1);
     }
 
-    public Point drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, Mat cameraMatrix) {
+    public Point drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, TAGPOSITION position, int id, Mat cameraMatrix) {
         // The points in 3D space we wish to project onto the 2D image plane.
         // The origin of the coordinate space is assumed to be in the center of the detection.
         MatOfPoint3f axis = new MatOfPoint3f(
@@ -112,7 +122,11 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
         //Imgproc.line(buf, projectedPoints[0], projectedPoints[2], new Scalar(0, 255, 0), thickness);
         //Imgproc.line(buf, projectedPoints[0], projectedPoints[3], new Scalar(0, 0, 255), thickness);
 
-        Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(20, 200, 255), -1);
+        if(position == TAGPOSITION.LEFT && id == 4 || position == TAGPOSITION.CENTER && id == 5 || position == TAGPOSITION.RIGHT && id == 6) {
+            Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(255, 200, 20), -1);
+        } else{
+            Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(20, 200, 255), -1);
+        }
         return(projectedPoints[0]);
     }
 

@@ -59,7 +59,6 @@ public class yellowPixels extends OpenCvPipeline {
 
         MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contour.size()];
         MatOfPoint2f[] approx = new MatOfPoint2f[contour.size()];
-        List<Double> areas = new ArrayList<>();
 
         Rect[] boundRect = new Rect[contour.size()];
 
@@ -70,7 +69,6 @@ public class yellowPixels extends OpenCvPipeline {
             double peri = Imgproc.arcLength(new MatOfPoint2f(contour.get(i).toArray()), true);
             Imgproc.approxPolyDP(new MatOfPoint2f(contour.get(i).toArray()), approx[i], 0.04 * peri, true);
             boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
-            areas.add(Imgproc.contourArea(contour.get(i)));
         }
 
         Imgproc.cvtColor(hsv, output, Imgproc.COLOR_HSV2RGB);

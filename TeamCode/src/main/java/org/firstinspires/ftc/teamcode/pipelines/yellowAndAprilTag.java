@@ -46,6 +46,12 @@ public class yellowAndAprilTag extends OpenCvPipeline {
     Mat hsv = new Mat();
     Size blur = new Size(1.5, 1.5);
 
+    //positions
+    public enum TAGPOSITION {LEFT, CENTER, RIGHT};
+    public TAGPOSITION tagposition;
+    public enum PIXELPOSITION {LEFT, RIGHT, EITHER, NONE}
+    public PIXELPOSITION pixelposition;
+
     public yellowAndAprilTag(Telemetry telemetry){
         this.telemetry = telemetry;
         constructMatrix();
@@ -55,6 +61,9 @@ public class yellowAndAprilTag extends OpenCvPipeline {
     public Mat processFrame(Mat input){
         telemetry.addLine("yellowAndAprilTag pipeline selected");
         telemetry.update();
+
+        //position
+        tagposition = TAGPOSITION.CENTER;
 
         //grey for april tags, yellow for pixels
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
@@ -70,8 +79,6 @@ public class yellowAndAprilTag extends OpenCvPipeline {
 
         //April Tag detection for the centers
         detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
-
-        List<Point> tagCenters = new ArrayList<>();
 
         //Yellow Pixel detection for the contours
         List<MatOfPoint> contour = new ArrayList<>();
@@ -100,31 +107,25 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         }
 
         //drawing the centers for the april tags
+        List<Point> tagCenters = new ArrayList<>();
+
         for(org.openftc.apriltag.AprilTagDetection detection: detections){
             Pose pose = aprilTagPoseToOpenCvPose(detection.pose);
-            tagCenters.add(drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix));
+            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix, tagCenters);
         }
 
         //drawing the boxes for the pixels
         double avgArea = pixelSizeThreshold(boundRect, input);
-        int hexagonCount = 0;
+        List<Point> pixelCenters = new ArrayList<>();
 
-        for(int i = 0; i != boundRect.length; i++){
-            if(boundRect[i].area() > (input.width() * input.height() * 0.001) && approx[i].size().height > 4 && boundRect[i].area() < (avgArea * 10)){
-                Imgproc.rectangle(input, boundRect[i], new Scalar(50, 200, 200));
-                Imgproc.circle(input, new Point(boundRect[i].x + boundRect[i].width/2, boundRect[i].y + boundRect[i].height/2), 0, new Scalar(0, 200, 200));
-                hexagonCount++;
-            }
+        for(int i = 0; i != boundRect.length; i++) {
+            pixelMarker(input, boundRect[i], approx[i], avgArea, tagposition, pixelCenters, tagCenters.get(0), tagsizeX * 640);
         }
 
-        //telemetry tag centers + pixel count
-        String points = "";
-        for(Point p: tagCenters){
-            points += "(" + Math.round(p.x * 100.0)/100.0 + "," + Math.round(p.y * 100.0)/100.0 + ")";
-        }
+        //determining pixel position relative to tag
+        pixelposition = setPixelPosition(pixelCenters, tagCenters);
 
-        telemetry.addData("hexagons", hexagonCount);
-        telemetry.addLine(points);
+        telemetry.addData("Pixel to Tag", pixelposition);
         telemetry.update();
 
         return input;
@@ -145,6 +146,87 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         return (avgArea /= total);
     }
 
+    public void pixelMarker(Mat input, Rect rect, MatOfPoint2f approx, double avgArea, TAGPOSITION tagposition, List<Point> pixelCenters, Point tagCenter, double tagsizeX){
+        tagsizeX *= 1.5;
+
+        if(rect.area() > (input.width() * input.height() * 0.001) && approx.size().height > 4 && rect.area() < (avgArea * 10)){
+            Point pixelCenter = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
+            Imgproc.circle(input, pixelCenter, 0, new Scalar(0, 200, 200), 8);
+
+            if(rect.x >= (tagCenter.x - tagsizeX) && rect.x <= (tagCenter.x + tagsizeX)){
+                Imgproc.rectangle(input, rect, new Scalar(250, 25, 50));
+                pixelCenters.add(new Point(rect.x, rect.y));
+            }
+        }
+    }
+
+    public void drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, TAGPOSITION position, int id, Mat cameraMatrix, List<Point> tagCenters) {
+        // The points in 3D space we wish to project onto the 2D image plane.
+        // The origin of the coordinate space is assumed to be in the center of the detection.
+
+        MatOfPoint3f axis = new MatOfPoint3f(
+                new Point3(0,0,0),
+                new Point3(length,0,0),
+                new Point3(0,length,0),
+                new Point3(0,0,-length)
+        );
+
+        // Project those points
+        MatOfPoint2f matProjectedPoints = new MatOfPoint2f();
+        Calib3d.projectPoints(axis, rvec, tvec, cameraMatrix, new MatOfDouble(), matProjectedPoints);
+        Point[] projectedPoints = matProjectedPoints.toArray();
+
+        if(position == TAGPOSITION.LEFT && id == 4 || position == TAGPOSITION.CENTER && id == 5 || position == TAGPOSITION.RIGHT && id == 6) {
+            Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(255, 200, 20), -1);
+            tagCenters.add(projectedPoints[0]);
+        } else{
+            Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(20, 200, 255), -1);
+        }
+    }
+
+    public PIXELPOSITION setPixelPosition(List<Point> pixels, List<Point> tags){
+        double tagX = tags.get(0).x;
+        if(pixels.size() == 1){
+            if(pixels.get(0).x < tagX){
+                return PIXELPOSITION.LEFT;
+            } else{
+                return PIXELPOSITION.RIGHT;
+            }
+        } else if(pixels.size() == 0){
+            return PIXELPOSITION.EITHER;
+        } else if(pixels.size() > 2){
+            return PIXELPOSITION.NONE;
+        } else {
+            PIXELPOSITION current = PIXELPOSITION.NONE;
+            PIXELPOSITION next = PIXELPOSITION.NONE;
+            Boolean majority = false;
+
+            for(int i = 0; i < pixels.size() - 1; i++){
+                if(pixels.get(i).x < tagX){
+                    current = PIXELPOSITION.LEFT;
+                } else{
+                    current = PIXELPOSITION.RIGHT;
+                }
+
+                if(pixels.get(i + 1).x < tagX){
+                    next = PIXELPOSITION.LEFT;
+                } else{
+                     next = PIXELPOSITION.RIGHT;
+                }
+
+                if(current == next){
+                    majority = true;
+                }
+            }
+
+            if(majority){
+                return current;
+            } else{
+                return PIXELPOSITION.NONE;
+            }
+        }
+    }
+
     void constructMatrix()
     {
         cameraMatrix = new Mat(3,3, CvType.CV_32FC1);
@@ -160,25 +242,6 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         cameraMatrix.put(2, 0, 0);
         cameraMatrix.put(2,1,0);
         cameraMatrix.put(2,2,1);
-    }
-
-    public Point drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, Mat cameraMatrix) {
-        // The points in 3D space we wish to project onto the 2D image plane.
-        // The origin of the coordinate space is assumed to be in the center of the detection.
-        MatOfPoint3f axis = new MatOfPoint3f(
-                new Point3(0,0,0),
-                new Point3(length,0,0),
-                new Point3(0,length,0),
-                new Point3(0,0,-length)
-        );
-
-        // Project those points
-        MatOfPoint2f matProjectedPoints = new MatOfPoint2f();
-        Calib3d.projectPoints(axis, rvec, tvec, cameraMatrix, new MatOfDouble(), matProjectedPoints);
-        Point[] projectedPoints = matProjectedPoints.toArray();
-
-        Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(20, 200, 255), -1);
-        return(projectedPoints[0]);
     }
 
     Pose aprilTagPoseToOpenCvPose(AprilTagPose aprilTagPose){
@@ -219,5 +282,4 @@ public class yellowAndAprilTag extends OpenCvPipeline {
             this.tvec = tvec;
         }
     }
-
 }
