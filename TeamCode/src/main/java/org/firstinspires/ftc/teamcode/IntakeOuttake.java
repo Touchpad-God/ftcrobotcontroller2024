@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
 public class IntakeOuttake {
-    // intake hardware components
+    // intake hardware componentss
     protected DcMotor intakeIntake;
     protected DcMotor intakeTransfer;
     protected Servo intakeServo;
@@ -354,7 +354,7 @@ public class IntakeOuttake {
             outtakeprevError = error;
         }
         double outtakekP, outtakekI, outtakekD;
-        if (ticks > 550) {
+        if (ticks > 650) {
             outtakekP = highP;
             outtakekI = highI;
             outtakekD = highD;
