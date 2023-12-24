@@ -68,11 +68,12 @@ public class IntakeOuttake {
     final int OUTTAKEMAX = 20;
 
     // pid for outtake motors
-    public static double outtakekP = 0.04;
-    public static double outtakekI = 0.00000;
-    public static double outtakekD = 0.0012;
-    public static double outtakeMAX_I = 1.0;
-    public static double outtakeMIN_I = -1.0;
+    public static double highP = 0.04;
+    public static double highI = 0.00000;
+    public static double highD = 0.0012;
+    public static double lowP = 0.01;
+    public static double lowI = 0.0;
+    public static double lowD = 0.0002;
 
     private double outtakei = 0.0;
     private double outtakeprevTime = 0.0;
@@ -85,7 +86,7 @@ public class IntakeOuttake {
     public IntakeState intakeState = IntakeState.IDLE;
     public OuttakeState outtakeState = OuttakeState.IDLE;
     public TransferState transferState = TransferState.IDLE;
-    public int outtakeTicks = 0;
+    public volatile int outtakeTicks = 0;
 
     public int clawRotation = 0;
 
@@ -349,6 +350,16 @@ public class IntakeOuttake {
         if (outtakeprevTime == 0.0) {
             outtakeprevTime = currTime;
             outtakeprevError = error;
+        }
+        double outtakekP, outtakekI, outtakekD;
+        if (ticks > 550) {
+            outtakekP = highP;
+            outtakekI = highI;
+            outtakekD = highD;
+        } else {
+            outtakekP = lowP;
+            outtakekI = lowI;
+            outtakekD = lowD;
         }
 
         double p = outtakekP * error;

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable{
+public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
     private boolean running;
     private double currTime;
 
