@@ -34,7 +34,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         Thread time = new Thread(new Time());
         time.start();
         inOutThread.start();
-        intakeOuttake.setCurrTime(getRuntime());
         intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         if (isStopRequested()) return;
@@ -48,29 +47,49 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         if (location == 1) { // center
             traj = drive.trajectorySequenceBuilder(new Pose2d(36, 12, Math.toRadians(0)))
                     .setReversed(true)
-                    .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                            idle();
+                        }
+                    })
+                    .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270)))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.setCurrTime(getRuntime());
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                            idle();
+                        }
+                    });
 //                    .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(270))
 //                    .splineToConstantHeading(new Vector2d(12, -56), Math.toRadians(270))
 //                    .lineToConstantHeading(new Vector2d(12, 26))
 //                    .splineTo(new Vector2d(30, 48), Math.toRadians(90)
-                    );
+
         } else if (location == 2) { // left
             traj = drive.trajectorySequenceBuilder(new Pose2d(36, 12, Math.toRadians(0)))
                     .setReversed(true)
                     .turn(Math.toRadians(90))
-                    .lineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270))
-//                    .splineToConstantHeading(new Vector2d(12, 36), Math.toRadians(270))
-//                    .splineToConstantHeading(new Vector2d(12, -56), Math.toRadians(270))
-//                    .lineToConstantHeading(new Vector2d(12, 26))
-//                    .splineTo(new Vector2d(30, 48), Math.toRadians(90)
-                    );
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                            idle();
+                        }
+                    })
+                    .lineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270)))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.setCurrTime(getRuntime());
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                            idle();
+                        }
+                    });
         } else { //right
             traj = drive.trajectorySequenceBuilder(new Pose2d(36, 12, Math.toRadians(0)))
                     .setReversed(true)
                     .turn(Math.toRadians(-90));
             drive.followTrajectorySequence(traj.build());
 
-            intakeOuttake.setCurrTime(getRuntime());
             intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
                 idle();
@@ -80,7 +99,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                     .splineToConstantHeading(new Vector2d(48, 24), Math.toRadians(90))
                     .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180));
 
-            intakeOuttake.setCurrTime(getRuntime());
             intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
@@ -107,15 +125,14 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 }
 
 class Time implements Runnable {
-    public double nowTime, startTime;
+    public double startTime;
     public Time() {
         this.startTime = System.currentTimeMillis();
     }
 
     @Override
     public void run() {
-        nowTime = System.currentTimeMillis() - startTime;
-        IntakeOuttakeAuto.currTime = nowTime;
+        IntakeOuttakeAuto.currTime = System.currentTimeMillis() - startTime;
     }
 }
 
