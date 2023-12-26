@@ -87,21 +87,25 @@ public class redPropRight extends OpenCvPipeline {
         Imgproc.line(output, new Point(1010, 340), new Point(1280, 385), new Scalar(100, 100, 200), 5); //right line
 
         if(boundRect.length != 0){
-            Rect largestContour = boundRect[largestContour(boundRect)];
+            onLine(boundRect);
 
-            int centerX = largestContour.x + largestContour.width/2;
-            int centerY = largestContour.y + largestContour.height/2;
+            if(position == PROPPOSITION.LEFT){
+                Rect largestContour = boundRect[largestContour(boundRect)];
 
-            Imgproc.circle(output, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
+                int centerX = largestContour.x + largestContour.width/2;
+                int centerY = largestContour.y + largestContour.height/2;
 
-            if(largestContour.area() >= 30000){
-                propPosition(centerX);
-                telemetry.addData("Prop Position", position);
-            }else{
-                position = PROPPOSITION.LEFT;
-                telemetry.addData("Prop Position", position);
+                Imgproc.circle(output, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
+
+                if(largestContour.area() >= 30000){
+                    propPosition(centerX);
+                }else{
+                    position = PROPPOSITION.LEFT;
+                }
             }
         }
+
+        telemetry.addData("Prop position", position);
 
         /**
          for(int i = 0; i < indexes.size(); i++){
@@ -134,5 +138,20 @@ public class redPropRight extends OpenCvPipeline {
             }
         }
         return maxIndex;
+    }
+
+    public void onLine(Rect[] boundRect){
+        Point rightLine = new Point(1120, 360);
+        Point centerLine = new Point(460, 325);
+
+        for(int i = 0; i < boundRect.length; i++){
+            if(boundRect[i].contains(rightLine)){
+                position = PROPPOSITION.RIGHT;
+            } else if(boundRect[i].contains(centerLine)){
+                position = PROPPOSITION.CENTER;
+            } else{
+                position = PROPPOSITION.LEFT;
+            }
+        }
     }
 }
