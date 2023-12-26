@@ -85,9 +85,9 @@ public class redPropLeft extends OpenCvPipeline {
             }
         }
 
-        Imgproc.line(output, new Point(0, 385), new Point(225, 350), new Scalar(100, 100, 200), 5); //left line
-        Imgproc.line(output, new Point( 430, 350), new Point(1040, 350), new Scalar(100, 100, 200), 5); //center line
-        Imgproc.circle(output, new Point(100, 365), 2, new Scalar(255, 255, 255), 8);
+        Imgproc.line(output, new Point(0, 380), new Point(235, 335), new Scalar(100, 100, 200), 5); //left line
+        Imgproc.line(output, new Point( 440, 335), new Point(1020, 335), new Scalar(100, 100, 200), 5); //center line
+        //Imgproc.circle(output, new Point(730, 310), 2, new Scalar(255, 255, 255), 8);
 
         if(boundRect.length != 0){
             onLine(boundRect);
@@ -126,7 +126,7 @@ public class redPropLeft extends OpenCvPipeline {
     public void propPosition(int centerX){
         if(centerX >= 0 && centerX <= 225){
             position = PROPPOSITION.LEFT;
-        } else if(centerX >= 430 && centerX <= 1040){
+        } else if(centerX >= 440 && centerX <= 1020){
             position = PROPPOSITION.CENTER;
         } else{
             position = PROPPOSITION.NONE;
@@ -144,14 +144,16 @@ public class redPropLeft extends OpenCvPipeline {
     }
 
     public void onLine(Rect[] boundRect){
-        Point leftLine = new Point(100, 365);
-        Point centerLine = new Point(735, 350);
+        Point leftLine = new Point(180, 340);
+        Point centerLine = new Point(730, 330);
 
         for(int i = 0; i < boundRect.length; i++){
             if(boundRect[i].contains(leftLine)){
                 position = PROPPOSITION.LEFT;
             } else if(boundRect[i].contains(centerLine)){
                 position = PROPPOSITION.CENTER;
+//                telemetry.addLine("(" + (boundRect[i].x + boundRect[i].width/2) + ", " + (boundRect[i].y + boundRect[i].height/2) + ")");
+//                telemetry.update();
             }
         }
     }
