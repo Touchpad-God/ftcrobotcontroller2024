@@ -47,9 +47,9 @@ public class yellowAndAprilTag extends OpenCvPipeline {
     Size blur = new Size(1.5, 1.5);
 
     //positions
-    public enum TAGPOSITION {LEFT, CENTER, RIGHT};
+    public enum TAGPOSITION {LEFT, CENTER, RIGHT}
     public TAGPOSITION tagposition;
-    public enum PIXELPOSITION {LEFT, RIGHT, EITHER, NONE}
+    public enum PIXELPOSITION {LEFT, RIGHT, BOTH, NONE}
     public PIXELPOSITION pixelposition;
 
     public yellowAndAprilTag(Telemetry telemetry){
@@ -111,28 +111,39 @@ public class yellowAndAprilTag extends OpenCvPipeline {
 
         for(org.openftc.apriltag.AprilTagDetection detection: detections){
             Pose pose = aprilTagPoseToOpenCvPose(detection.pose);
-            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix, tagCenters);
+            Point tagCenter = drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix);
+            if(tagCenter.x != -1){
+                tagCenters.add(tagCenter);
+            }
         }
 
         //drawing the boxes for the pixels
         double avgArea = pixelSizeThreshold(boundRect, input);
         List<Point> pixelCenters = new ArrayList<>();
 
-        for(int i = 0; i != boundRect.length; i++) {
-            pixelMarker(input, boundRect[i], approx[i], avgArea, tagposition, pixelCenters, tagCenters.get(0), tagsizeX * 640);
+        if(tagCenters.size() > 0){
+            for(int i = 0; i != boundRect.length; i++) {
+                Point pixelCenter = pixelMarker(input, boundRect[i], approx[i], avgArea, tagCenters.get(0), tagsizeX * 640);
+                if (pixelCenter.x != -1) {
+                    pixelCenters.add(pixelCenter);
+                }
+            }
         }
 
         //determining pixel position relative to tag
-        pixelposition = setPixelPosition(pixelCenters, tagCenters);
+        try{
+            pixelposition = setPixelPosition(pixelCenters, tagCenters);
+            telemetry.addData("Pixel to Tag", pixelposition);
+        } catch (Exception e){
+            telemetry.addLine("No tags detected");
+        }
 
-        telemetry.addData("Pixel to Tag", pixelposition);
         telemetry.update();
 
         return input;
     }
 
     public double pixelSizeThreshold(Rect[] boundRect, Mat input){
-
         double avgArea = 0;
         double total = 0;
 
@@ -146,23 +157,27 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         return (avgArea /= total);
     }
 
-    public void pixelMarker(Mat input, Rect rect, MatOfPoint2f approx, double avgArea, TAGPOSITION tagposition, List<Point> pixelCenters, Point tagCenter, double tagsizeX){
-        tagsizeX *= 1.5;
-
+    public Point pixelMarker(Mat input, Rect rect, MatOfPoint2f approx, double avgArea, Point tagCenter, double tagsizeX){
         if(rect.area() > (input.width() * input.height() * 0.001) && approx.size().height > 4 && rect.area() < (avgArea * 10)){
             Point pixelCenter = new Point(rect.x + rect.width/2, rect.y + rect.height/2);
             Imgproc.circle(input, pixelCenter, 0, new Scalar(0, 200, 200), 8);
 
-            if(rect.x >= (tagCenter.x - tagsizeX) && rect.x <= (tagCenter.x + tagsizeX)){
+            if(pixelCenter.x >= (tagCenter.x - tagsizeX) && pixelCenter.x <= (tagCenter.x + tagsizeX)){
                 Imgproc.rectangle(input, rect, new Scalar(250, 25, 50));
-                pixelCenters.add(new Point(rect.x, rect.y));
+                return(pixelCenter);
+            } else{
+                return(new Point(-1, -1));
             }
+        } else{
+            return(new Point(-1, -1));
         }
     }
 
-    public void drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, TAGPOSITION position, int id, Mat cameraMatrix, List<Point> tagCenters) {
+    public Point drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, TAGPOSITION position, int id, Mat cameraMatrix) {
         // The points in 3D space we wish to project onto the 2D image plane.
         // The origin of the coordinate space is assumed to be in the center of the detection.
+
+        Point tagCenter = new Point(-1, -1);
 
         MatOfPoint3f axis = new MatOfPoint3f(
                 new Point3(0,0,0),
@@ -178,14 +193,17 @@ public class yellowAndAprilTag extends OpenCvPipeline {
 
         if(position == TAGPOSITION.LEFT && id == 4 || position == TAGPOSITION.CENTER && id == 5 || position == TAGPOSITION.RIGHT && id == 6) {
             Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(255, 200, 20), -1);
-            tagCenters.add(projectedPoints[0]);
+            tagCenter = projectedPoints[0];
         } else{
             Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(20, 200, 255), -1);
         }
+
+        return(tagCenter);
     }
 
     public PIXELPOSITION setPixelPosition(List<Point> pixels, List<Point> tags){
         double tagX = tags.get(0).x;
+
         if(pixels.size() == 1){
             if(pixels.get(0).x < tagX){
                 return PIXELPOSITION.LEFT;
@@ -193,9 +211,9 @@ public class yellowAndAprilTag extends OpenCvPipeline {
                 return PIXELPOSITION.RIGHT;
             }
         } else if(pixels.size() == 0){
-            return PIXELPOSITION.EITHER;
-        } else if(pixels.size() > 2){
             return PIXELPOSITION.NONE;
+        } else if(pixels.size() > 2){
+            return PIXELPOSITION.BOTH;
         } else {
             PIXELPOSITION current = PIXELPOSITION.NONE;
             PIXELPOSITION next = PIXELPOSITION.NONE;
@@ -216,13 +234,15 @@ public class yellowAndAprilTag extends OpenCvPipeline {
 
                 if(current == next){
                     majority = true;
+                } else{
+                    majority = false;
                 }
             }
 
             if(majority){
                 return current;
             } else{
-                return PIXELPOSITION.NONE;
+                return PIXELPOSITION.BOTH;
             }
         }
     }
