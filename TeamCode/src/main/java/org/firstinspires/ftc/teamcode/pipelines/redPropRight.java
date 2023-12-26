@@ -98,7 +98,8 @@ public class redPropRight extends OpenCvPipeline {
                 propPosition(centerX);
                 telemetry.addData("Prop Position", position);
             }else{
-                telemetry.addData("Prop Position", PROPPOSITION.LEFT);
+                position = PROPPOSITION.LEFT;
+                telemetry.addData("Prop Position", position);
             }
         }
 
