@@ -4,8 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
+import org.firstinspires.ftc.ftccommon.internal.manualcontrol.parameters.ImuParameters;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 
 /*
 TODO moved to IntakeOuttakeTeleOp.java
@@ -23,9 +28,10 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
+    double headingOffset = 0;
     boolean tankMode = false;
     boolean wasGamepadAPressed = false;
-    boolean dpadPressedLast = false;
+    boolean dpadLeftPrev = false;
     boolean rightStickPressedLast = false;
 
     boolean slowMode = false;
@@ -40,6 +46,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         motorLb = hardwareMap.get(DcMotor.class, "BL");
         motorRf = hardwareMap.get(DcMotor.class, "FR");
         motorRb = hardwareMap.get(DcMotor.class, "BR");
+        IMU imu = hardwareMap.get(IMU.class, "imu");
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
 
@@ -52,6 +59,10 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
         waitForStart();
         IntakeOuttakeTeleOp intakeOuttake = new IntakeOuttakeTeleOp(hardwareMap);
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
+        imu.initialize(parameters);
+
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
@@ -59,6 +70,10 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             x = Math.pow(gamepad1.left_stick_x, 3);
             y = Math.pow(-gamepad1.left_stick_y, 3);
             rot = Math.pow(gamepad1.right_stick_x, 3);
+
+            double theta = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) - headingOffset;
+            double rotX = x * Math.cos(theta) - y * Math.sin(theta);
+            double rotY = x * Math.sin(theta) + y * Math.cos(theta);
 
             if (gamepad1.a && !wasGamepadAPressed) {
                 tankMode = !tankMode;
@@ -74,10 +89,10 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             wasGamepadAPressed = gamepad1.a;
             double drivetrainMult = (slowMode ? slow : fast);
             if (!tankMode) {
-                motorLf.setPower((-x -y -rot) * drivetrainMult);
-                motorLb.setPower((+x -y -rot) * drivetrainMult);
-                motorRf.setPower((-x +y -rot) * drivetrainMult);
-                motorRb.setPower((+x +y -rot) * drivetrainMult);
+                motorLf.setPower((-rotX -rotY -rot) * drivetrainMult);
+                motorLb.setPower((+rotX -rotY -rot) * drivetrainMult);
+                motorRf.setPower((-rotX +rotY -rot) * drivetrainMult);
+                motorRb.setPower((+rotX +rotY -rot) * drivetrainMult);
             } else {
                 motorLf.setPower((-y -rot) * drivetrainMult);
                 motorLb.setPower((-y -rot) * drivetrainMult);
@@ -88,8 +103,12 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             if (gamepad1.right_stick_button && !rightStickPressedLast) {
                 slowMode = !slowMode;
             }
+            if (gamepad1.dpad_left && !dpadLeftPrev) {
+                headingOffset = theta;
+            }
 
             rightStickPressedLast = gamepad1.right_stick_button;
+            dpadLeftPrev = gamepad1.dpad_left;
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
 
             intakeOuttake.update(gamepad1, gamepad2, telemetry, getRuntime());
