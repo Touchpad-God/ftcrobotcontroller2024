@@ -191,7 +191,9 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         Calib3d.projectPoints(axis, rvec, tvec, cameraMatrix, new MatOfDouble(), matProjectedPoints);
         Point[] projectedPoints = matProjectedPoints.toArray();
 
-        if(position == TAGPOSITION.LEFT && id == 4 || position == TAGPOSITION.CENTER && id == 5 || position == TAGPOSITION.RIGHT && id == 6) {
+        if(position == TAGPOSITION.LEFT && id == 4 || position == TAGPOSITION.LEFT && id == 1 ||
+                position == TAGPOSITION.CENTER && id == 5 || position == TAGPOSITION.CENTER && id == 2 ||
+                position == TAGPOSITION.RIGHT && id == 6 || position == TAGPOSITION.RIGHT && id == 3) {
             Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(255, 200, 20), -1);
             tagCenter = projectedPoints[0];
         } else{
