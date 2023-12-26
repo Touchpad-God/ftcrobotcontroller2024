@@ -288,12 +288,14 @@ public class IntakeOuttake {
             case AUTORAISED:
                 outtakeTicks = 150;
                 if (outtakeRaised()) {
+                    horizontalSlideServo.setPosition(horizontalOpen);
                     outtakeState = OuttakeState.POS4;
                 }
                 break;
             case AUTODROP:
                 timer.start(200);
                 clawLeft.setPosition(clawClosedLeft);
+                clawRight.setPosition(clawEngagedRight);
                 if (timer.finished()) {
                     outtakeState = OuttakeState.POS1;
                     timer.markReady();
