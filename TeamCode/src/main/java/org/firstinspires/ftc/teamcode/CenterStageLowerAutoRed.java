@@ -6,8 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.pipelines.redPropLeft;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
 public class CenterStageLowerAutoRed extends LinearOpMode {
@@ -17,6 +22,8 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
     int location;
     static IntakeOuttakeAuto intakeOuttake;
 
+    //vision
+    private OpenCvCamera camera;
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -30,6 +37,27 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
         inOutThread.start();
         intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
+        //vision
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+
+        redPropLeft redPropPipeline = new redPropLeft(telemetry);
+        camera.setPipeline(redPropPipeline);
+
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                telemetry.addData("Camera Status: ", "Camera opened");
+                telemetry.update();
+
+                camera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Camera Status: ", "Couldn't open camera");
+                telemetry.update();
+            }});
+
         waitForStart();
 
         if (isStopRequested()) return;
@@ -38,9 +66,7 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
 
         drive.setPoseEstimate(new Pose2d(37.5, -36, Math.toRadians(0)));
 
-        location = 1;
-
-        if (location == 1) { // center
+        if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER) { // center
             intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
                 idle();
@@ -62,7 +88,7 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
-        } else if (location == 2) { // left
+        } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.LEFT) { // left
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
                     .setReversed(true)
                     .turn(Math.toRadians(90));

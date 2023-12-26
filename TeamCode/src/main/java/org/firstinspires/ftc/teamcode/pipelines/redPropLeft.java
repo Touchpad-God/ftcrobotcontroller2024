@@ -26,6 +26,13 @@ public class redPropLeft extends OpenCvPipeline {
     Mat output = new Mat();
     Size blur = new Size(1.5, 1.5);
 
+    Mat red = new Mat();
+    Mat edges = new Mat();
+    Mat hierarchy = new Mat();
+
+    public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
+    public PROPPOSITION position = PROPPOSITION.NONE;
+
     @Override
     public Mat processFrame(Mat input) {
         telemetry.addLine("RedPropLeft pipeline selected");
@@ -33,12 +40,8 @@ public class redPropLeft extends OpenCvPipeline {
 
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        Scalar lowHSVred = new Scalar(170, 140, 170);
-        Scalar highHSVred = new Scalar(230, 250, 255);
-
-        Mat red = new Mat();
-
-        Mat edges = new Mat();
+        Scalar lowHSVred = new Scalar(0, 130, 120);
+        Scalar highHSVred = new Scalar(200, 200, 255);
 
         Core.inRange(hsv, lowHSVred, highHSVred, red);
 
@@ -47,7 +50,6 @@ public class redPropLeft extends OpenCvPipeline {
         Imgproc.Canny(red, edges, 100, 300);
 
         List<MatOfPoint> contour = new ArrayList<>();
-        Mat hierarchy = new Mat();
         Imgproc.findContours(edges, contour, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
 
 
@@ -85,23 +87,28 @@ public class redPropLeft extends OpenCvPipeline {
 
         Imgproc.line(output, new Point(0, 385), new Point(225, 350), new Scalar(100, 100, 200), 5); //left line
         Imgproc.line(output, new Point( 430, 350), new Point(1040, 350), new Scalar(100, 100, 200), 5); //center line
+        Imgproc.circle(output, new Point(100, 365), 2, new Scalar(255, 255, 255), 8);
 
         if(boundRect.length != 0){
-            Rect largestContour = boundRect[largestContour(boundRect)];
-            telemetry.addData("Contour Area", largestContour.area());
+            onLine(boundRect);
 
-            int centerX = largestContour.x + largestContour.width/2;
-            int centerY = largestContour.y + largestContour.height/2;
+            if(position == PROPPOSITION.NONE){
+                Rect largestContour = boundRect[largestContour(boundRect)];
 
-            Imgproc.circle(output, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
-            if(largestContour.area() >= 30000){
-                telemetry.addLine(propPosition(centerX));
-            }else{
-                telemetry.addLine("Right");
+                int centerX = largestContour.x + largestContour.width/2;
+                int centerY = largestContour.y + largestContour.height/2;
+
+                Imgproc.circle(output, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
+
+                if(largestContour.area() >= 30000){
+                    propPosition(centerX);
+                }else{
+                    position = PROPPOSITION.RIGHT;
+                }
             }
-        } else{
-            telemetry.addLine("No red objects found");
         }
+
+        telemetry.addData("Prop position", position);
 
         /**
          for(int i = 0; i < indexes.size(); i++){
@@ -116,13 +123,13 @@ public class redPropLeft extends OpenCvPipeline {
         return output;
     }
 
-    public String propPosition(int centerX){
+    public void propPosition(int centerX){
         if(centerX >= 0 && centerX <= 225){
-            return("Left");
+            position = PROPPOSITION.LEFT;
         } else if(centerX >= 430 && centerX <= 1040){
-            return("Center");
+            position = PROPPOSITION.CENTER;
         } else{
-            return("can't determine position");
+            position = PROPPOSITION.NONE;
         }
     }
 
@@ -134,5 +141,18 @@ public class redPropLeft extends OpenCvPipeline {
             }
         }
         return maxIndex;
+    }
+
+    public void onLine(Rect[] boundRect){
+        Point leftLine = new Point(100, 365);
+        Point centerLine = new Point(735, 350);
+
+        for(int i = 0; i < boundRect.length; i++){
+            if(boundRect[i].contains(leftLine)){
+                position = PROPPOSITION.LEFT;
+            } else if(boundRect[i].contains(centerLine)){
+                position = PROPPOSITION.CENTER;
+            }
+        }
     }
 }
