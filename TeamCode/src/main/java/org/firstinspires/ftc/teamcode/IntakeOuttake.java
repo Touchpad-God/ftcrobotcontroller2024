@@ -293,7 +293,7 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTODROP:
-                timer.start(200);
+                timer.start(500);
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawEngagedRight);
                 if (timer.finished()) {
