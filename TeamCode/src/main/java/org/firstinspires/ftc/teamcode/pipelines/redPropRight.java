@@ -30,7 +30,7 @@ public class redPropRight extends OpenCvPipeline {
     Mat hierarchy = new Mat();
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
-    public PROPPOSITION position;
+    public PROPPOSITION position = PROPPOSITION.NONE;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -89,7 +89,7 @@ public class redPropRight extends OpenCvPipeline {
         if(boundRect.length != 0){
             onLine(boundRect);
 
-            if(position == PROPPOSITION.LEFT){
+            if(position == PROPPOSITION.NONE){
                 Rect largestContour = boundRect[largestContour(boundRect)];
 
                 int centerX = largestContour.x + largestContour.width/2;
@@ -149,9 +149,6 @@ public class redPropRight extends OpenCvPipeline {
                 position = PROPPOSITION.RIGHT;
             } else if(boundRect[i].contains(centerLine)){
                 position = PROPPOSITION.CENTER;
-            } else{
-                position = PROPPOSITION.LEFT;
-            }
         }
     }
 }
