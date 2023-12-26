@@ -76,7 +76,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             location = 3;
         } else{
             location = 0;
-            telemetry.addLine("location = 0");
+            telemetry.addLine("location = 0, propposition was None");
         }
 
         if (location == 1) { // center
@@ -137,15 +137,11 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
-
-
         }
-
 
         while (opModeIsActive()) {}
         intakeOuttake.stop();
     }
-
 }
 
 class Time implements Runnable {
@@ -159,4 +155,3 @@ class Time implements Runnable {
         IntakeOuttakeAuto.currTime = System.currentTimeMillis() - startTime;
     }
 }
-
