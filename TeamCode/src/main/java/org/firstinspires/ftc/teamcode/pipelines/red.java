@@ -20,6 +20,7 @@ public class red extends OpenCvPipeline {
     Mat blurred = new Mat();
     Size blur = new Size(3, 3);
     Mat hsv = new Mat();
+    Mat red = new Mat();
 
     @Override
     public Mat processFrame(Mat input) {
@@ -31,7 +32,6 @@ public class red extends OpenCvPipeline {
 
         Scalar lowHSV = new Scalar(0, 130, 120);
         Scalar highHSV = new Scalar(255, 255, 255);
-        Mat red = new Mat();
 
         Core.inRange(hsv, lowHSV, highHSV, red);
 
