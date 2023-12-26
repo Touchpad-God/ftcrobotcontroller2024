@@ -23,14 +23,14 @@ public class red extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        telemetry.addLine("Green pipeline selected");
+        telemetry.addLine("Red pipeline selected");
         telemetry.update();
 
         Imgproc.GaussianBlur(input, blurred, blur, 0);
         Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
 
-        Scalar lowHSV = new Scalar(170, 140, 170);
-        Scalar highHSV = new Scalar(230, 250, 255);
+        Scalar lowHSV = new Scalar(0, 130, 120);
+        Scalar highHSV = new Scalar(255, 255, 255);
         Mat red = new Mat();
 
         Core.inRange(hsv, lowHSV, highHSV, red);

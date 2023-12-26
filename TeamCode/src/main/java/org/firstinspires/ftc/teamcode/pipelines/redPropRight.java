@@ -36,8 +36,8 @@ public class redPropRight extends OpenCvPipeline {
 
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        Scalar lowHSVred = new Scalar(170, 140, 170);
-        Scalar highHSVred = new Scalar(230, 250, 255);
+        Scalar lowHSVred = new Scalar(0, 130, 120);
+        Scalar highHSVred = new Scalar(200, 200, 255);
 
         Mat red = new Mat();
 
@@ -86,8 +86,8 @@ public class redPropRight extends OpenCvPipeline {
             }
         }
 
-        Imgproc.line(output, new Point( 240, 350), new Point(850, 350), new Scalar(100, 100, 200), 5); //center line
-        Imgproc.line(output, new Point(1025, 350), new Point(1280, 385), new Scalar(100, 100, 200), 5); //right line
+        Imgproc.line(output, new Point( 160, 325), new Point(760, 325), new Scalar(100, 100, 200), 5); //center line
+        Imgproc.line(output, new Point(1010, 340), new Point(1280, 385), new Scalar(100, 100, 200), 5); //right line
 
         if(boundRect.length != 0){
             Rect largestContour = boundRect[largestContour(boundRect)];
@@ -119,9 +119,9 @@ public class redPropRight extends OpenCvPipeline {
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 240 && centerX <= 850){
+        if(centerX >= 160 && centerX <= 760){
             position = PROPPOSITION.CENTER;
-        } else if(centerX >= 1025 && centerX <= 1280){
+        } else if(centerX >= 1010 && centerX <= 1280){
             position = PROPPOSITION.RIGHT;
         } else{
             position = PROPPOSITION.NONE;
