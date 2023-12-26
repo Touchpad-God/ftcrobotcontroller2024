@@ -26,6 +26,9 @@ public class redPropRight extends OpenCvPipeline {
     Mat output = new Mat();
     Size blur = new Size(1.5, 1.5);
 
+    public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
+    public PROPPOSITION position;
+
     @Override
     public Mat processFrame(Mat input) {
         telemetry.addLine("RedPropRight pipeline selected");
@@ -88,19 +91,18 @@ public class redPropRight extends OpenCvPipeline {
 
         if(boundRect.length != 0){
             Rect largestContour = boundRect[largestContour(boundRect)];
-            telemetry.addData("Contour Area", largestContour.area());
 
             int centerX = largestContour.x + largestContour.width/2;
             int centerY = largestContour.y + largestContour.height/2;
 
             Imgproc.circle(output, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
+
             if(largestContour.area() >= 30000){
-                telemetry.addLine(propPosition(centerX));
+                propPosition(centerX);
+                telemetry.addData("Prop Position", position);
             }else{
-                telemetry.addLine("Left");
+                telemetry.addData("Prop Position", PROPPOSITION.LEFT);
             }
-        } else{
-            telemetry.addLine("No red objects found");
         }
 
         /**
@@ -116,13 +118,13 @@ public class redPropRight extends OpenCvPipeline {
         return output;
     }
 
-    public String propPosition(int centerX){
+    public void propPosition(int centerX){
         if(centerX >= 240 && centerX <= 850){
-            return("Center");
+            position = PROPPOSITION.CENTER;
         } else if(centerX >= 1025 && centerX <= 1280){
-            return("Right");
+            position = PROPPOSITION.RIGHT;
         } else{
-            return("can't determine position");
+            position = PROPPOSITION.NONE;
         }
     }
 
