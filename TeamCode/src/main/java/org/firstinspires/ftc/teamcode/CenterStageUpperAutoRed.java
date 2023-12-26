@@ -72,8 +72,11 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             location = 2;
         } else if(redPropPipeline.position == redPropRight.PROPPOSITION.CENTER){
             location = 1;
-        } else{
+        } else if(redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT){
             location = 3;
+        } else{
+            location = 0;
+            telemetry.addLine("location = 0");
         }
 
         if (location == 1) { // center
@@ -92,8 +95,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
-
-
         } else if (location == 2) { // left
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
                     .setReversed(true)
