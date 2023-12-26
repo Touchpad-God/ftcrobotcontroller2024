@@ -25,6 +25,9 @@ public class redPropRight extends OpenCvPipeline {
     Mat hsv = new Mat();
     Mat output = new Mat();
     Size blur = new Size(1.5, 1.5);
+    Mat red = new Mat();
+    Mat edges = new Mat();
+    Mat hierarchy = new Mat();
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position;
@@ -39,10 +42,6 @@ public class redPropRight extends OpenCvPipeline {
         Scalar lowHSVred = new Scalar(0, 130, 120);
         Scalar highHSVred = new Scalar(200, 200, 255);
 
-        Mat red = new Mat();
-
-        Mat edges = new Mat();
-
         Core.inRange(hsv, lowHSVred, highHSVred, red);
 
         Imgproc.GaussianBlur(red, red, blur, 0);
@@ -50,9 +49,7 @@ public class redPropRight extends OpenCvPipeline {
         Imgproc.Canny(red, edges, 100, 300);
 
         List<MatOfPoint> contour = new ArrayList<>();
-        Mat hierarchy = new Mat();
         Imgproc.findContours(edges, contour, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
-
 
         MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contour.size()];
 
