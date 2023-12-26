@@ -22,10 +22,7 @@ public class MyClass {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
                                 .setReversed(true)
-                                .turn(Math.toRadians(-90))
-                                .setReversed(false)
-                                .splineToConstantHeading(new Vector2d(60, 24), Math.toRadians(90))
-                                .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180))
+                                .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270)))
                                 .build()
                 );
 //
