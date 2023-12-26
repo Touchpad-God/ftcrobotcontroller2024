@@ -268,10 +268,12 @@ public class IntakeOuttake {
                 outtakeState = OuttakeState.IDLE;
                 break;
             case POS4:
+                timer.start(200);
                 differentialLeft.setPosition(leftHorizonatal);
                 differentialRight.setPosition(rightHorizontal);
-                if (0.51 < differentialLeft.getPosition() && differentialLeft.getPosition() < 0.53) {
+                if (timer.finished()) {
                     outtakeState = OuttakeState.AUTODROP;
+                    timer.markReady();
                 }
                 break;
             case DROPPED:
@@ -286,12 +288,18 @@ public class IntakeOuttake {
             case AUTORAISED:
                 outtakeTicks = 150;
                 if (outtakeRaised()) {
+                    horizontalSlideServo.setPosition(horizontalOpen);
                     outtakeState = OuttakeState.POS4;
                 }
                 break;
             case AUTODROP:
+                timer.start(200);
                 clawLeft.setPosition(clawClosedLeft);
-                outtakeState = OuttakeState.POS1;
+                clawRight.setPosition(clawEngagedRight);
+                if (timer.finished()) {
+                    outtakeState = OuttakeState.POS1;
+                    timer.markReady();
+                }
                 break;
         }
 
