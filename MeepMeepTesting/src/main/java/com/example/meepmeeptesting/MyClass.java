@@ -21,8 +21,8 @@ public class MyClass {
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
-                                .setReversed(true)
-                                .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270)))
+                                .lineToSplineHeading(new Pose2d(34.5, 36, Math.toRadians(90)))
+                                .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)))
                                 .build()
                 );
 //

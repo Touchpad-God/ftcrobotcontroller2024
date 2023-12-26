@@ -85,7 +85,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             }
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
-                    .setReversed(true)
                     .turn(Math.toRadians(90));
 
             drive.followTrajectorySequence(traj.build());
@@ -105,8 +104,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             }
         } else { //right
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
-                    .setReversed(true)
-                    .turn(Math.toRadians(-90));
+                    .lineToSplineHeading(new Pose2d(34.5, 36, Math.toRadians(90)));
             drive.followTrajectorySequence(traj.build());
 
             intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
@@ -115,9 +113,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             }
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(-90)))
-                    .setReversed(false)
-                    .splineToConstantHeading(new Vector2d(60, 24), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180));
+                    .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)));
 
             drive.followTrajectorySequence(traj.build());
 
@@ -132,14 +128,3 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     }
 }
 
-class Time implements Runnable {
-    public double startTime;
-    public Time() {
-        this.startTime = System.currentTimeMillis();
-    }
-
-    @Override
-    public void run() {
-        IntakeOuttakeAuto.currTime = System.currentTimeMillis() - startTime;
-    }
-}
