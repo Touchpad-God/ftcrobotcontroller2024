@@ -12,11 +12,18 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuild
 public class CenterStageLowerAutoRed extends LinearOpMode {
     TrajectorySequenceBuilder traj;
     int location;
+    static IntakeOuttakeAuto intakeOuttake;
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         waitForStart();
+
+        intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
+        Thread inOutThread = new Thread(intakeOuttake);
+        inOutThread.start();
+        intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         if (isStopRequested()) return;
 
@@ -26,26 +33,65 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
 
         if (location == 1) { // center
             traj = drive.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(0)))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                            idle();
+                        }
+                    })
                     .splineToSplineHeading(new Pose2d(60, -24, Math.toRadians(90)), Math.toRadians(90))
                     .splineToConstantHeading(new Vector2d(60, 0), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(36, 48), Math.toRadians(180)
-                    );
+                    .splineToConstantHeading(new Vector2d(36, 48), Math.toRadians(180))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.setCurrTime(getRuntime());
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                            idle();
+                        }
+                    });
         } else if (location == 2) { // left
             traj = drive.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(0)))
                     .setReversed(true)
                     .turn(Math.toRadians(90))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                            idle();
+                        }
+                    })
                     .strafeRight(12)
                     .splineToConstantHeading(new Vector2d(60, 0), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180));
+                    .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.setCurrTime(getRuntime());
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                            idle();
+                        }
+                    });
         } else { // right
             traj = drive.trajectorySequenceBuilder(new Pose2d(36, -36, Math.toRadians(0)))
                     .turn(Math.toRadians(-90))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                            idle();
+                        }
+                    })
                     .splineToConstantHeading(new Vector2d(60, -24), Math.toRadians(90))
                     .splineToConstantHeading(new Vector2d(60, 0), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(30, 48), Math.toRadians(180)
-                    );
+                    .splineToConstantHeading(new Vector2d(30, 48), Math.toRadians(180))
+                    .addDisplacementMarker(() -> {
+                        intakeOuttake.setCurrTime(getRuntime());
+                        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+                        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                            idle();
+                        }
+                    });
         }
 
         drive.followTrajectorySequence(traj.build());
     }
 }
+
+

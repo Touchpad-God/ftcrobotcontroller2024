@@ -213,6 +213,7 @@ public class IntakeOuttake {
     public void outtake(double currTime) {
         switch (outtakeState) {
             case IDLE:
+            case RAISEDWAITING:
                 break;
             case READY:
                 if (!outtakeRaised()) {
@@ -222,8 +223,6 @@ public class IntakeOuttake {
                 differentialRight.setPosition(right0);
                 horizontalSlideServo.setPosition(horizontalOpen);
                 outtakeState = OuttakeState.RAISEDWAITING;
-                break;
-            case RAISEDWAITING:
                 break;
             case RETRACT:
                 timer.start(300);
@@ -274,6 +273,7 @@ public class IntakeOuttake {
                 if (0.51 < differentialLeft.getPosition() && differentialLeft.getPosition() < 0.53) {
                     outtakeState = OuttakeState.AUTODROP;
                 }
+                break;
             case DROPPED:
                 timer.start(200);
                 clawLeft.setPosition(clawClosedLeft);
@@ -284,7 +284,7 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTORAISED:
-                outtakeTicks = 120;
+                outtakeTicks = 150;
                 if (outtakeRaised()) {
                     outtakeState = OuttakeState.POS4;
                 }
@@ -292,6 +292,7 @@ public class IntakeOuttake {
             case AUTODROP:
                 clawLeft.setPosition(clawClosedLeft);
                 outtakeState = OuttakeState.POS1;
+                break;
         }
 
     }
