@@ -149,6 +149,7 @@ public class redPropRight extends OpenCvPipeline {
                 position = PROPPOSITION.RIGHT;
             } else if(boundRect[i].contains(centerLine)){
                 position = PROPPOSITION.CENTER;
+            }
         }
     }
 }
