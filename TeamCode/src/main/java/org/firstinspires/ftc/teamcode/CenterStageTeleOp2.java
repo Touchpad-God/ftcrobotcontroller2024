@@ -28,7 +28,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
-    double headingOffset = 0;
+    double headingOffset = Math.PI / 2;
     boolean tankMode = false;
     boolean wasGamepadAPressed = false;
     boolean dpadLeftPrev = false;
@@ -70,8 +70,8 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             x = Math.pow(gamepad1.left_stick_x, 3);
             y = Math.pow(-gamepad1.left_stick_y, 3);
             rot = Math.pow(gamepad1.right_stick_x, 3);
-
-            double theta = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) - headingOffset;
+            double currHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double theta = -(currHeading + headingOffset);
             double rotX = x * Math.cos(theta) - y * Math.sin(theta);
             double rotY = x * Math.sin(theta) + y * Math.cos(theta);
 
@@ -89,10 +89,11 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             wasGamepadAPressed = gamepad1.a;
             double drivetrainMult = (slowMode ? slow : fast);
             if (!tankMode) {
-                motorLf.setPower((-rotX -rotY -rot) * drivetrainMult);
-                motorLb.setPower((+rotX -rotY -rot) * drivetrainMult);
-                motorRf.setPower((-rotX +rotY -rot) * drivetrainMult);
-                motorRb.setPower((+rotX +rotY -rot) * drivetrainMult);
+                double denom = Math.max(Math.abs(-rotX -rotY -rot), Math.max(Math.abs(+rotX -rotY -rot), Math.max(Math.abs(-rotX +rotY -rot), Math.max(Math.abs(+rotX +rotY -rot), 1))));
+                motorLf.setPower((-rotX -rotY -rot) * drivetrainMult / denom);
+                motorLb.setPower((+rotX -rotY -rot) * drivetrainMult / denom);
+                motorRf.setPower((-rotX +rotY -rot) * drivetrainMult / denom);
+                motorRb.setPower((+rotX +rotY -rot) * drivetrainMult / denom);
             } else {
                 motorLf.setPower((-y -rot) * drivetrainMult);
                 motorLb.setPower((-y -rot) * drivetrainMult);
@@ -104,12 +105,13 @@ public class CenterStageTeleOp2 extends LinearOpMode {
                 slowMode = !slowMode;
             }
             if (gamepad1.dpad_left && !dpadLeftPrev) {
-                headingOffset = theta;
+                imu.initialize(parameters);
             }
 
             rightStickPressedLast = gamepad1.right_stick_button;
             dpadLeftPrev = gamepad1.dpad_left;
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
+            telemetry.addData("Current heading", theta);
 
             intakeOuttake.update(gamepad1, gamepad2, telemetry, getRuntime());
             telemetry.update();
