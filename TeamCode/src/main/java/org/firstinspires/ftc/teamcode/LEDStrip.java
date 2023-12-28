@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /*
@@ -29,14 +28,15 @@ class LEDStrip {
     final double PURPLE = 0.7545;
     final double YELLOW = 0.6945;
 
-    public Servo blinkinLedDriver;
+    public Servo blinkinLed;
     public double color1;
     public double color2;
 
     public LEDStrip(HardwareMap hardwareMap) {
-        blinkinLedDriver = hardwareMap.get(Servo.class, "led");
-        color1 = BLACK;
-        color2 = BLACK;
+        this.blinkinLed = hardwareMap.get(Servo.class, "led");
+        blinkinLed.setPosition(this.BLACK);
+        this.color1 = this.BLACK;
+        this.color2 = this.BLACK;
     }
 
     public void updatePixels(String color1, String color2) {
@@ -80,42 +80,42 @@ class LEDStrip {
         switch (ledState) {
             case PATTERN1:
                 timer.start(1750);
-                blinkinLedDriver.setPosition(this.color1);
+                blinkinLed.setPosition(this.color1);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE1;
                 }
             case PAUSE1:
                 timer.start(550);
-                blinkinLedDriver.setPosition(this.BLACK);
+                blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN2A;
                 }
             case PATTERN2A:
                 timer.start(750);
-                blinkinLedDriver.setPosition(this.color2);
+                blinkinLed.setPosition(this.color2);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE2;
                 }
             case PAUSE2:
                 timer.start(550);
-                blinkinLedDriver.setPosition(this.BLACK);
+                blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN2B;
                 }
             case PATTERN2B:
                 timer.start(750);
-                blinkinLedDriver.setPosition(this.color2);
+                blinkinLed.setPosition(this.color2);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE3;
                 }
             case PAUSE3:
                 timer.start(550);
-                blinkinLedDriver.setPosition(this.BLACK);
+                blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN1;
