@@ -65,6 +65,9 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
+        Servo drone;
+        drone = hardwareMap.get(Servo.class, "drone");
+        drone.setPosition(0.97);
 
         if (isStopRequested()) return;
 
@@ -109,6 +112,9 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             }
             if (gamepad1.dpad_left && !dpadLeftPrev) {
                 headingOffset = currHeading;
+            }
+            if (gamepad1.b) {
+                drone.setPosition(0.5);
             }
 
             rightStickPressedLast = gamepad1.right_stick_button;
