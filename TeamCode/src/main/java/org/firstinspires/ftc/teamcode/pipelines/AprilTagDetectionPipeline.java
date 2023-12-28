@@ -25,8 +25,6 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
     private long nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 3, 3);
     private Mat grey = new Mat();
     private Mat cameraMatrix;
-    private ArrayList<org.openftc.apriltag.AprilTagDetection> detections = new ArrayList<>();
-    private ArrayList<AprilTagDetection> detectionsUpdate = new ArrayList<>();
 
     double fx = 1430;
     double fy = 1430;
@@ -55,16 +53,17 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
 
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
 
-        detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
+        ArrayList<org.openftc.apriltag.AprilTagDetection> detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
 
         //releasing matrices
         grey.release();
 
-        List<Point> tagCenters = new ArrayList<>();
+        //List<Point> tagCenters = new ArrayList<>();
 
         for(org.openftc.apriltag.AprilTagDetection detection: detections){
             Pose pose = aprilTagPoseToOpenCvPose(detection.pose);
-            tagCenters.add(drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix));
+            //tagCenters.add(drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix));
+            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix);
 
             //releasing matrices
             pose.rvec.release();

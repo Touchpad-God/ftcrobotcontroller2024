@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -30,9 +29,6 @@ public class yellowAndAprilTag extends OpenCvPipeline {
     private long nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 3, 3);
     private Mat grey = new Mat();
     private Mat cameraMatrix;
-    private ArrayList<org.openftc.apriltag.AprilTagDetection> detections = new ArrayList<>();
-    private ArrayList<AprilTagDetection> detectionsUpdate = new ArrayList<>();
-
     double fx = 1430;
     double fy = 1430;
     double cx = 480;
@@ -65,7 +61,7 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         telemetry.update();
 
         //position
-        tagposition = TAGPOSITION.CENTER;
+        tagposition = TAGPOSITION.RIGHT;
 
         //grey for april tags, yellow for pixels
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
@@ -79,7 +75,7 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         Imgproc.GaussianBlur(yellow, yellow, blur, 0);
 
         //April Tag detection for the centers
-        detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
+        ArrayList<org.openftc.apriltag.AprilTagDetection> detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
 
         //releasing matrices
         grey.release();
