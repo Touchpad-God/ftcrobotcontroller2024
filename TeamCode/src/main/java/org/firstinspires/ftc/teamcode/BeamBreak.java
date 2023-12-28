@@ -23,6 +23,11 @@ public class BeamBreak implements Runnable {
             this.status = beam.getState();
             if (this.status && !this.prevStatus) {
                 this.detections++;
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
             this.prevStatus = this.status;
         }

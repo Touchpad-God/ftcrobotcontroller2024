@@ -35,7 +35,7 @@ public class IntakeOuttake {
     double intakePos2 = 0.4267;
     double intakePos3 = 0.4844;
     double intakePos4 = 0.5350;
-    double intakePos5 = 0.5800;
+    double intakePos5 = 0.5700;
     int locationPixel = 0;
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     public static double intakePower = 1.0;
@@ -85,9 +85,9 @@ public class IntakeOuttake {
     public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
     public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
-    public IntakeState intakeState = IntakeState.IDLE;
-    public OuttakeState outtakeState = OuttakeState.IDLE;
-    public TransferState transferState = TransferState.IDLE;
+    public volatile IntakeState intakeState = IntakeState.IDLE;
+    public volatile OuttakeState outtakeState = OuttakeState.IDLE;
+    public volatile TransferState transferState = TransferState.IDLE;
     public volatile int outtakeTicks = 0;
 
     public int clawRotation = 0;
@@ -320,8 +320,8 @@ public class IntakeOuttake {
         float[] HSVValues = new float[3];
         float[] HSVValues2 = new float[3];
         Color.RGBToHSV(color1red, color1green, color1blue, HSVValues);
-        if (color1.getDistance(DistanceUnit.CM) < 0.7) {
-            if (HSVValues[1] < 0.4) {
+        if (color1.getDistance(DistanceUnit.CM) < 0.65) {
+            if (HSVValues[1] < 0.59) {
                 pixel1 = "white";
             } else if (HSVValues[0] > 120 && HSVValues[0] < 140) {
                 pixel1 = "green";
@@ -332,8 +332,8 @@ public class IntakeOuttake {
             }
         }
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
-        if (color2.getDistance(DistanceUnit.CM) < 0.7) {
-            if (HSVValues2[1] < 0.4) {
+        if (color2.getDistance(DistanceUnit.CM) < 0.65) {
+            if (HSVValues2[1] < 0.47) {
                 pixel2 = "white";
             } else if (HSVValues2[0] > 120 && HSVValues2[0] < 140) {
                 pixel2 = "green";

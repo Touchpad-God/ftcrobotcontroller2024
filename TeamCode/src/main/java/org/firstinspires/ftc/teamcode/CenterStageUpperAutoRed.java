@@ -64,14 +64,22 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         if (isStopRequested()) return;
 
-//        drive.setPoseEstimate(new Pose2d(51.5, 15, Math.toRadians(0)));
+        telemetry.addData("Intake state", intakeOuttake.intakeState);
+        telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+        telemetry.addData("Transfer state", intakeOuttake.transferState);
+        telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+        telemetry.update();
 
         if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER || redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) {
             drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).lineTo(new Vector2d(-24, -3)).build());
             drive.setPoseEstimate(new Pose2d(37.5, 12, Math.toRadians(0)));
         }
 
-
+        telemetry.addData("Intake state", intakeOuttake.intakeState);
+        telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+        telemetry.addData("Transfer state", intakeOuttake.transferState);
+        telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+        telemetry.update();
 
         if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER) { // center
             backdropX = 36;
@@ -94,9 +102,24 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             }
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT){ //right
             backdropX = 42;
+            drive.setPoseEstimate(new Pose2d(61.5, 15, Math.toRadians(0)));
+
+            telemetry.addData("Intake state", intakeOuttake.intakeState);
+            telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+            telemetry.addData("Transfer state", intakeOuttake.transferState);
+            telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+            telemetry.update();
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(51.5, 15, Math.toRadians(0)))
-                    .lineToSplineHeading(new Pose2d(34.5, 36, Math.toRadians(90)));
+                    .lineToConstantHeading(new Vector2d(34.5, 36))
+                    .addDisplacementMarker(() -> {
+                        telemetry.addData("Intake state", intakeOuttake.intakeState);
+                        telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+                        telemetry.addData("Transfer state", intakeOuttake.transferState);
+                        telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+                        telemetry.update();
+                    })
+                    .turn(Math.toRadians(90));
             drive.followTrajectorySequence(traj.build());
 
             intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
@@ -104,8 +127,16 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
 
+
             traj = drive.trajectorySequenceBuilder(new Pose2d(34.5, 36, Math.toRadians(90)))
-                    .lineToSplineHeading(new Pose2d(backdropX, 48, Math.toRadians(270)));
+                    .lineToSplineHeading(new Pose2d(backdropX, 48, Math.toRadians(270)))
+                    .addDisplacementMarker(() -> {
+                        telemetry.addData("Intake state", intakeOuttake.intakeState);
+                        telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+                        telemetry.addData("Transfer state", intakeOuttake.transferState);
+                        telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+                        telemetry.update();
+                    });
 
             drive.followTrajectorySequence(traj.build());
 
@@ -137,16 +168,58 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         }
 
         traj = drive.trajectorySequenceBuilder(new Pose2d(backdropX, 48, Math.toRadians(270)))
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.pos = intakeOuttake.intakePos5)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -50), Math.toRadians(270));
+                .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
+                .addDisplacementMarker(() -> {
+                    telemetry.addData("Intake state", intakeOuttake.intakeState);
+                    telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+                    telemetry.addData("Transfer state", intakeOuttake.transferState);
+                    telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+                    telemetry.update();
+                })
+                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
+                .addDisplacementMarker(() -> {
+                    telemetry.addData("Intake state", intakeOuttake.intakeState);
+                    telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+                    telemetry.addData("Transfer state", intakeOuttake.transferState);
+                    telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+                    telemetry.update();
+                })
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -50), Math.toRadians(270))
+                .addDisplacementMarker(() -> {
+                    telemetry.addData("Intake state", intakeOuttake.intakeState);
+                    telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+                    telemetry.addData("Transfer state", intakeOuttake.transferState);
+                    telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+                    telemetry.update();
+                });
 
         drive.followTrajectorySequence(traj.build());
 
         intakeOuttake.intakeState = IntakeOuttake.IntakeState.INTAKING;
+
+        telemetry.addData("Intake state", intakeOuttake.intakeState);
+        telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+        telemetry.addData("Transfer state", intakeOuttake.transferState);
+        telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+        telemetry.update();
+
         drive.followTrajectory(drive.trajectoryBuilder(new Pose2d(whitePixelLocation, -50, Math.toRadians(270)))
-                .forward(3, (v, pose2d, pose2d1, pose2d2) -> 10, (v, pose2d, pose2d1, pose2d2) -> 10)
+                .forward(6.420, (v, pose2d, pose2d1, pose2d2) -> 2, (v, pose2d, pose2d1, pose2d2) -> 2)
+                .addDisplacementMarker(() -> {
+                    telemetry.addData("Intake state", intakeOuttake.intakeState);
+                    telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+                    telemetry.addData("Transfer state", intakeOuttake.transferState);
+                    telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+                    telemetry.update();
+                })
                 .build());
+
+        telemetry.addData("Intake state", intakeOuttake.intakeState);
+        telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+        telemetry.addData("Transfer state", intakeOuttake.transferState);
+        telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+        telemetry.update();
 
         traj = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .setReversed(true)
