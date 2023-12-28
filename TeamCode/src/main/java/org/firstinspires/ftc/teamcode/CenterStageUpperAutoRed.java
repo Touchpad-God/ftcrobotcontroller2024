@@ -20,9 +20,10 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     protected Servo butterflyRight;
     public static final int IMU_DIFF = -90;
     TrajectorySequenceBuilder traj;
-    int location;
-    static double currTime;
     static IntakeOuttakeAuto intakeOuttake;
+
+    public int whitePixelLocation = 12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
+    public int backdropX = 0;
 
     //vision
     private OpenCvCamera camera;
@@ -63,11 +64,18 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         if (isStopRequested()) return;
 
-        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).lineTo(new Vector2d(-24, -3)) .build());
+//        drive.setPoseEstimate(new Pose2d(51.5, 15, Math.toRadians(0)));
 
-        drive.setPoseEstimate(new Pose2d(37.5, 12, Math.toRadians(0)));
+        if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER || redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) {
+            drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).lineTo(new Vector2d(-24, -3)).build());
+            drive.setPoseEstimate(new Pose2d(37.5, 12, Math.toRadians(0)));
+        }
+
+
 
         if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER) { // center
+            backdropX = 36;
+
             intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
                 idle();
@@ -76,7 +84,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
                     .setReversed(true)
                     .waitSeconds(0.4)
-                    .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270)));
+                    .lineToSplineHeading(new Pose2d(backdropX, 48, Math.toRadians(270)));
 
             drive.followTrajectorySequence(traj.build());
 
@@ -85,7 +93,9 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT){ //right
-            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
+            backdropX = 42;
+
+            traj = drive.trajectorySequenceBuilder(new Pose2d(51.5, 15, Math.toRadians(0)))
                     .lineToSplineHeading(new Pose2d(34.5, 36, Math.toRadians(90)));
             drive.followTrajectorySequence(traj.build());
 
@@ -94,8 +104,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
 
-            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(-90)))
-                    .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)));
+            traj = drive.trajectorySequenceBuilder(new Pose2d(34.5, 36, Math.toRadians(90)))
+                    .lineToSplineHeading(new Pose2d(backdropX, 48, Math.toRadians(270)));
 
             drive.followTrajectorySequence(traj.build());
 
@@ -104,6 +114,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
+            backdropX = 30;
+
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
                     .turn(Math.toRadians(90));
 
@@ -114,7 +126,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             }
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(90)))
-                    .lineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270)));
+                    .lineToSplineHeading(new Pose2d(backdropX, 48, Math.toRadians(270)));
 
             drive.followTrajectorySequence(traj.build());
 
@@ -123,6 +135,13 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
         }
+
+        traj = drive.trajectorySequenceBuilder(new Pose2d(backdropX, 48, Math.toRadians(270)))
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(270))
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.pos = 0.5350)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -50), Math.toRadians(270));
+
+        drive.followTrajectorySequence(traj.build());
 
         while (opModeIsActive()) {}
         intakeOuttake.stop();

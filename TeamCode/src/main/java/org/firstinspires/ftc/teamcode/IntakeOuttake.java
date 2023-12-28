@@ -322,26 +322,26 @@ public class IntakeOuttake {
         float[] HSVValues2 = new float[3];
         Color.RGBToHSV(color1red, color1green, color1blue, HSVValues);
         if (color1.getDistance(DistanceUnit.CM) < 0.7) {
-            if (HSVValues[0] > 120 && HSVValues[0] < 140) {
+            if (HSVValues[1] < 0.4) {
+                pixel1 = "white";
+            } else if (HSVValues[0] > 120 && HSVValues[0] < 140) {
                 pixel1 = "green";
             } else if (HSVValues[0] > 190 && HSVValues[0] < 220) {
                 pixel1 = "purple";
             } else if (HSVValues[0] > 75 && HSVValues[0] < 100) {
                 pixel1 = "yellow";
-            } else {
-                pixel1 = "white";
             }
         }
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
         if (color2.getDistance(DistanceUnit.CM) < 0.7) {
-            if (HSVValues[0] > 120 && HSVValues[0] < 140) {
+            if (HSVValues2[1] < 0.4) {
+                pixel1 = "white";
+            } else if (HSVValues2[0] > 120 && HSVValues2[0] < 140) {
                 pixel2 = "green";
-            } else if (HSVValues[0] > 190 && HSVValues[0] < 220) {
+            } else if (HSVValues2[0] > 190 && HSVValues2[0] < 220) {
                 pixel2 = "purple";
-            } else if (HSVValues[0] > 75 && HSVValues[0] < 100) {
+            } else if (HSVValues2[0] > 75 && HSVValues2[0] < 100) {
                 pixel2 = "yellow";
-            } else {
-                pixel2 = "white";
             }
         }
 

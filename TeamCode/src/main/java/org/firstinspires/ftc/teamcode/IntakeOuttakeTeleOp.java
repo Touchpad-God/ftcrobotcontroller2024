@@ -27,9 +27,9 @@ Very important:
  - Tune da outtake PID (done)
 
 Fairly important:
- - Driver-centric driving (depends on who's driver 1)
+ - Driver-centric driving (depends on who's driver 1) (done)
  - LED integration wtih color sensors (done)
- - Lift intake when not intaking
+ - Lift intake when not intaking (done)
 
 
 Nice to have:
@@ -56,7 +56,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
             gamepad1Prev = gamepad1;
             gamepad2Prev = gamepad2; // this is a hack. hopefully we can do this in a better way;
         }
-        sensors();
+        if (outtakeState != OuttakeState.READY) sensors();
         if (locationPixel != 5 && gamepad2.right_trigger > 0.1) {
             if (!pixel1.equals("") && !pixel2.equals("") && beam.getDetections() >= 2) {
                 intakeState = IntakeState.EJECTING;
@@ -153,6 +153,9 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         telemetry.addData("Transfer state", transferState);
         telemetry.addData("Outtake state", outtakeState);
         telemetry.addData("LED State", blinky.ledState);
+        telemetry.addData("LED color 1", blinky.color1);
+        telemetry.addData("LED color 2", blinky.color2);
+        telemetry.addData("LED current", blinky.blinkinLedDriver.getPosition());
 
     }
 
