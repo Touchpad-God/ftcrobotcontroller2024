@@ -215,11 +215,13 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 })
                 .build());
 
-        telemetry.addData("Intake state", intakeOuttake.intakeState);
-        telemetry.addData("Outtake state", intakeOuttake.outtakeState);
-        telemetry.addData("Transfer state", intakeOuttake.transferState);
-        telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
-        telemetry.update();
+        while (opModeIsActive()) {
+            telemetry.addData("Intake state", intakeOuttake.intakeState);
+            telemetry.addData("Outtake state", intakeOuttake.outtakeState);
+            telemetry.addData("Transfer state", intakeOuttake.transferState);
+            telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
+            telemetry.update();
+        }
 
         traj = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .setReversed(true)
@@ -227,7 +229,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .addDisplacementMarker(() -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
                 .splineToConstantHeading(new Vector2d(30, 48), Math.toRadians(90));
 
-        while (opModeIsActive()) {}
         intakeOuttake.stop();
     }
 }
