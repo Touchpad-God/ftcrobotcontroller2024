@@ -40,7 +40,7 @@ public class redPropRight extends OpenCvPipeline {
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
         Scalar lowHSVred = new Scalar(0, 130, 120);
-        Scalar highHSVred = new Scalar(200, 200, 255);
+        Scalar highHSVred = new Scalar(255, 255, 255);
 
         Core.inRange(hsv, lowHSVred, highHSVred, red);
 
@@ -73,13 +73,10 @@ public class redPropRight extends OpenCvPipeline {
 
         avgArea /= total;
 
-        List<Integer> indexes = new ArrayList<>();
-
         Imgproc.cvtColor(hsv, output, Imgproc.COLOR_HSV2RGB);
         for(int i = 0; i != boundRect.length; i++){
             if(boundRect[i].area() > (input.width() * input.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
-                Imgproc.rectangle(output, boundRect[i], new Scalar(250, 100, 200));
-                indexes.add(i);
+                Imgproc.rectangle(output, boundRect[i], new Scalar(250, 100, 200), 4);
             }
         }
 
@@ -106,16 +103,6 @@ public class redPropRight extends OpenCvPipeline {
         }
 
         telemetry.addData("Prop position", position);
-
-        /**
-         for(int i = 0; i < indexes.size(); i++){
-         int centerX = boundRect[indexes.get(i)].x + boundRect[indexes.get(i)].width/2;
-         int centerY = boundRect[indexes.get(i)].y + boundRect[indexes.get(i)].height/2;
-
-         Imgproc.circle(output, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
-         telemetry.addLine(propPosition(centerX));
-         }
-         **/
 
         return output;
     }

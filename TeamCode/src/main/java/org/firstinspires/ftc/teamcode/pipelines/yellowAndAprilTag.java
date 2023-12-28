@@ -163,7 +163,7 @@ public class yellowAndAprilTag extends OpenCvPipeline {
             Imgproc.circle(input, pixelCenter, 0, new Scalar(0, 200, 200), 8);
 
             if(pixelCenter.x >= (tagCenter.x - tagsizeX) && pixelCenter.x <= (tagCenter.x + tagsizeX)){
-                Imgproc.rectangle(input, rect, new Scalar(250, 25, 50));
+                Imgproc.rectangle(input, rect, new Scalar(250, 25, 50), 4);
                 return(pixelCenter);
             } else{
                 return(new Point(-1, -1));
