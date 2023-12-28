@@ -35,7 +35,7 @@ public class IntakeOuttake {
     double intakePos2 = 0.4267;
     double intakePos3 = 0.4844;
     double intakePos4 = 0.5350;
-    double intakePos5 = 0.580;
+    double intakePos5 = 0.5800;
     int locationPixel = 0;
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     public static double intakePower = 1.0;
@@ -171,8 +171,7 @@ public class IntakeOuttake {
                 intakeIntake.setPower(-intakePower);
                 intakeTransfer.setPower(-transferPower);
                 intakeServo.setPosition(intakePositions[4]);
-
-
+                break;
         }
     }
 
@@ -335,7 +334,7 @@ public class IntakeOuttake {
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
         if (color2.getDistance(DistanceUnit.CM) < 0.7) {
             if (HSVValues2[1] < 0.4) {
-                pixel1 = "white";
+                pixel2 = "white";
             } else if (HSVValues2[0] > 120 && HSVValues2[0] < 140) {
                 pixel2 = "green";
             } else if (HSVValues2[0] > 190 && HSVValues2[0] < 220) {

@@ -138,10 +138,21 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         traj = drive.trajectorySequenceBuilder(new Pose2d(backdropX, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.pos = 0.5350)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.pos = intakeOuttake.intakePos5)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -50), Math.toRadians(270));
 
         drive.followTrajectorySequence(traj.build());
+
+        intakeOuttake.intakeState = IntakeOuttake.IntakeState.INTAKING;
+        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d(whitePixelLocation, -50, Math.toRadians(270)))
+                .forward(3, (v, pose2d, pose2d1, pose2d2) -> 10, (v, pose2d, pose2d1, pose2d2) -> 10)
+                .build());
+
+        traj = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
+                .addDisplacementMarker(() -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                .splineToConstantHeading(new Vector2d(30, 48), Math.toRadians(90));
 
         while (opModeIsActive()) {}
         intakeOuttake.stop();

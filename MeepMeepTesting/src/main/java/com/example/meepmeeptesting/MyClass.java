@@ -20,10 +20,9 @@ public class MyClass {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(36, 46, Math.toRadians(270)))
-                                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
-//                                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.pos = 0.5350)
-                                .splineToSplineHeading(new Pose2d(12, -52), Math.toRadians(270))
+                        drive.trajectorySequenceBuilder(new Pose2d(51.5, 15, Math.toRadians(0)))
+                                .lineToConstantHeading(new Vector2d(34.5, 36))
+                                .turn(Math.toRadians(90))
                                 .build()
                 );
 //
