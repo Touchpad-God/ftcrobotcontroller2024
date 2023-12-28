@@ -23,11 +23,11 @@ class LEDStrip {
 
     private Timer timer = new Timer();
 
-    final double BLACK = 0.7475;
-    final double WHITE = 0.7325000000000002;
-    final double GREEN = 0.6925000000000001;
-    final double PURPLE = 0.7275;
-    final double YELLOW = 0.6725000000000001;
+    final double BLACK = 0.7745;
+    final double WHITE = 0.7595;
+    final double GREEN = 0.7145;
+    final double PURPLE = 0.7545;
+    final double YELLOW = 0.6945;
 
     public Servo blinkinLedDriver;
     public double color1;
