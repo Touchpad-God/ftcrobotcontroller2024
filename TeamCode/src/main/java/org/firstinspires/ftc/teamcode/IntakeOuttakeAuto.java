@@ -8,7 +8,7 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
     private boolean running;
     public static double startTime;
     public static double currTime;
-    public static double pos = 0;
+    public double pos = intakeStowed;
 
     public IntakeOuttakeAuto(HardwareMap hardwareMap) {
         super(hardwareMap);
