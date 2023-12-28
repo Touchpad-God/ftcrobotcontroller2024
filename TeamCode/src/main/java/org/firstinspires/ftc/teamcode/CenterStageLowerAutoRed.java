@@ -78,11 +78,40 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
             }
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
-                    .addSpatialMarker(new Vector2d(60, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
-                    .splineToSplineHeading(new Pose2d(60, -24, Math.toRadians(90)), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(60, 0), Math.toRadians(90))
+                    .addSpatialMarker(new Vector2d(58, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                    .splineToSplineHeading(new Pose2d(58, -24, Math.toRadians(90)), Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(58, 0), Math.toRadians(90))
                     .splineToConstantHeading(new Vector2d(36, 48), Math.toRadians(180));
             drive.followTrajectorySequence(traj.build());
+
+            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                idle();
+            }
+        } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) { // right
+            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
+                    .turn(Math.toRadians(-90));
+
+            drive.followTrajectorySequence(traj.build());
+
+            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
+                idle();
+            }
+
+            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.RETRACT;
+            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                idle();
+            }
+
+            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(-90)))
+                    .addSpatialMarker(new Vector2d(58, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                    .splineToConstantHeading(new Vector2d(58, -24), Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(58, 0), Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180));
+
+            drive.followTrajectorySequence(traj.build());
+
 
             intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
@@ -106,47 +135,18 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
             }
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(90)))
-                    .addSpatialMarker(new Vector2d(60, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
-                    .strafeRight(12)
-                    .splineToConstantHeading(new Vector2d(60, 0), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180));
-
-            drive.followTrajectorySequence(traj.build());
-
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-                idle();
-            }
-
-        } else { // right
-            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
-                    .turn(Math.toRadians(-90));
-
-            drive.followTrajectorySequence(traj.build());
-
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
-                idle();
-            }
-
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.RETRACT;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-                idle();
-            }
-
-            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(-90)))
-                    .addSpatialMarker(new Vector2d(60, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
-                    .splineToConstantHeading(new Vector2d(60, -24), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(60, 0), Math.toRadians(90))
+                    .addSpatialMarker(new Vector2d(58, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                    .strafeRight(10)
+                    .splineToConstantHeading(new Vector2d(58, 0), Math.toRadians(90))
                     .splineToConstantHeading(new Vector2d(30, 48), Math.toRadians(180));
 
             drive.followTrajectorySequence(traj.build());
 
-
             intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
+
         }
         while (opModeIsActive()) {}
 
