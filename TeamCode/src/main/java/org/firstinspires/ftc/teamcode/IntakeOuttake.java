@@ -321,7 +321,7 @@ public class IntakeOuttake {
         float[] HSVValues2 = new float[3];
         Color.RGBToHSV(color1red, color1green, color1blue, HSVValues);
         if (color1.getDistance(DistanceUnit.CM) < 0.7) {
-            if (HSVValues[1] < 0.4) {
+            if (HSVValues[1] < 0.59) {
                 pixel1 = "white";
             } else if (HSVValues[0] > 120 && HSVValues[0] < 140) {
                 pixel1 = "green";
@@ -333,7 +333,7 @@ public class IntakeOuttake {
         }
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
         if (color2.getDistance(DistanceUnit.CM) < 0.7) {
-            if (HSVValues2[1] < 0.4) {
+            if (HSVValues2[1] < 0.47) {
                 pixel2 = "white";
             } else if (HSVValues2[0] > 120 && HSVValues2[0] < 140) {
                 pixel2 = "green";
