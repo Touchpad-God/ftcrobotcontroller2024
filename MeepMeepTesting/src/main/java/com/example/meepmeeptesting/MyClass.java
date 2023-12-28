@@ -20,11 +20,10 @@ public class MyClass {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
-                                .turn(Math.toRadians(-90))
-                                .splineToConstantHeading(new Vector2d(58, -24), Math.toRadians(90))
-                                .splineToConstantHeading(new Vector2d(58, 0), Math.toRadians(90))
-                                .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180))
+                        drive.trajectorySequenceBuilder(new Pose2d(36, 46, Math.toRadians(90)))
+                                .setReversed(true)
+                                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
+                                .splineToConstantHeading(new Vector2d(12, -52), Math.toRadians(270))
                                 .build()
                 );
 //

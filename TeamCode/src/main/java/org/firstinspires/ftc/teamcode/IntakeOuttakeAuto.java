@@ -8,6 +8,7 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
     private boolean running;
     public static double startTime;
     public static double currTime;
+    public static double pos = 0;
 
     public IntakeOuttakeAuto(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -22,6 +23,7 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
 //            telemetry.addData("Outtake state", outtakeState);
 //            telemetry.addData("Transfer state", transferState);
 //            telemetry.addData("Outtake Ticks", outtakeTicks);
+            intakePos(pos);
             intake(currTime);
             transfer(currTime);
             outtake(currTime);
@@ -29,8 +31,8 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
         }
     }
 
-    public void setCurrTime(double time) {
-        currTime = time;
+    public void intakePos(double pos) {
+        intakeServo.setPosition(pos);
     }
 
     public void stop() {
