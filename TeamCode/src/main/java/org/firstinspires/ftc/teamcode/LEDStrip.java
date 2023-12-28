@@ -110,7 +110,7 @@ class LEDStrip {
                     ledState = BLINKYBLINKY.PAUSE3;
                 }
             case PAUSE3:
-                timer.start(250);
+                timer.start(550);
                 blinkinLedDriver.setPosition(BLACK);
                 if (timer.finished()) {
                     timer.markReady();

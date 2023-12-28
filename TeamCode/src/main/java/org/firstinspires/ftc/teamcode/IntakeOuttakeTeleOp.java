@@ -155,6 +155,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         telemetry.addData("LED State", blinky.ledState);
         telemetry.addData("LED color 1", blinky.color1);
         telemetry.addData("LED color 2", blinky.color2);
+        telemetry.addData("LED current", blinky.blinkinLedDriver.getPosition());
 
     }
 
