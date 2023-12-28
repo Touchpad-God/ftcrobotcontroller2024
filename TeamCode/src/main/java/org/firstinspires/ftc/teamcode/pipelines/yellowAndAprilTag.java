@@ -45,6 +45,8 @@ public class yellowAndAprilTag extends OpenCvPipeline {
     //Yellow Pixel Detection
     Mat hsv = new Mat();
     Size blur = new Size(1.5, 1.5);
+    Mat hierarchy = new Mat();
+    Mat yellow = new Mat();
 
     //positions
     public enum TAGPOSITION {LEFT, CENTER, RIGHT}
@@ -71,7 +73,6 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
         Scalar lowHSVyellow = new Scalar(10, 90, 180);
         Scalar highHSVyellow = new Scalar(30, 255, 255);
-        Mat yellow = new Mat();
 
         Core.inRange(hsv, lowHSVyellow, highHSVyellow, yellow);
 
@@ -80,9 +81,11 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         //April Tag detection for the centers
         detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
 
+        //releasing matrices
+        grey.release();
+
         //Yellow Pixel detection for the contours
         List<MatOfPoint> contour = new ArrayList<>();
-        Mat hierarchy = new Mat();
 
         Imgproc.findContours(yellow, contour, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
 
@@ -92,18 +95,42 @@ public class yellowAndAprilTag extends OpenCvPipeline {
             }
         }
 
+        //releasing matrices
+        hsv.release();
+        yellow.release();
+        hierarchy.release();
+
         MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contour.size()];
+        MatOfPoint[] contoursPolyArray = new MatOfPoint[contour.size()];
+        MatOfPoint2f[] curve = new MatOfPoint2f[contour.size()];
         MatOfPoint2f[] approx = new MatOfPoint2f[contour.size()];
+        MatOfPoint2f[] arcCurve = new MatOfPoint2f[contour.size()];
+        MatOfPoint2f[] approxCurve = new MatOfPoint2f[contour.size()];
 
         Rect[] boundRect = new Rect[contour.size()];
 
         for(int i = 0; i < contour.size(); i++){
             contoursPoly[i] = new MatOfPoint2f();
+            curve[i] = new MatOfPoint2f(contour.get(i).toArray());
             approx[i] = new MatOfPoint2f();
-            Imgproc.approxPolyDP(new MatOfPoint2f(contour.get(i).toArray()), contoursPoly[i], 3, true);
-            double peri = Imgproc.arcLength(new MatOfPoint2f(contour.get(i).toArray()), true);
-            Imgproc.approxPolyDP(new MatOfPoint2f(contour.get(i).toArray()), approx[i], 0.04 * peri, true);
-            boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
+            arcCurve[i] = new MatOfPoint2f(contour.get(i).toArray());
+            approxCurve[i] = new MatOfPoint2f(contour.get(i).toArray());
+
+            Imgproc.approxPolyDP(curve[i], contoursPoly[i], 3, true);
+
+            double peri = Imgproc.arcLength(arcCurve[i], true);
+
+            contoursPolyArray[i] = new MatOfPoint(contoursPoly[i].toArray());
+
+            Imgproc.approxPolyDP(approxCurve[i], approx[i], 0.04 * peri, true);
+            boundRect[i] = Imgproc.boundingRect(contoursPolyArray[i]);
+
+            //releasing matrices
+            contoursPoly[i].release();
+            contoursPolyArray[i].release();
+            curve[i].release();
+            arcCurve[i].release();
+            approxCurve[i].release();
         }
 
         //drawing the centers for the april tags
@@ -115,6 +142,10 @@ public class yellowAndAprilTag extends OpenCvPipeline {
             if(tagCenter.x != -1){
                 tagCenters.add(tagCenter);
             }
+
+            //releasing matrices
+            pose.rvec.release();
+            pose.tvec.release();
         }
 
         //drawing the boxes for the pixels
@@ -127,6 +158,9 @@ public class yellowAndAprilTag extends OpenCvPipeline {
                 if (pixelCenter.x != -1) {
                     pixelCenters.add(pixelCenter);
                 }
+
+                //releasing matrices
+                approx[i].release();
             }
         }
 
@@ -188,7 +222,9 @@ public class yellowAndAprilTag extends OpenCvPipeline {
 
         // Project those points
         MatOfPoint2f matProjectedPoints = new MatOfPoint2f();
-        Calib3d.projectPoints(axis, rvec, tvec, cameraMatrix, new MatOfDouble(), matProjectedPoints);
+        MatOfDouble coefficients = new MatOfDouble();
+
+        Calib3d.projectPoints(axis, rvec, tvec, cameraMatrix, coefficients, matProjectedPoints);
         Point[] projectedPoints = matProjectedPoints.toArray();
 
         if(position == TAGPOSITION.LEFT && id == 4 || position == TAGPOSITION.LEFT && id == 1 ||
@@ -199,6 +235,11 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         } else{
             Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(20, 200, 255), -1);
         }
+
+        //releasing matrices
+        axis.release();
+        matProjectedPoints.release();
+        coefficients.release();
 
         return(tagCenter);
     }
@@ -283,6 +324,9 @@ public class yellowAndAprilTag extends OpenCvPipeline {
         }
 
         Calib3d.Rodrigues(R, pose.rvec);
+
+        //releasing matrices
+        R.release();
 
         return pose;
     }

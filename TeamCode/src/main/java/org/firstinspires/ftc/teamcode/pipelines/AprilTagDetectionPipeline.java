@@ -10,7 +10,6 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.MatOfPoint3f;
 import org.opencv.core.Point;
 import org.opencv.core.Point3;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.apriltag.AprilTagDetectorJNI;
@@ -34,12 +33,12 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
     double cx = 480;
     double cy = 620;
 
-    double tagsize = 0.1126;
-    double tagsizeX = 0.1126;
-    double tagsizeY = 0.1126;
+    double tagsize = 0.0508;
+    double tagsizeX = 0.0508;
+    double tagsizeY = 0.0508;
 
     //position
-    public enum TAGPOSITION {LEFT, CENTER, RIGHT};
+    public enum TAGPOSITION {LEFT, CENTER, RIGHT}
     public TAGPOSITION tagposition;
 
     public AprilTagDetectionPipeline(Telemetry telemetry){
@@ -49,23 +48,32 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input){
+        telemetry.addLine("AprilTagDetectionPipeline selected");
+        telemetry.update();
+
         tagposition = TAGPOSITION.LEFT;
 
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
 
         detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
 
+        //releasing matrices
+        grey.release();
+
         List<Point> tagCenters = new ArrayList<>();
 
         for(org.openftc.apriltag.AprilTagDetection detection: detections){
             Pose pose = aprilTagPoseToOpenCvPose(detection.pose);
             tagCenters.add(drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix));
+
+            //releasing matrices
+            pose.rvec.release();
+            pose.tvec.release();
         }
 
         Imgproc.line(input, new Point(0, 100), new Point(tagsizeX * 640, 100), new Scalar(255, 255, 255));
 
-        telemetry.addData("tagSize", tagsizeY/2.0);
-
+        /*
         String points = "";
         for(Point p: tagCenters){
             points += "(" + Math.round(p.x * 100.0)/100.0 + "," + Math.round(p.y * 100.0)/100.0 + ")";
@@ -73,6 +81,10 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
 
         telemetry.addLine(points);
         telemetry.update();
+         */
+
+        //releasing matrices
+        //cameraMatrix.release();
 
         return input;
     }
@@ -114,19 +126,22 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
 
         // Project those points
         MatOfPoint2f matProjectedPoints = new MatOfPoint2f();
-        Calib3d.projectPoints(axis, rvec, tvec, cameraMatrix, new MatOfDouble(), matProjectedPoints);
-        Point[] projectedPoints = matProjectedPoints.toArray();
+        MatOfDouble coefficients = new MatOfDouble();
 
-        // Draw the marker!
-        //Imgproc.line(buf, projectedPoints[0], projectedPoints[1], new Scalar(255, 0, 0), thickness);
-        //Imgproc.line(buf, projectedPoints[0], projectedPoints[2], new Scalar(0, 255, 0), thickness);
-        //Imgproc.line(buf, projectedPoints[0], projectedPoints[3], new Scalar(0, 0, 255), thickness);
+        Calib3d.projectPoints(axis, rvec, tvec, cameraMatrix, coefficients, matProjectedPoints);
+        Point[] projectedPoints = matProjectedPoints.toArray();
 
         if(position == TAGPOSITION.LEFT && id == 4 || position == TAGPOSITION.CENTER && id == 5 || position == TAGPOSITION.RIGHT && id == 6) {
             Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(255, 200, 20), -1);
         } else{
             Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(20, 200, 255), -1);
         }
+
+        //releasing matrices
+        axis.release();
+        matProjectedPoints.release();
+        coefficients.release();
+
         return(projectedPoints[0]);
     }
 
@@ -147,6 +162,9 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
         }
 
         Calib3d.Rodrigues(R, pose.rvec);
+
+        //releasing matrices
+        R.release();
 
         return pose;
     }
