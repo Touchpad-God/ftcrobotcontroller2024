@@ -171,8 +171,7 @@ public class IntakeOuttake {
                 intakeIntake.setPower(-intakePower);
                 intakeTransfer.setPower(-transferPower);
                 intakeServo.setPosition(intakePositions[4]);
-
-
+                break;
         }
     }
 
