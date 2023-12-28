@@ -78,9 +78,9 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
             }
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
-                    .addSpatialMarker(new Vector2d(58, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
-                    .splineToSplineHeading(new Pose2d(58, -24, Math.toRadians(90)), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(58, 0), Math.toRadians(90))
+                    .addSpatialMarker(new Vector2d(59, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                    .splineToSplineHeading(new Pose2d(59, -24, Math.toRadians(90)), Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(59, 0), Math.toRadians(90))
                     .splineToConstantHeading(new Vector2d(36, 48), Math.toRadians(180));
             drive.followTrajectorySequence(traj.build());
 
@@ -105,9 +105,9 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
             }
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(-90)))
-                    .addSpatialMarker(new Vector2d(58, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
-                    .splineToConstantHeading(new Vector2d(58, -24), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(58, 0), Math.toRadians(90))
+                    .addSpatialMarker(new Vector2d(59, 10), () -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                    .splineToConstantHeading(new Vector2d(59, -24), Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(59, 0), Math.toRadians(90))
                     .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180));
 
             drive.followTrajectorySequence(traj.build());

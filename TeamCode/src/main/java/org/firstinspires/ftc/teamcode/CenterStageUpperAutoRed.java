@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.profile.AccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -142,6 +147,11 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -50), Math.toRadians(270));
 
         drive.followTrajectorySequence(traj.build());
+
+        intakeOuttake.intakeState = IntakeOuttake.IntakeState.INTAKING;
+        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d(whitePixelLocation, -50, Math.toRadians(270)))
+                .forward(3, (v, pose2d, pose2d1, pose2d2) -> 10, (v, pose2d, pose2d1, pose2d2) -> 10)
+                .build());
 
         while (opModeIsActive()) {}
         intakeOuttake.stop();
