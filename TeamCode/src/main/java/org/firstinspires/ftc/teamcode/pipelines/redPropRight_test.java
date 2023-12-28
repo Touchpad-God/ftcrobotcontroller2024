@@ -15,17 +15,15 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class redPropLeft extends OpenCvPipeline {
+public class redPropRight_test extends OpenCvPipeline {
     Telemetry telemetry;
 
-    public redPropLeft(Telemetry telemetry) {
+    public redPropRight_test(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
 
     Mat hsv = new Mat();
-    Mat output = new Mat();
     Size blur = new Size(1.5, 1.5);
-
     Mat red = new Mat();
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
@@ -35,7 +33,7 @@ public class redPropLeft extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        telemetry.addLine("RedPropLeft pipeline selected");
+        telemetry.addLine("RedPropRight pipeline selected");
         telemetry.update();
 
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
@@ -52,15 +50,32 @@ public class redPropLeft extends OpenCvPipeline {
         List<MatOfPoint> contour = new ArrayList<>();
         Imgproc.findContours(edges, contour, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
 
+        //releasing matrices
+        hsv.release();
+        red.release();
+        edges.release();
+        hierarchy.release();
 
         MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contour.size()];
+        MatOfPoint2f[] curve = new MatOfPoint2f[contour.size()];
+        MatOfPoint[] contoursPolyArray = new MatOfPoint[contour.size()];
 
         Rect[] boundRect = new Rect[contour.size()];
 
         for(int i = 0; i < contour.size(); i++){
             contoursPoly[i] = new MatOfPoint2f();
-            Imgproc.approxPolyDP(new MatOfPoint2f(contour.get(i).toArray()), contoursPoly[i], 3, true);
-            boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
+            curve[i] = new MatOfPoint2f(contour.get(i).toArray());
+
+            Imgproc.approxPolyDP(curve[i], contoursPoly[i], 3, true);
+
+            contoursPolyArray[i] = new MatOfPoint(contoursPoly[i].toArray());
+
+            boundRect[i] = Imgproc.boundingRect(contoursPolyArray[i]);
+
+            //releasing matrices
+            contoursPoly[i].release();
+            curve[i].release();
+            contoursPolyArray[i].release();
         }
 
         double avgArea = 0;
@@ -75,16 +90,14 @@ public class redPropLeft extends OpenCvPipeline {
 
         avgArea /= total;
 
-        Imgproc.cvtColor(hsv, output, Imgproc.COLOR_HSV2RGB);
         for(int i = 0; i != boundRect.length; i++){
             if(boundRect[i].area() > (input.width() * input.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
-                Imgproc.rectangle(output, boundRect[i], new Scalar(250, 100, 200), 4);
+                Imgproc.rectangle(input, boundRect[i], new Scalar(250, 100, 200), 4);
             }
         }
 
-        Imgproc.line(output, new Point(0, 380), new Point(235, 335), new Scalar(100, 100, 200), 5); //left line
-        Imgproc.line(output, new Point( 440, 335), new Point(1020, 335), new Scalar(100, 100, 200), 5); //center line
-        //Imgproc.circle(output, new Point(730, 310), 2, new Scalar(255, 255, 255), 8);
+        Imgproc.line(input, new Point( 160, 325), new Point(760, 325), new Scalar(100, 100, 200), 5); //center line
+        Imgproc.line(input, new Point(1010, 340), new Point(1280, 385), new Scalar(100, 100, 200), 5); //right line
 
         if(boundRect.length != 0){
             onLine(boundRect);
@@ -95,26 +108,26 @@ public class redPropLeft extends OpenCvPipeline {
                 int centerX = largestContour.x + largestContour.width/2;
                 int centerY = largestContour.y + largestContour.height/2;
 
-                Imgproc.circle(output, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
+                Imgproc.circle(input, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
 
                 if(largestContour.area() >= 30000){
                     propPosition(centerX);
                 }else{
-                    position = PROPPOSITION.RIGHT;
+                    position = PROPPOSITION.LEFT;
                 }
             }
         }
 
         telemetry.addData("Prop position", position);
 
-        return output;
+        return input;
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 0 && centerX <= 225){
-            position = PROPPOSITION.LEFT;
-        } else if(centerX >= 440 && centerX <= 1020){
+        if(centerX >= 160 && centerX <= 760){
             position = PROPPOSITION.CENTER;
+        } else if(centerX >= 1010 && centerX <= 1280){
+            position = PROPPOSITION.RIGHT;
         } else{
             position = PROPPOSITION.NONE;
         }
@@ -131,16 +144,14 @@ public class redPropLeft extends OpenCvPipeline {
     }
 
     public void onLine(Rect[] boundRect){
-        Point leftLine = new Point(180, 340);
-        Point centerLine = new Point(730, 330);
+        Point rightLine = new Point(1120, 360);
+        Point centerLine = new Point(460, 325);
 
         for(int i = 0; i < boundRect.length; i++){
-            if(boundRect[i].contains(leftLine)){
-                position = PROPPOSITION.LEFT;
+            if(boundRect[i].contains(rightLine)){
+                position = PROPPOSITION.RIGHT;
             } else if(boundRect[i].contains(centerLine)){
                 position = PROPPOSITION.CENTER;
-//                telemetry.addLine("(" + (boundRect[i].x + boundRect[i].width/2) + ", " + (boundRect[i].y + boundRect[i].height/2) + ")");
-//                telemetry.update();
             }
         }
     }
