@@ -45,15 +45,12 @@ Nice to have:
 public class IntakeOuttakeTeleOp extends IntakeOuttake{
     private Gamepad gamepad1Prev = new Gamepad();
     private Gamepad gamepad2Prev = new Gamepad();
-    private Servo drone;
     LEDStrip blinky;
 
     // initialize intake and outtake, reset all hardware
     public IntakeOuttakeTeleOp(HardwareMap hardwareMap) {
         super(hardwareMap);
         blinky = new LEDStrip(hardwareMap);
-        drone = hardwareMap.get(Servo.class, "drone");
-        drone.setPosition(0.97);
     }
 
     public void update(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, double currTime) {
@@ -129,9 +126,6 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         else if (gamepad2.dpad_up && !gamepad2Prev.dpad_up) {
             if (locationPixel != 5) locationPixel++;
             intakeServo.setPosition(intakePositions[locationPixel]);
-        }
-        if (gamepad1.b) {
-            drone.setPosition(0.5);
         }
 
         if (clawRotation < 2) {
