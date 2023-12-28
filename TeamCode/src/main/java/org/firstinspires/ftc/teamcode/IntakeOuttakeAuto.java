@@ -9,6 +9,7 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
     public static double startTime;
     public static double currTime;
     public double pos = intakeStowed;
+//    public Telemetry telemetry;
 
     public IntakeOuttakeAuto(HardwareMap hardwareMap) {
         super(hardwareMap);
@@ -19,10 +20,7 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
     public void run() {
         while (running) {
             currTime = ((double) System.currentTimeMillis() / 1000) - startTime;
-//            telemetry.addData("Intake state", intakeState);
-//            telemetry.addData("Outtake state", outtakeState);
-//            telemetry.addData("Transfer state", transferState);
-//            telemetry.addData("Outtake Ticks", outtakeTicks);
+
             intakePos(pos);
             intake(currTime);
             transfer(currTime);
@@ -33,6 +31,51 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
 
     public void intakePos(double pos) {
         intakeServo.setPosition(pos);
+    }
+
+    @Override
+    public void intake(double currTime) {
+        switch(intakeState) {
+            case IDLE:
+                break;
+            case INTAKING:
+                outtakeTicks = 14;
+                intakeIntake.setPower(intakePower);
+                intakeTransfer.setPower(transferPower);
+                intakeServo.setPosition(intakePositions[locationPixel]);
+                clawLeft.setPosition(clawClosedLeft);
+                clawRight.setPosition(clawClosedRight);
+
+                if (beam.getDetections() >= 2) {
+                    intakeState = IntakeState.BEAMNOCOLOR;
+                }
+                break;
+            case BEAMNOCOLOR:
+                if (!pixel1.equals("") && !pixel2.equals("")) {
+                    intakeState = IntakeState.BOTHCOLOR;
+                    intakeIntake.setPower(-intakePower);
+                    intakeTransfer.setPower(transferPower);
+                }
+                break;
+            case STOP:
+                intakeServo.setPosition(intakeStowed);
+                intakeIntake.setPower(0);
+                intakeTransfer.setPower(0);
+                intakeState = IntakeState.IDLE;
+                outtakeTicks = 0;
+            case BOTHCOLOR:
+                intakeServo.setPosition(intakeStowed);
+                intakeIntake.setPower(0);
+                intakeTransfer.setPower(0);
+                intakeState = IntakeState.IDLE;
+                transferState = TransferState.MOTORS;
+                break;
+            case EJECTING:
+                intakeIntake.setPower(-intakePower);
+                intakeTransfer.setPower(-transferPower);
+                intakeServo.setPosition(intakePositions[4]);
+                break;
+        }
     }
 
     public void stop() {
