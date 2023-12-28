@@ -67,7 +67,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         imu.initialize(parameters);
         Servo drone;
         drone = hardwareMap.get(Servo.class, "drone");
-        drone.setPosition(0.97);
+        drone.setPosition(0.99);
 
         if (isStopRequested()) return;
 
