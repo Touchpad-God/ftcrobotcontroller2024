@@ -28,7 +28,10 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
-    double headingOffset = Math.PI / 2;
+    double headingOffset = 0;
+
+    final double INITIALOFFSET = 0.0;
+
     boolean tankMode = false;
     boolean wasGamepadAPressed = false;
     boolean dpadLeftPrev = false;
@@ -71,7 +74,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             y = Math.pow(-gamepad1.left_stick_y, 3);
             rot = Math.pow(gamepad1.right_stick_x, 3);
             double currHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-            double theta = -(currHeading + headingOffset);
+            double theta = -(currHeading - headingOffset - INITIALOFFSET);
             double rotX = x * Math.cos(theta) - y * Math.sin(theta);
             double rotY = x * Math.sin(theta) + y * Math.cos(theta);
 
@@ -105,7 +108,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
                 slowMode = !slowMode;
             }
             if (gamepad1.dpad_left && !dpadLeftPrev) {
-                imu.initialize(parameters);
+                headingOffset = currHeading;
             }
 
             rightStickPressedLast = gamepad1.right_stick_button;

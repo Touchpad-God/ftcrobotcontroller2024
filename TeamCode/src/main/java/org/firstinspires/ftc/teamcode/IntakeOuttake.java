@@ -149,7 +149,7 @@ public class IntakeOuttake {
                 }
                 break;
             case BEAMNOCOLOR:
-                if (pixel1 != null && pixel2 != null) {
+                if (!pixel1.equals("") && !pixel2.equals("")) {
                     intakeState = IntakeState.BOTHCOLOR;
                     intakeIntake.setPower(-intakePower);
                     intakeTransfer.setPower(transferPower);
@@ -321,7 +321,7 @@ public class IntakeOuttake {
         float[] HSVValues = new float[3];
         float[] HSVValues2 = new float[3];
         Color.RGBToHSV(color1red, color1green, color1blue, HSVValues);
-        if (color1.getDistance(DistanceUnit.CM) < 0.75) {
+        if (color1.getDistance(DistanceUnit.CM) < 0.7) {
             if (HSVValues[0] > 120 && HSVValues[0] < 140) {
                 pixel1 = "green";
             } else if (HSVValues[0] > 190 && HSVValues[0] < 220) {
@@ -333,7 +333,7 @@ public class IntakeOuttake {
             }
         }
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
-        if (color2.getDistance(DistanceUnit.CM) < 0.75) {
+        if (color2.getDistance(DistanceUnit.CM) < 0.7) {
             if (HSVValues[0] > 120 && HSVValues[0] < 140) {
                 pixel2 = "green";
             } else if (HSVValues[0] > 190 && HSVValues[0] < 220) {

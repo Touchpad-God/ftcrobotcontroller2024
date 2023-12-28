@@ -58,10 +58,10 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         }
         sensors();
         if (locationPixel != 5 && gamepad2.right_trigger > 0.1) {
-            if (!pixel1.equals("") && !pixel2.equals("") && beam.getDetections() > 0) {
+            if (!pixel1.equals("") && !pixel2.equals("") && beam.getDetections() >= 2) {
                 intakeState = IntakeState.EJECTING;
             }
-            else if (intakeState == IntakeState.IDLE) {
+            else if (outtakeState == OuttakeState.IDLE && (intakeState == IntakeState.IDLE || intakeState == IntakeState.EJECTING)) {
                 intakeState = IntakeState.INTAKING;
             }
         } else if (gamepad2.right_trigger <= 0.1 && !(gamepad2Prev.right_trigger <= 0.1)) {
@@ -75,7 +75,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
             intakeState = IntakeState.STOP;
         }
 
-        if ((gamepad2.y && !gamepad2Prev.y) || (pixel1 != null && pixel2 != null && beam.getDetections() > 0) && intakeState == IntakeState.IDLE) {
+        if (outtakeState == OuttakeState.IDLE && ((gamepad2.y && !gamepad2Prev.y) || (pixel1 != null && pixel2 != null && beam.getDetections() > 0) && intakeState == IntakeState.IDLE)) {
             transferState = TransferState.MOTORS;
         }
         if ((gamepad2.x && !gamepad2Prev.x) && outtakeState == OuttakeState.RAISEDWAITING) {
@@ -152,6 +152,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         telemetry.addData("Intake state", intakeState);
         telemetry.addData("Transfer state", transferState);
         telemetry.addData("Outtake state", outtakeState);
+        telemetry.addData("LED State", blinky.ledState);
 
     }
 
