@@ -20,11 +20,9 @@ public class MyClass {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12, -53, Math.toRadians(270)))
-                                .setReversed(true)
-                                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(90))
-//                                .addDisplacementMarker(() -> intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
-                                .splineToConstantHeading(new Vector2d(30, 48), Math.toRadians(90))
+                        drive.trajectorySequenceBuilder(new Pose2d(51.5, 15, Math.toRadians(0)))
+                                .lineToConstantHeading(new Vector2d(34.5, 36))
+                                .turn(Math.toRadians(90))
                                 .build()
                 );
 //
