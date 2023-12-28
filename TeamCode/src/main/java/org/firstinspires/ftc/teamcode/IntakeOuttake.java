@@ -85,9 +85,9 @@ public class IntakeOuttake {
     public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
     public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
-    public IntakeState intakeState = IntakeState.IDLE;
-    public OuttakeState outtakeState = OuttakeState.IDLE;
-    public TransferState transferState = TransferState.IDLE;
+    public volatile IntakeState intakeState = IntakeState.IDLE;
+    public volatile OuttakeState outtakeState = OuttakeState.IDLE;
+    public volatile TransferState transferState = TransferState.IDLE;
     public volatile int outtakeTicks = 0;
 
     public int clawRotation = 0;
