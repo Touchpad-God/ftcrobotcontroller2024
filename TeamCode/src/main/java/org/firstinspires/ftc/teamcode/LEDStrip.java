@@ -23,11 +23,11 @@ class LEDStrip {
 
     private Timer timer = new Timer();
 
-    final double BLACK = 0.745025;
-    final double WHITE = 0.730175;
-    final double GREEN = 0.690575;
-    final double PURPLE = 0.725225;
-    final double YELLOW = 0.670775;
+    final double BLACK = 0.7475;
+    final double WHITE = 0.7325000000000002;
+    final double GREEN = 0.6925000000000001;
+    final double PURPLE = 0.7275;
+    final double YELLOW = 0.6725000000000001;
 
     public Servo blinkinLedDriver;
     public double color1;
@@ -75,35 +75,35 @@ class LEDStrip {
     public void update() {
         switch (ledState) {
             case PATTERN1:
-                timer.start(1250);
+                timer.start(1750);
                 blinkinLedDriver.setPosition(color1);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE1;
                 }
             case PAUSE1:
-                timer.start(250);
+                timer.start(550);
                 blinkinLedDriver.setPosition(BLACK);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN2A;
                 }
             case PATTERN2A:
-                timer.start(500);
+                timer.start(750);
                 blinkinLedDriver.setPosition(color2);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE2;
                 }
             case PAUSE2:
-                timer.start(250);
+                timer.start(550);
                 blinkinLedDriver.setPosition(BLACK);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN2B;
                 }
             case PATTERN2B:
-                timer.start(500);
+                timer.start(750);
                 blinkinLedDriver.setPosition(color2);
                 if (timer.finished()) {
                     timer.markReady();
