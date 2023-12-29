@@ -25,6 +25,7 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
             intake(currTime);
             transfer(currTime);
             outtake(currTime);
+            sensors();
             runTo(outtakeTicks, currTime);
         }
     }
@@ -64,11 +65,10 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
                 intakeState = IntakeState.IDLE;
                 outtakeTicks = 0;
             case BOTHCOLOR:
-                intakeServo.setPosition(intakeStowed);
                 intakeIntake.setPower(0);
                 intakeTransfer.setPower(0);
+                intakeServo.setPosition(intakeStowed);
                 intakeState = IntakeState.IDLE;
-                transferState = TransferState.MOTORS;
                 break;
             case EJECTING:
                 intakeIntake.setPower(-intakePower);

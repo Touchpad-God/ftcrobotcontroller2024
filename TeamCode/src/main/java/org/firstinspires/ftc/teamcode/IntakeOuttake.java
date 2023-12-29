@@ -120,6 +120,8 @@ public class IntakeOuttake {
         outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeTransfer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         clawLeft.setPosition(clawClosedLeft);
         clawRight.setPosition(clawClosedRight);
         differentialLeft.setPosition(leftStowed);
