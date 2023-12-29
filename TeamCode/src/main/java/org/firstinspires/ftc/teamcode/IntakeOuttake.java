@@ -146,7 +146,7 @@ public class IntakeOuttake {
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
 
-                if (beam.getDetections() >= 2) {
+                if (beam.getDetections() >= 4) {
                     intakeState = IntakeState.BEAMNOCOLOR;
                 }
                 break;
@@ -223,7 +223,10 @@ public class IntakeOuttake {
                 differentialLeft.setPosition(left0);
                 differentialRight.setPosition(right0);
                 horizontalSlideServo.setPosition(horizontalOpen);
-                outtakeState = OuttakeState.RAISEDWAITING;
+                timer.start(400);
+                if (timer.finished()) {
+                    outtakeState = OuttakeState.RAISEDWAITING;
+                }
                 break;
             case RETRACT:
                 timer.start(300);
