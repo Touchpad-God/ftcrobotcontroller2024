@@ -158,7 +158,7 @@ public class IntakeOuttake {
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
                 if (beam.getDetections() >= 1) {
-                    intakeServo.setPosition(intakePositions[--locationPixel]);
+                    intakeServo.setPosition(intakePositions[locationPixel - 2]);
                 } else if (beam.getDetections() >= 4) {
                     intakeState = IntakeState.BEAMNOCOLOR;
                 }
@@ -211,14 +211,14 @@ public class IntakeOuttake {
                 }
                 break;
             case ON:
-                outtakeTicks = 200;
-                if (outtakeMotor1.getCurrentPosition() < -190 && outtakeMotor2.getCurrentPosition() > 190) {
+                outtakeTicks = 150;
+                if (outtakeMotor1.getCurrentPosition() < -140 && outtakeMotor2.getCurrentPosition() > 140) {
                     transferState = TransferState.OUT;
                 }
                 break;
             case OUT:
                 outtakeState = OuttakeState.READY;
-                transferState = TransferState.RETRACT;
+                transferState = TransferState.IDLE;
                 break;
         }
 
