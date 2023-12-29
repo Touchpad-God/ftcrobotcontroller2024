@@ -138,7 +138,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         traj = drive.trajectorySequenceBuilder(new Pose2d(backdropX, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 3)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -52), Math.toRadians(270))
                 .addDisplacementMarker(() -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.INTAKING)
                 .forward(4, (v, pose2d, pose2d1, pose2d2) -> 2, (v, pose2d, pose2d1, pose2d2) -> 2);
@@ -147,11 +147,10 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         traj = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .setReversed(true)
+                .addTemporalMarker(0.3, () -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
-                .addSpatialMarker(new Vector2d(12, 12), () -> {intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
-                    intakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;})
-                .splineToConstantHeading(new Vector2d(30, 49.5), Math.toRadians(90));
-
+                .addSpatialMarker(new Vector2d(12, 12), () -> {intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;})
+                .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90));
         drive.followTrajectorySequence(traj.build());
 
         intakeOuttake.outtakeTicks = 200;
