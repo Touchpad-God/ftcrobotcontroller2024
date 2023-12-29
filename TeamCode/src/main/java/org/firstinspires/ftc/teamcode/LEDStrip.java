@@ -39,40 +39,41 @@ class LEDStrip {
         this.color2 = this.BLACK;
     }
 
-    public void updatePixels(String color1, String color2) {
-        switch (color1) {
+    public void updatePixels(String color1string, String color2string) {
+        switch (color1string) {
             case "white":
-                this.color1 = WHITE;
+                color1 = WHITE;
                 break;
             case "yellow":
-                this.color1 = YELLOW;
+                color1 = YELLOW;
                 break;
             case "purple":
-                this.color1 = PURPLE;
+                color1 = PURPLE;
                 break;
             case "green":
-                this.color1 = GREEN;
+                color1 = GREEN;
                 break;
             default:
-                this.color1 = BLACK;
+                color1 = BLACK;
                 break;
         }
-        switch (color2) {
+        switch (color2string) {
+            default:
+                color2 = BLACK;
+                break;
             case "white":
-                this.color2 = WHITE;
+                color2 = WHITE;
                 break;
             case "yellow":
-                this.color2 = YELLOW;
+                color2 = YELLOW;
                 break;
             case "purple":
-                this.color2 = PURPLE;
+                color2 = PURPLE;
                 break;
             case "green":
-                this.color2 = GREEN;
+                color2 = GREEN;
                 break;
-            default:
-                this.color2 = BLACK;
-                break;
+
         }
     }
 
