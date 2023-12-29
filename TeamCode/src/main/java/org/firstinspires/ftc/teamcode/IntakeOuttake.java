@@ -82,7 +82,7 @@ public class IntakeOuttake {
     private double outtakeprevError = 0.0;
 
     // state machine initialization
-    public enum IntakeState {INTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
+    public enum IntakeState {INTAKING, AUTOINTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
     public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
     public volatile IntakeState intakeState = IntakeState.IDLE;
@@ -147,6 +147,19 @@ public class IntakeOuttake {
                 clawRight.setPosition(clawClosedRight);
 
                 if (beam.getDetections() >= 4) {
+                    intakeState = IntakeState.BEAMNOCOLOR;
+                }
+                break;
+            case AUTOINTAKING:
+                outtakeTicks = 14;
+                intakeIntake.setPower(intakePower);
+                intakeTransfer.setPower(transferPower);
+                intakeServo.setPosition(intakePositions[locationPixel]);
+                clawLeft.setPosition(clawClosedLeft);
+                clawRight.setPosition(clawClosedRight);
+                if (beam.getDetections() >= 1) {
+                    intakeServo.setPosition(intakePositions[--locationPixel]);
+                } else if (beam.getDetections() >= 4) {
                     intakeState = IntakeState.BEAMNOCOLOR;
                 }
                 break;

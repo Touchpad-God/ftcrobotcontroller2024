@@ -139,8 +139,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -52), Math.toRadians(270))
-                .addDisplacementMarker(() -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.INTAKING)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -51.5), Math.toRadians(270))
+                .addDisplacementMarker(() -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .forward(4, (v, pose2d, pose2d1, pose2d2) -> 2, (v, pose2d, pose2d1, pose2d2) -> 2);
 
         drive.followTrajectorySequence(traj.build());
@@ -153,7 +153,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90));
         drive.followTrajectorySequence(traj.build());
 
-        intakeOuttake.outtakeTicks = 200;
+        intakeOuttake.outtakeTicks = 300;
         intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
 
         while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
