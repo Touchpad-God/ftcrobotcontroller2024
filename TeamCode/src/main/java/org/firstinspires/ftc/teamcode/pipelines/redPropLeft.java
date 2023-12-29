@@ -24,7 +24,6 @@ public class redPropLeft extends OpenCvPipeline {
 
     Mat hsv = new Mat();
     Size blur = new Size(1.5, 1.5);
-
     Mat red = new Mat();
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
@@ -39,8 +38,14 @@ public class redPropLeft extends OpenCvPipeline {
 
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        Scalar lowHSVred = new Scalar(0, 130, 120);
-        Scalar highHSVred = new Scalar(255, 255, 255);
+        //BGR
+        Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
+
+        Scalar lowHSVred = new Scalar(0, 0, 100);
+        Scalar highHSVred = new Scalar(100, 100, 255);
+
+//        Scalar lowHSVred = new Scalar(0, 130, 120);
+//        Scalar highHSVred = new Scalar(255, 255, 255);
 
         Core.inRange(hsv, lowHSVred, highHSVred, red);
 

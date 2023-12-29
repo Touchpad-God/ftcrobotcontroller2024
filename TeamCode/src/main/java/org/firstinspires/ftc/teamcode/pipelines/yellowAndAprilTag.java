@@ -34,9 +34,9 @@ public class yellowAndAprilTag extends OpenCvPipeline {
     double cx = 480;
     double cy = 620;
 
-    double tagsize = 0.1126;
-    double tagsizeX = 0.1126;
-    double tagsizeY = 0.1126;
+    double tagsize = 0.0508;
+    double tagsizeX = 0.0508;
+    double tagsizeY = 0.0508;
 
     //Yellow Pixel Detection
     Mat hsv = new Mat();
