@@ -146,9 +146,10 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         drive.followTrajectorySequence(traj.build());
 
         t.start(2000);
-        while (!t.finished()) {
-            drive.setMotorPowers(0.4, 0.4, 0.4, 0.4);
+        while (!t.finished() && intakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
+            drive.setMotorPowers(0.35, 0.35, 0.35, 0.35);
         }
+        t.markReady();
         drive.setMotorPowers(0, 0, 0, 0);
         traj = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .setReversed(true)
