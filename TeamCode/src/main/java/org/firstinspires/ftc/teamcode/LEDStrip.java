@@ -34,7 +34,7 @@ class LEDStrip {
 
     public LEDStrip(HardwareMap hardwareMap) {
         this.blinkinLed = hardwareMap.get(Servo.class, "led");
-        blinkinLed.setPosition(this.BLACK);
+        this.blinkinLed.setPosition(this.BLACK);
         this.color1 = this.BLACK;
         this.color2 = this.BLACK;
     }
@@ -81,42 +81,42 @@ class LEDStrip {
         switch (ledState) {
             case PATTERN1:
                 timer.start(1750);
-                blinkinLed.setPosition(this.color1);
+                this.blinkinLed.setPosition(this.color1);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE1;
                 }
             case PAUSE1:
                 timer.start(550);
-                blinkinLed.setPosition(this.BLACK);
+                this.blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN2A;
                 }
             case PATTERN2A:
                 timer.start(750);
-                blinkinLed.setPosition(this.color2);
+                this.blinkinLed.setPosition(this.color2);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE2;
                 }
             case PAUSE2:
                 timer.start(550);
-                blinkinLed.setPosition(this.BLACK);
+                this.blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN2B;
                 }
             case PATTERN2B:
                 timer.start(750);
-                blinkinLed.setPosition(this.color2);
+                this.blinkinLed.setPosition(this.color2);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE3;
                 }
             case PAUSE3:
                 timer.start(550);
-                blinkinLed.setPosition(this.BLACK);
+                this.blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN1;

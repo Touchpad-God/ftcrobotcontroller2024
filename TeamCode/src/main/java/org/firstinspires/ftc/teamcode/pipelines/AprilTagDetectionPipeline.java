@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -17,7 +16,6 @@ import org.openftc.apriltag.AprilTagPose;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AprilTagDetectionPipeline extends OpenCvPipeline {
     Telemetry telemetry;
@@ -32,8 +30,6 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
     double cy = 620;
 
     double tagsize = 0.0508;
-    double tagsizeX = 0.0508;
-    double tagsizeY = 0.0508;
 
     //position
     public enum TAGPOSITION {LEFT, CENTER, RIGHT}
@@ -58,46 +54,21 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
         //releasing matrices
         grey.release();
 
-        //List<Point> tagCenters = new ArrayList<>();
-
         for(org.openftc.apriltag.AprilTagDetection detection: detections){
             Pose pose = aprilTagPoseToOpenCvPose(detection.pose);
-            //tagCenters.add(drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix));
-            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix);
+            drawAxisMarker(input, tagsize, 4, pose.rvec, pose.tvec, tagposition, detection.id, cameraMatrix);
 
             //releasing matrices
             pose.rvec.release();
             pose.tvec.release();
         }
 
-        Imgproc.line(input, new Point(0, 100), new Point(tagsizeX * 640, 100), new Scalar(255, 255, 255));
-
-        /*
-        String points = "";
-        for(Point p: tagCenters){
-            points += "(" + Math.round(p.x * 100.0)/100.0 + "," + Math.round(p.y * 100.0)/100.0 + ")";
-        }
-
-        telemetry.addLine(points);
-        telemetry.update();
-         */
-
-        //releasing matrices
-        //cameraMatrix.release();
+        Imgproc.line(input, new Point(0, 100), new Point(tagsize * 640, 100), new Scalar(255, 255, 255));
 
         return input;
     }
     void constructMatrix()
     {
-        //     Construct the camera matrix.
-        //
-        //      --         --
-        //     | fx   0   cx |
-        //     | 0    fy  cy |
-        //     | 0    0   1  |
-        //      --         --
-        //
-
         cameraMatrix = new Mat(3,3, CvType.CV_32FC1);
 
         cameraMatrix.put(0,0, fx);
@@ -117,11 +88,11 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
         // The points in 3D space we wish to project onto the 2D image plane.
         // The origin of the coordinate space is assumed to be in the center of the detection.
         MatOfPoint3f axis = new MatOfPoint3f(
-                new Point3(0,0,0),
-                new Point3(length,0,0),
-                new Point3(0,length,0),
-                new Point3(0,0,-length)
-        );
+                new Point3(-length/2, length/2,0),
+                new Point3( length/2, length/2,0),
+                new Point3( length/2,-length/2,0),
+                new Point3(-length/2,-length/2,0),
+                new Point3(0, 0, 0));
 
         // Project those points
         MatOfPoint2f matProjectedPoints = new MatOfPoint2f();
@@ -130,11 +101,20 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline {
         Calib3d.projectPoints(axis, rvec, tvec, cameraMatrix, coefficients, matProjectedPoints);
         Point[] projectedPoints = matProjectedPoints.toArray();
 
+        Scalar circleColor = new Scalar(20, 135, 250);
+        Scalar rectColor = new Scalar(20, 135, 250);
+
         if(position == TAGPOSITION.LEFT && id == 4 || position == TAGPOSITION.CENTER && id == 5 || position == TAGPOSITION.RIGHT && id == 6) {
-            Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(255, 200, 20), -1);
-        } else{
-            Imgproc.circle(buf, projectedPoints[0], thickness, new Scalar(20, 200, 255), -1);
+            circleColor = new Scalar(250, 20, 135);
+            rectColor = new Scalar(250, 20, 135);
         }
+
+        Imgproc.circle(buf, projectedPoints[4], thickness, circleColor, -1);
+
+        Imgproc.line(buf, projectedPoints[0], projectedPoints[1], rectColor, thickness);
+        Imgproc.line(buf, projectedPoints[1], projectedPoints[2], rectColor, thickness);
+        Imgproc.line(buf, projectedPoints[2], projectedPoints[3], rectColor, thickness);
+        Imgproc.line(buf, projectedPoints[3], projectedPoints[0], rectColor, thickness);
 
         //releasing matrices
         axis.release();

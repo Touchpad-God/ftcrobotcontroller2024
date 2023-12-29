@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -28,10 +26,13 @@ public class red extends OpenCvPipeline {
         telemetry.update();
 
         Imgproc.GaussianBlur(input, blurred, blur, 0);
+
         Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
 
-        Scalar lowHSV = new Scalar(0, 130, 120);
-        Scalar highHSV = new Scalar(255, 255, 255);
+        Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
+
+        Scalar lowHSV = new Scalar(0, 0, 100);
+        Scalar highHSV = new Scalar(100, 100, 255);
 
         Core.inRange(hsv, lowHSV, highHSV, red);
 
