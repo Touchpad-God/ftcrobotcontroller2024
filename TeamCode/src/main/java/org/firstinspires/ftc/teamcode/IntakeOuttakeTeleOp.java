@@ -23,8 +23,8 @@ Very important:
  - Drivetrain slow mode (done)
  - Ejecting/autoejecting (done)
  - Beam break sensor denoising?
- - Hanging
- - Drone
+ - Hanging (done)
+ - Drone (done)
  - Beam break sensor threading (done)
  - Tune da outtake PID (done)
 

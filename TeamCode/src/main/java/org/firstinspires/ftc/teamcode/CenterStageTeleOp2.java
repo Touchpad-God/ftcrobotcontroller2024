@@ -12,16 +12,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 
-/*
-TODO moved to IntakeOuttakeTeleOp.java
-*/
-
 @TeleOp
 public class CenterStageTeleOp2 extends LinearOpMode {
     protected DcMotor motorLf;
     protected DcMotor motorLb;
     protected DcMotor motorRf;
     protected DcMotor motorRb;
+    protected Servo hangL;
+    protected Servo hangR;
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
     double tankPosL = 0.8589;
@@ -35,12 +33,19 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     boolean tankMode = false;
     boolean wasGamepadAPressed = false;
     boolean dpadLeftPrev = false;
+    boolean dpadUpPrev = false;
+    boolean dpadDownPrev = false;
     boolean rightStickPressedLast = false;
 
     boolean slowMode = false;
 
     public static double fast = 0.8;
     public static double slow = 0.5;
+
+    int hangPos = 0;
+
+    double[] leftHang = {0.122, 0.4689, 0.7065};
+    double[] rightHang = {0.7686, 0.7686, 0.1972};
 
     double x, y, rot;
     @Override
@@ -52,6 +57,8 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         IMU imu = hardwareMap.get(IMU.class, "imu");
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
+        hangL = hardwareMap.get(Servo.class, "hangL");
+        hangR = hardwareMap.get(Servo.class, "hangR");
 
         butterflyLeft.setPosition(mecanumPosL);
         butterflyRight.setPosition(mecanumPosR);
@@ -65,8 +72,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
-        Servo drone;
-        drone = hardwareMap.get(Servo.class, "drone");
+        Servo drone = hardwareMap.get(Servo.class, "drone");
         drone.setPosition(0.99);
 
         if (isStopRequested()) return;
@@ -92,7 +98,6 @@ public class CenterStageTeleOp2 extends LinearOpMode {
                     butterflyRight.setPosition(mecanumPosR);
                 }
             }
-            wasGamepadAPressed = gamepad1.a;
             double drivetrainMult = (slowMode ? slow : fast);
             if (!tankMode) {
                 double denom = Math.max(Math.abs(-rotX -rotY -rot), Math.max(Math.abs(+rotX -rotY -rot), Math.max(Math.abs(-rotX +rotY -rot), Math.max(Math.abs(+rotX +rotY -rot), 1))));
@@ -117,6 +122,17 @@ public class CenterStageTeleOp2 extends LinearOpMode {
                 drone.setPosition(0.5);
             }
 
+            if (gamepad1.dpad_up && !dpadUpPrev && hangPos < 2)
+                hangPos++;
+            else if (gamepad1.dpad_down && !dpadDownPrev && hangPos > 0)
+                hangPos--;
+
+            hangL.setPosition(leftHang[hangPos]);
+            hangR.setPosition(rightHang[hangPos]);
+
+            dpadUpPrev = gamepad1.dpad_up;
+            dpadDownPrev = gamepad1.dpad_down;
+            wasGamepadAPressed = gamepad1.a;
             rightStickPressedLast = gamepad1.right_stick_button;
             dpadLeftPrev = gamepad1.dpad_left;
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
