@@ -51,34 +51,40 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(59, 0), Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(36, 48), Math.toRadians(180)).build();
+
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(-90)))
                 .addSpatialMarker(new Vector2d(59, 10), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .lineTo(new Vector2d(59, -36))
                 .lineToConstantHeading(new Vector2d(59, 0))
                 .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180)).build();
+
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(58, -36, Math.toRadians(90)))
                 .addSpatialMarker(new Vector2d(52, 30), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .splineToConstantHeading(new Vector2d(57.5, 0), Math.toRadians(90))
                 .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(270)), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(27, 47), Math.toRadians(180)).build();
+
         driveToAudienceRight = drive.trajectorySequenceBuilder(new Pose2d(42, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -53), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING).build();
+
         driveToAudienceLeft = drive.trajectorySequenceBuilder(new Pose2d(27, 47, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -53), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING).build();
+
         driveToAudienceCenter = drive.trajectorySequenceBuilder(new Pose2d(36, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -53), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING).build();
+
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .setReversed(true)
                 .addTemporalMarker(0.3, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
