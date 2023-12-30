@@ -165,10 +165,15 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -53), Math.toRadians(270))
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
-                .forward(4, (v, pose2d, pose2d1, pose2d2) -> 2, (v, pose2d, pose2d1, pose2d2) -> 2);
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING);
+//                .forward(4, (v, pose2d, pose2d1, pose2d2) -> 2, (v, pose2d, pose2d1, pose2d2) -> 2);
 
         drive.followTrajectorySequence(traj.build());
+
+        while (IntakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
+            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
+        }
+        drive.setMotorPowers(0, 0, 0, 0);
 
         traj = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .setReversed(true)
