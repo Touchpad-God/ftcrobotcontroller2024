@@ -21,9 +21,14 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     protected Servo butterflyRight;
     public static final int IMU_DIFF = -90;
     TrajectorySequenceBuilder traj;
-    Trajectory driveToBackdropFromVision;
+    Trajectory driveToBackdropFromVisionLeft;
+    Trajectory driveToBackdropFromVisionRight;
+    Trajectory driveToBackdropFromVisionCenter;
     Trajectory driveToAudience;
     Trajectory driveToBackdropReturn;
+    Trajectory driveToAudienceLeft;
+    Trajectory driveToAudienceRight;
+    Trajectory driveToAudienceCenter;
     static IntakeOuttakeAuto intakeOuttake;
     Timer t = new Timer();
 
@@ -65,8 +70,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 telemetry.update();
             }});
 
-        while(redPropPipeline.position == redPropRight.PROPPOSITION.NONE) {idle();}
-
         driveToBackdropReturn = drive.trajectoryBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)), true)
                 .addTemporalMarker(0.3, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
@@ -77,29 +80,37 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90))
                 .build();
 
-        if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER) {
-            backdropX = 36;
-            driveToBackdropFromVision = drive.trajectoryBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
-                    .lineToSplineHeading(new Pose2d(backdropX, 48, Math.toRadians(270)))
-                    .build();
-        } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT) {
-            backdropX = 42;
-            driveToBackdropFromVision = drive.trajectoryBuilder(new Pose2d(34.5, 36, Math.toRadians(90)))
-                    .lineToSplineHeading(new Pose2d(backdropX, 48, Math.toRadians(270)))
-                    .build();
-        } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) {
-            backdropX = 30;
-            driveToBackdropFromVision = drive.trajectoryBuilder(new Pose2d(37.5, 12, Math.toRadians(90)))
-                    .lineToSplineHeading(new Pose2d(backdropX, 48, Math.toRadians(270)))
-                    .build();
+        driveToBackdropFromVisionCenter = drive.trajectoryBuilder(new Pose2d(37.5, 16, Math.toRadians(0)))
+            .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270)))
+            .build();
+        driveToBackdropFromVisionRight = drive.trajectoryBuilder(new Pose2d(34.5, 36, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)))
+                .build();
+        driveToBackdropFromVisionLeft = drive.trajectoryBuilder(new Pose2d(37.5, 12, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270)))
+                .build();
 
-        }
-
-        driveToAudience = drive.trajectoryBuilder(new Pose2d(backdropX, 48, Math.toRadians(270)))
+        driveToAudienceLeft = drive.trajectoryBuilder(new Pose2d(30, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -51.5), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -50), Math.toRadians(270))
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .build();
+
+        driveToAudienceRight = drive.trajectoryBuilder(new Pose2d(36, 48, Math.toRadians(270)))
+                .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -50), Math.toRadians(270))
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .build();
+
+        driveToAudienceCenter = drive.trajectoryBuilder(new Pose2d(42, 48, Math.toRadians(270)))
+                .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -50), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
@@ -107,45 +118,94 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         if (isStopRequested()) return;
 
+        camera.stopStreaming();
+
         drive.setPoseEstimate(new Pose2d(61.5, 15, Math.toRadians(0)));
 
-        if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER || redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) {
-            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(-24, -3)).build());
-        }
+        if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER) {
+            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, 16)).build());
 
-         if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT){ //right
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                idle();
+            }
 
+            t.start(400);
+            while(!t.finished()) {
+                idle();
+            }
+            t.markReady();
+
+            drive.followTrajectory(driveToBackdropFromVisionCenter);
+
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                idle();
+            }
+
+            drive.followTrajectory(driveToAudienceCenter);
+
+
+        } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT) { //right
             traj = drive.trajectorySequenceBuilder(new Pose2d(61.5, 15, Math.toRadians(0)))
                     .lineToConstantHeading(new Vector2d(34.5, 36))
                     .turn(Math.toRadians(90));
             drive.followTrajectorySequence(traj.build());
 
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                idle();
+            }
+
+            t.start(400);
+            while(!t.finished()) {
+                idle();
+            }
+            t.markReady();
+
+            drive.followTrajectory(driveToBackdropFromVisionRight);
+
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                idle();
+            }
+
+            drive.followTrajectory(driveToAudienceRight);
+
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
+            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, 12)).build());
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
                     .turn(Math.toRadians(90));
 
             drive.followTrajectorySequence(traj.build());
 
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+                idle();
+            }
+
+            t.start(400);
+            while(!t.finished()) {
+                idle();
+            }
+            t.markReady();
+
+            drive.followTrajectory(driveToBackdropFromVisionLeft);
+
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                idle();
+            }
+
+            drive.followTrajectory(driveToAudienceLeft);
+
+
         }
 
-        IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-        while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
-            idle();
-        }
-
-        drive.followTrajectory(driveToBackdropFromVision);
-
-        IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
-        while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-            idle();
-        }
-
-        drive.followTrajectory(driveToAudience);
-
-        t.start(2000);
+        t.start(1880);
         while (!t.finished() && IntakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
-            drive.setMotorPowers(0.2, 0.2, 0.2, 0.2);
+            drive.setMotorPowers(0.17, 0.17, 0.17, 0.17);
         }
         t.markReady();
         drive.setMotorPowers(0, 0, 0, 0);
