@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,8 +14,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.redPropRight;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraException;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
@@ -85,11 +91,11 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         driveToBackdropFromVisionRight = drive.trajectoryBuilder(new Pose2d(34.5, 36, Math.toRadians(90)))
                 .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)))
                 .build();
-        driveToBackdropFromVisionLeft = drive.trajectoryBuilder(new Pose2d(37.5, 12, Math.toRadians(90)))
-                .lineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270)))
+        driveToBackdropFromVisionLeft = drive.trajectoryBuilder(new Pose2d(37.5, 14.5, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(30, 48.5, Math.toRadians(270)))
                 .build();
 
-        driveToAudienceLeft = drive.trajectoryBuilder(new Pose2d(30, 48, Math.toRadians(270)))
+        driveToAudienceLeft = drive.trajectoryBuilder(new Pose2d(30, 48.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
@@ -116,13 +122,12 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         waitForStart();
 
         if (isStopRequested()) return;
-
         camera.closeCameraDeviceAsync(() -> {
             telemetry.addData("Camera Status", "Camera closed");
             telemetry.update();
 
-            camera.stopStreaming();
         });
+
 
         drive.setPoseEstimate(new Pose2d(61.5, 15, Math.toRadians(0)));
 
@@ -177,7 +182,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             drive.followTrajectory(driveToAudienceRight);
 
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
-            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, 12)).build());
+            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, 14.5)).build());
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
                     .turn(Math.toRadians(90));
@@ -207,12 +212,16 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         }
 
-        t.start(1880);
-        while (!t.finished() && IntakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
-            drive.setMotorPowers(0.17, 0.17, 0.17, 0.17);
-        }
-        t.markReady();
-        drive.setMotorPowers(0, 0, 0, 0);
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
+                .forward(4.5, (v, pose2d, pose2d1, pose2d2) -> 2.5, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .build());
+
+//        t.start(1880);
+//        while (!t.finished() && IntakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
+//            drive.setMotorPowers(0.17, 0.17, 0.17, 0.17);
+//        }
+//        t.markReady();
+//        drive.setMotorPowers(0, 0, 0, 0);
 
         drive.followTrajectory(driveToBackdropReturn);
 
