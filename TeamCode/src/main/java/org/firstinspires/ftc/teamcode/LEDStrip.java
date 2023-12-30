@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /*
 
 TODO:
@@ -31,12 +33,14 @@ class LEDStrip {
     public Servo blinkinLed;
     public double color1;
     public double color2;
+    private Telemetry telemetry;
 
-    public LEDStrip(HardwareMap hardwareMap) {
+    public LEDStrip(HardwareMap hardwareMap, Telemetry telemetry) {
         this.blinkinLed = hardwareMap.get(Servo.class, "led");
         this.blinkinLed.setPosition(this.BLACK);
         this.color1 = this.BLACK;
         this.color2 = this.BLACK;
+        this.telemetry = telemetry;
     }
 
     public void updatePixels(String color1string, String color2string) {
@@ -57,10 +61,8 @@ class LEDStrip {
                 color1 = BLACK;
                 break;
         }
+
         switch (color2string) {
-            default:
-                color2 = BLACK;
-                break;
             case "white":
                 color2 = WHITE;
                 break;
@@ -73,8 +75,13 @@ class LEDStrip {
             case "green":
                 color2 = GREEN;
                 break;
-
+            default:
+                color2 = BLACK;
+                break;
         }
+        telemetry.addData("Color 1", color1);
+        telemetry.addData("Color 2", color2);
+
     }
 
     public void update() {

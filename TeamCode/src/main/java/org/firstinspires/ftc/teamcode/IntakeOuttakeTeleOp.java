@@ -50,9 +50,9 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
     public SubsystemThread s;
 
     // initialize intake and outtake, reset all hardware
-    public IntakeOuttakeTeleOp(HardwareMap hardwareMap, double currTime) {
+    public IntakeOuttakeTeleOp(HardwareMap hardwareMap, double currTime, Telemetry telemetry) {
         super(hardwareMap);
-        blinky = new LEDStrip(hardwareMap);
+        blinky = new LEDStrip(hardwareMap, telemetry);
         s = new SubsystemThread(hardwareMap);
         t = new Thread(s);
         t.start();
