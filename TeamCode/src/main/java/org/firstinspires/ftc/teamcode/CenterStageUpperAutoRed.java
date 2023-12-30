@@ -117,14 +117,12 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         if (isStopRequested()) return;
 
-        camera.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener() {
-            @Override
-            public void onClose(){
-                telemetry.addData("Camera Status", "Camera opened");
-                telemetry.update();
+        camera.closeCameraDeviceAsync(() -> {
+            telemetry.addData("Camera Status", "Camera closed");
+            telemetry.update();
 
-                camera.stopStreaming();
-            }});
+            camera.stopStreaming();
+        });
 
         drive.setPoseEstimate(new Pose2d(61.5, 15, Math.toRadians(0)));
 
