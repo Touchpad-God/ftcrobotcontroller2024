@@ -40,7 +40,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         Thread inOutThread = new Thread(intakeOuttake);
         inOutThread.start();
-        intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
+        IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         //vision
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
@@ -73,8 +73,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER) { // center
             backdropX = 36;
 
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
                 idle();
             }
 
@@ -85,8 +85,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
             drive.followTrajectorySequence(traj.build());
 
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT){ //right
@@ -98,8 +98,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                     .turn(Math.toRadians(90));
             drive.followTrajectorySequence(traj.build());
 
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
                 idle();
             }
 
@@ -109,8 +109,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
             drive.followTrajectorySequence(traj.build());
 
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
@@ -120,8 +120,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                     .turn(Math.toRadians(90));
 
             drive.followTrajectorySequence(traj.build());
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
                 idle();
             }
 
@@ -130,8 +130,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
             drive.followTrajectorySequence(traj.build());
 
-            intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
-            while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
         }
@@ -141,45 +141,41 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -51.5), Math.toRadians(270))
-                .addDisplacementMarker(() -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING);
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING);
 
         drive.followTrajectorySequence(traj.build());
 
         t.start(2000);
-        while (!t.finished() && intakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
+        while (!t.finished() && IntakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
             drive.setMotorPowers(0.35, 0.35, 0.35, 0.35);
         }
         t.markReady();
         drive.setMotorPowers(0, 0, 0, 0);
         traj = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .setReversed(true)
-                .addTemporalMarker(0.3, () -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
+                .addTemporalMarker(0.3, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
                 .addSpatialMarker(new Vector2d(12, 12), () -> {
-                    intakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
-                    intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
+                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
                 })
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90));
         drive.followTrajectorySequence(traj.build());
 
-        intakeOuttake.outtakeTicks = 300;
-        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
+        IntakeOuttake.outtakeTicks = 300;
+        IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
 
-        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
+        while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
             idle();
         }
 
-        intakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
-        while(intakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+        IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+        while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
             idle();
         }
 
         while (opModeIsActive()) {
-            telemetry.addData("Intake state", intakeOuttake.intakeState);
-            telemetry.addData("Outtake state", intakeOuttake.outtakeState);
-            telemetry.addData("Transfer state", intakeOuttake.transferState);
-            telemetry.addData("Outtake Ticks", intakeOuttake.outtakeTicks);
-            telemetry.update();
+
         }
 
         intakeOuttake.stop();
