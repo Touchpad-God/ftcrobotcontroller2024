@@ -76,6 +76,9 @@ public class IntakeOuttake {
     public static double lowP = 0.01;
     public static double lowI = 0.0;
     public static double lowD = 0.0002;
+    public static double downP = 0.06;
+    public static double downI = 0.0002;
+    public static double downD = 0.0016;
 
     private double outtakei = 0.0;
     private double outtakeprevTime = 0.0;
@@ -85,10 +88,10 @@ public class IntakeOuttake {
     public enum IntakeState {INTAKING, AUTOINTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
     public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
-    public volatile IntakeState intakeState = IntakeState.IDLE;
-    public volatile OuttakeState outtakeState = OuttakeState.IDLE;
-    public volatile TransferState transferState = TransferState.IDLE;
-    public volatile int outtakeTicks = 0;
+    public static volatile IntakeState intakeState = IntakeState.IDLE;
+    public static volatile OuttakeState outtakeState = OuttakeState.IDLE;
+    public static volatile TransferState transferState = TransferState.IDLE;
+    public static volatile int outtakeTicks = 0;
 
     public int clawRotation = 0;
 
@@ -139,7 +142,7 @@ public class IntakeOuttake {
             case IDLE:
                 break;
             case INTAKING:
-                outtakeTicks = 14;
+                outtakeTicks = 13;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
@@ -151,14 +154,14 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTOINTAKING:
-                outtakeTicks = 14;
+                outtakeTicks = 13;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
                 if (beam.getDetections() >= 1) {
-                    intakeServo.setPosition(intakePositions[--locationPixel]);
+                    intakeServo.setPosition(intakePositions[locationPixel - 2]);
                 } else if (beam.getDetections() >= 4) {
                     intakeState = IntakeState.BEAMNOCOLOR;
                 }
@@ -211,14 +214,14 @@ public class IntakeOuttake {
                 }
                 break;
             case ON:
-                outtakeTicks = 200;
-                if (outtakeMotor1.getCurrentPosition() < -190 && outtakeMotor2.getCurrentPosition() > 190) {
+                outtakeTicks = 150;
+                if (outtakeMotor1.getCurrentPosition() < -140 && outtakeMotor2.getCurrentPosition() > 140) {
                     transferState = TransferState.OUT;
                 }
                 break;
             case OUT:
                 outtakeState = OuttakeState.READY;
-                transferState = TransferState.RETRACT;
+                transferState = TransferState.IDLE;
                 break;
         }
 
@@ -380,7 +383,11 @@ public class IntakeOuttake {
             outtakeprevError = error;
         }
         double outtakekP, outtakekI, outtakekD;
-        if (ticks > 650) {
+        if (false) {
+            outtakekP = downP;
+            outtakekI = downI;
+            outtakekD = downD;
+        } else if (outtakeMotor2.getCurrentPosition() > 650 || outtakeMotor2.getCurrentPosition() < 6) {
             outtakekP = highP;
             outtakekI = highI;
             outtakekD = highD;

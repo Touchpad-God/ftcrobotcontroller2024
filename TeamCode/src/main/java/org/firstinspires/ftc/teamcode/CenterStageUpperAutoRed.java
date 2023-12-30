@@ -21,6 +21,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     public static final int IMU_DIFF = -90;
     TrajectorySequenceBuilder traj;
     static IntakeOuttakeAuto intakeOuttake;
+    Timer t = new Timer();
 
     public int whitePixelLocation = 12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
@@ -140,16 +141,24 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -51.5), Math.toRadians(270))
-                .addDisplacementMarker(() -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
-                .forward(4, (v, pose2d, pose2d1, pose2d2) -> 2, (v, pose2d, pose2d1, pose2d2) -> 2);
+                .addDisplacementMarker(() -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING);
 
         drive.followTrajectorySequence(traj.build());
 
+        t.start(2000);
+        while (!t.finished() && intakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
+            drive.setMotorPowers(0.35, 0.35, 0.35, 0.35);
+        }
+        t.markReady();
+        drive.setMotorPowers(0, 0, 0, 0);
         traj = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .setReversed(true)
                 .addTemporalMarker(0.3, () -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
-                .addSpatialMarker(new Vector2d(12, 12), () -> {intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;})
+                .addSpatialMarker(new Vector2d(12, 12), () -> {
+                    intakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+                    intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
+                })
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90));
         drive.followTrajectorySequence(traj.build());
 

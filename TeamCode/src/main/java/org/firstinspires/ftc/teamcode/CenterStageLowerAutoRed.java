@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -115,8 +117,8 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(-90)))
                     .addSpatialMarker(new Vector2d(59, 10), () -> intakeOuttake.transferState = IntakeOuttake.TransferState.ON)
-                    .splineToConstantHeading(new Vector2d(59, -24), Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(59, 0), Math.toRadians(90))
+                    .lineTo(new Vector2d(59, -36))
+                    .lineToConstantHeading(new Vector2d(59, 0))
                     .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180));
 
             drive.followTrajectorySequence(traj.build());
@@ -144,11 +146,13 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 idle();
             }
 
-            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(90)))
-                    .addSpatialMarker(new Vector2d(57.5, 10), () -> intakeOuttake.transferState = IntakeOuttake.TransferState.ON)
-                    .strafeRight(10)
+            drive.followTrajectory(drive.trajectoryBuilder(new Pose2d(37.5, -36, Math.toRadians(90))).strafeRight(20.5).build());
+
+            traj = drive.trajectorySequenceBuilder(new Pose2d(58, -36, Math.toRadians(90)))
+                    .addSpatialMarker(new Vector2d(52, 30), () -> intakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                     .splineToConstantHeading(new Vector2d(57.5, 0), Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270)), Math.toRadians(180));
+                    .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(270)), Math.toRadians(180))
+                    .splineToConstantHeading(new Vector2d(27, 47), Math.toRadians(180));
 
             drive.followTrajectorySequence(traj.build());
 
@@ -163,7 +167,7 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -51.5), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -53), Math.toRadians(270))
                 .addDisplacementMarker(() -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .forward(4, (v, pose2d, pose2d1, pose2d2) -> 2, (v, pose2d, pose2d1, pose2d2) -> 2);
 
@@ -173,7 +177,10 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 .setReversed(true)
                 .addTemporalMarker(0.3, () -> intakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
-                .addSpatialMarker(new Vector2d(12, 12), () -> {intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;})
+                .addSpatialMarker(new Vector2d(12, 12), () -> {
+                    intakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+                    intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
+                })
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90));
         drive.followTrajectorySequence(traj.build());
 
