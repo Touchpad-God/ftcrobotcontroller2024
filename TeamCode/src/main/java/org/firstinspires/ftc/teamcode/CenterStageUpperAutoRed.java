@@ -215,7 +215,10 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
                 .forward(4.5, (v, pose2d, pose2d1, pose2d2) -> 2.5, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
-
+        t.start(500);
+        while (!t.finished()) {
+        }
+        t.markReady();
 //        t.start(1880);
 //        while (!t.finished() && IntakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
 //            drive.setMotorPowers(0.17, 0.17, 0.17, 0.17);
