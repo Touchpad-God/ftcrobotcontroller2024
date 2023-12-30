@@ -42,7 +42,7 @@ public class redPropLeft extends OpenCvPipeline {
         Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
 
         Scalar lowHSVred = new Scalar(0, 0, 100);
-        Scalar highHSVred = new Scalar(100, 100, 255);
+        Scalar highHSVred = new Scalar(100, 90, 255);
 
 //        Scalar lowHSVred = new Scalar(0, 130, 120);
 //        Scalar highHSVred = new Scalar(255, 255, 255);
@@ -153,10 +153,10 @@ public class redPropLeft extends OpenCvPipeline {
         Point leftLine = new Point(180, 340);
         Point centerLine = new Point(730, 330);
 
-        for(int i = 0; i < boundRect.length; i++){
-            if(boundRect[i].contains(leftLine)){
+        for(Rect rect: boundRect){
+            if(rect.contains(leftLine)){
                 position = PROPPOSITION.LEFT;
-            } else if(boundRect[i].contains(centerLine)){
+            } else if(rect.contains(centerLine)){
                 position = PROPPOSITION.CENTER;
             }
         }

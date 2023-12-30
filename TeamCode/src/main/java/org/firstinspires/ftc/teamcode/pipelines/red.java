@@ -28,11 +28,10 @@ public class red extends OpenCvPipeline {
         Imgproc.GaussianBlur(input, blurred, blur, 0);
 
         Imgproc.cvtColor(blurred, hsv, Imgproc.COLOR_RGB2HSV);
-
         Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
 
         Scalar lowHSV = new Scalar(0, 0, 100);
-        Scalar highHSV = new Scalar(100, 100, 255);
+        Scalar highHSV = new Scalar(100, 90, 255);
 
         Core.inRange(hsv, lowHSV, highHSV, red);
 
