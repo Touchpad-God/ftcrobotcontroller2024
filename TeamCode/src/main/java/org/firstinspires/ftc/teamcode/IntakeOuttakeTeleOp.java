@@ -45,12 +45,17 @@ Nice to have:
 public class IntakeOuttakeTeleOp extends IntakeOuttake{
     private Gamepad gamepad1Prev = new Gamepad();
     private Gamepad gamepad2Prev = new Gamepad();
-    LEDStrip blinky;
+    private LEDStrip blinky;
+    private Thread t;
+    public SubsystemThread s;
 
     // initialize intake and outtake, reset all hardware
-    public IntakeOuttakeTeleOp(HardwareMap hardwareMap) {
+    public IntakeOuttakeTeleOp(HardwareMap hardwareMap, double currTime) {
         super(hardwareMap);
         blinky = new LEDStrip(hardwareMap);
+        s = new SubsystemThread(hardwareMap);
+        t = new Thread(s);
+        t.start();
     }
 
     public void update(Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, double currTime) {
@@ -77,7 +82,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
             intakeState = IntakeState.STOP;
         }
 
-        if (outtakeState == OuttakeState.IDLE && ((gamepad2.y && !gamepad2Prev.y) || (pixel1 != null && pixel2 != null && beam.getDetections() > 0) && intakeState == IntakeState.IDLE)) {
+        if (outtakeState == OuttakeState.IDLE && ((gamepad2.y && !gamepad2Prev.y) || (pixel1 != null && pixel2 != null && clawLeft.getPosition() != clawEngagedLeft) && intakeState == IntakeState.IDLE)) {
             transferState = TransferState.MOTORS;
         }
         if ((gamepad2.x && !gamepad2Prev.x) && outtakeState == OuttakeState.RAISEDWAITING) {
@@ -133,11 +138,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         } else {
             blinky.updatePixels(pixel2, pixel1);
         }
-        intake(currTime);
-        transfer(currTime);
-        outtake(currTime);
         blinky.update();
-        runTo(outtakeTicks, currTime);
 
         gamepad1Prev.copy(gamepad1);
         gamepad2Prev.copy(gamepad2);
@@ -161,4 +162,33 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
 
     }
 
+}
+
+class SubsystemThread extends IntakeOuttake implements Runnable {
+    private volatile boolean running;
+    private HardwareMap hardwareMap;
+    private double time;
+    private double timeZero;
+    public SubsystemThread(HardwareMap hardwareMap) {
+        super(hardwareMap);
+        this.hardwareMap = hardwareMap;
+        this.running = true;
+        this.time = 0;
+        this.timeZero = System.currentTimeMillis() / 1000.0;
+    }
+    public void run() {
+        while (running) {
+            this.time = System.currentTimeMillis() / 1000.0 - this.timeZero;
+            intake(this.time);
+            transfer(this.time);
+            outtake(this.time);
+            runTo(outtakeTicks, this.time);
+        }
+    }
+    public void updateTime(double currTime) {
+        this.time = currTime;
+    }
+    public void stop() {
+        this.running = false;
+    }
 }

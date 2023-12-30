@@ -44,7 +44,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
     int hangPos = 0;
 
-    double[] leftHang = {0.122, 0.4689, 0.7065};
+    double[] leftHang = {0.122, 0.4089, 0.7065};
     double[] rightHang = {0.7686, 0.7686, 0.1972};
 
     double x, y, rot;
@@ -68,12 +68,12 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         motorRb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
-        IntakeOuttakeTeleOp intakeOuttake = new IntakeOuttakeTeleOp(hardwareMap);
+        IntakeOuttakeTeleOp intakeOuttake = new IntakeOuttakeTeleOp(hardwareMap, getRuntime());
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
         Servo drone = hardwareMap.get(Servo.class, "drone");
-        drone.setPosition(0.99);
+        drone.setPosition(1);
 
         if (isStopRequested()) return;
 
@@ -143,5 +143,6 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         }
 
         intakeOuttake.beam.stop();
+        intakeOuttake.s.stop();
     }
 }
