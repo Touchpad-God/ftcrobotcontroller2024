@@ -26,7 +26,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
-    double headingOffset = 0;
+    double headingOffset = Math.PI;
 
     final double INITIALOFFSET = 0.0;
 
@@ -68,7 +68,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         motorRb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
-        IntakeOuttakeTeleOp intakeOuttake = new IntakeOuttakeTeleOp(hardwareMap, getRuntime());
+        IntakeOuttakeTeleOp intakeOuttake = new IntakeOuttakeTeleOp(hardwareMap, getRuntime(), telemetry);
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
