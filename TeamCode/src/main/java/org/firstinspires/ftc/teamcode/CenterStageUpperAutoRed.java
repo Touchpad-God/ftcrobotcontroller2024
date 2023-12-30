@@ -24,7 +24,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     Trajectory driveToBackdropFromVisionLeft;
     Trajectory driveToBackdropFromVisionRight;
     Trajectory driveToBackdropFromVisionCenter;
-    Trajectory driveToAudience;
     Trajectory driveToBackdropReturn;
     Trajectory driveToAudienceLeft;
     Trajectory driveToAudienceRight;
