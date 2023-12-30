@@ -65,6 +65,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         if (isStopRequested()) return;
 
+        camera.stopStreaming();
+
         if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER || redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) {
             drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).lineTo(new Vector2d(-24, -3)).build());
             drive.setPoseEstimate(new Pose2d(37.5, 12, Math.toRadians(0)));
