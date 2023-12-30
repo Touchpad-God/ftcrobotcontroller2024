@@ -26,7 +26,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
-    double headingOffset = 0;
+    double headingOffset = Math.PI;
 
     final double INITIALOFFSET = 0.0;
 
