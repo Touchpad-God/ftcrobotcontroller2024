@@ -22,6 +22,9 @@ public class redPropRight extends OpenCvPipeline {
         this.telemetry = telemetry;
     }
 
+    Mat cropped;
+    Mat red2 = new Mat();
+    Mat redCombined = new Mat();
     Mat hsv = new Mat();
     Size blur = new Size(1.5, 1.5);
     Mat red = new Mat();
@@ -38,20 +41,31 @@ public class redPropRight extends OpenCvPipeline {
 
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        //BGR
-        Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
+        Size shape = input.size();
 
-        Scalar lowHSVred = new Scalar(0, 0, 100);
-        Scalar highHSVred = new Scalar(100, 90, 255);
+        Rect roi = new Rect(0, (int) shape.height / 6, (int) shape.width, (int) shape.height / 2);
+
+        cropped = new Mat(input, roi);
+
+        //BGR
+        //Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
+
+        Scalar lowerHSVred = new Scalar(0, 64, 10);
+        Scalar lowHSVred = new Scalar(10, 255, 255);
+        Scalar highHSVred = new Scalar(160, 64, 10);
+        Scalar higherHSVred = new Scalar(180, 255, 255);
 
 //        Scalar lowHSVred = new Scalar(0, 130, 120);
 //        Scalar highHSVred = new Scalar(255, 255, 255);
 
-        Core.inRange(hsv, lowHSVred, highHSVred, red);
+        Core.inRange(hsv, lowerHSVred, lowHSVred, red);
+        Core.inRange(hsv, highHSVred, higherHSVred, red2);
 
-        Imgproc.GaussianBlur(red, red, blur, 0);
+        Core.bitwise_or(red, red2, redCombined);
 
-        Imgproc.Canny(red, edges, 100, 300);
+        Imgproc.GaussianBlur(redCombined, redCombined, blur, 0);
+
+        Imgproc.Canny(redCombined, edges, 100, 300);
 
         List<MatOfPoint> contour = new ArrayList<>();
         Imgproc.findContours(edges, contour, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -59,8 +73,11 @@ public class redPropRight extends OpenCvPipeline {
         //releasing matrices
         hsv.release();
         red.release();
+        red2.release();
+        redCombined.release();
         edges.release();
         hierarchy.release();
+        cropped.release();
 
         MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contour.size()];
         MatOfPoint2f[] curve = new MatOfPoint2f[contour.size()];
