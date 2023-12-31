@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -15,6 +17,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
+@Config
 public class redPropLeft extends OpenCvPipeline {
     Telemetry telemetry;
 
@@ -22,13 +25,16 @@ public class redPropLeft extends OpenCvPipeline {
         this.telemetry = telemetry;
     }
 
+    Mat cropped;
     Mat hsv = new Mat();
-    Size blur = new Size(1.5, 1.5);
+    Size blur = new Size(3.0, 3.0);
     Mat red = new Mat();
     Mat red2 = new Mat();
     Mat redCombined = new Mat();
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
+
+    public static int contourSize = 30000;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -38,14 +44,20 @@ public class redPropLeft extends OpenCvPipeline {
         telemetry.addLine("RedPropLeft pipeline selected");
         telemetry.update();
 
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+        Size shape = input.size();
+
+        Rect roi = new Rect(0, (int) shape.height / 6, (int) shape.width, (int) shape.height / 2);
+
+        cropped = new Mat(input, roi);
+
+        Imgproc.cvtColor(cropped, hsv, Imgproc.COLOR_RGB2HSV);
 
         //BGR
-        Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
+        //Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
 
-        Scalar lowHSVred = new Scalar(10, 0, 0);
-        Scalar lowerHSVred = new Scalar(0, 255, 255);
-        Scalar highHSVred = new Scalar(170, 0, 0);
+        Scalar lowerHSVred = new Scalar(0, 64, 10);
+        Scalar lowHSVred = new Scalar(10, 255, 255);
+        Scalar highHSVred = new Scalar(160, 64, 10);
         Scalar higherHSVred = new Scalar(180, 255, 255);
 
 //        Scalar lowHSVred = new Scalar(0, 130, 120);
@@ -66,8 +78,11 @@ public class redPropLeft extends OpenCvPipeline {
         //releasing matrices
         hsv.release();
         red.release();
+        red2.release();
+        redCombined.release();
         edges.release();
         hierarchy.release();
+        cropped.release();
 
         MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contour.size()];
         MatOfPoint2f[] curve = new MatOfPoint2f[contour.size()];
@@ -121,9 +136,9 @@ public class redPropLeft extends OpenCvPipeline {
                 int centerX = largestContour.x + largestContour.width/2;
                 int centerY = largestContour.y + largestContour.height/2;
 
-                Imgproc.circle(input, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
+                //Imgproc.circle(input, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
 
-                if(largestContour.area() >= 30000){
+                if(largestContour.area() >= contourSize){
                     propPosition(centerX);
                 }else{
                     position = PROPPOSITION.RIGHT;
@@ -137,9 +152,9 @@ public class redPropLeft extends OpenCvPipeline {
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 0 && centerX <= 225){
+        if(centerX >= 0 && centerX <= 325){
             position = PROPPOSITION.LEFT;
-        } else if(centerX >= 440 && centerX <= 1020){
+        } else if(centerX >= 490 && centerX <= 1020){
             position = PROPPOSITION.CENTER;
         } else{
             position = PROPPOSITION.NONE;
