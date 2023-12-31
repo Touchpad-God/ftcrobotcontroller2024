@@ -56,15 +56,15 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 .addSpatialMarker(new Vector2d(59, 10), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .lineTo(new Vector2d(59, -36))
                 .lineToConstantHeading(new Vector2d(59, 0))
-                .splineToConstantHeading(new Vector2d(42, 48), Math.toRadians(180)).build();
+                .splineToConstantHeading(new Vector2d(42, 46), Math.toRadians(180)).build();
 
-        driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(58, -36, Math.toRadians(90)))
-                .addSpatialMarker(new Vector2d(52, 30), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
-                .splineToConstantHeading(new Vector2d(57.5, 0), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(48, 30, Math.toRadians(270)), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(27, 47), Math.toRadians(180)).build();
+        driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(47.5, -47, Math.toRadians(0)))
+                .addSpatialMarker(new Vector2d(59, 10), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
+                .lineToSplineHeading(new Pose2d(59, -30, Math.toRadians(-90)))
+                .lineToConstantHeading(new Vector2d(59, 12))
+                .splineToConstantHeading(new Vector2d(42, 47), Math.toRadians(180)).build();
 
-        driveToAudienceRight = drive.trajectorySequenceBuilder(new Pose2d(42, 48, Math.toRadians(270)))
+        driveToAudienceRight = drive.trajectorySequenceBuilder(new Pose2d(42, 46, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
@@ -97,7 +97,7 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
 
         Thread inOutThread = new Thread(intakeOuttake);
         inOutThread.start();
-        intakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
+        IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         //vision
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
@@ -130,9 +130,11 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        drive.followTrajectory(drive.trajectoryBuilder(new Pose2d()).lineTo(new Vector2d(-24, 3)).build());
+        drive.setPoseEstimate(new Pose2d(61.5, -39, Math.toRadians(0)));
 
-        drive.setPoseEstimate(new Pose2d(37.5, -36, Math.toRadians(0)));
+        if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER || redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) {
+            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, -36)).build());
+        }
 
         if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER) { // center
             backdropX = 36;
@@ -186,9 +188,8 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
         } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.LEFT) { // left
             backdropX = 30;
 
-            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
-                    .setReversed(true)
-                    .turn(Math.toRadians(90));
+            traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .lineTo(new Vector2d(47.5, -47));
 
             drive.followTrajectorySequence(traj.build());
 
