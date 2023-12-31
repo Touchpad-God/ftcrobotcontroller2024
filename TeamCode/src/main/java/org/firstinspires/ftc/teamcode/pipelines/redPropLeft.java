@@ -25,6 +25,8 @@ public class redPropLeft extends OpenCvPipeline {
     Mat hsv = new Mat();
     Size blur = new Size(1.5, 1.5);
     Mat red = new Mat();
+    Mat red2 = new Mat();
+    Mat redCombined = new Mat();
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
 
@@ -41,17 +43,22 @@ public class redPropLeft extends OpenCvPipeline {
         //BGR
         Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
 
-        Scalar lowHSVred = new Scalar(0, 0, 100);
-        Scalar highHSVred = new Scalar(100, 90, 255);
+        Scalar lowHSVred = new Scalar(10, 0, 0);
+        Scalar lowerHSVred = new Scalar(0, 255, 255);
+        Scalar highHSVred = new Scalar(170, 0, 0);
+        Scalar higherHSVred = new Scalar(180, 255, 255);
 
 //        Scalar lowHSVred = new Scalar(0, 130, 120);
 //        Scalar highHSVred = new Scalar(255, 255, 255);
 
-        Core.inRange(hsv, lowHSVred, highHSVred, red);
+        Core.inRange(hsv, lowerHSVred, lowHSVred, red);
+        Core.inRange(hsv, highHSVred, higherHSVred, red2);
 
-        Imgproc.GaussianBlur(red, red, blur, 0);
+        Core.bitwise_or(red, red2, redCombined);
 
-        Imgproc.Canny(red, edges, 100, 300);
+        Imgproc.GaussianBlur(redCombined, redCombined, blur, 0);
+
+        Imgproc.Canny(redCombined, edges, 100, 300);
 
         List<MatOfPoint> contour = new ArrayList<>();
         Imgproc.findContours(edges, contour, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
