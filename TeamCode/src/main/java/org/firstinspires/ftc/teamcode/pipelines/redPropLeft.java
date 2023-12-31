@@ -34,7 +34,7 @@ public class redPropLeft extends OpenCvPipeline {
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
 
-    public static int contourSize = 30000;
+    public static int contourSize = 10000;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -44,27 +44,27 @@ public class redPropLeft extends OpenCvPipeline {
         telemetry.addLine("RedPropLeft pipeline selected");
         telemetry.update();
 
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+
         Size shape = input.size();
 
-        Rect roi = new Rect(0, (int) shape.height / 6, (int) shape.width, (int) shape.height / 2);
+        Rect roi = new Rect(0, (int) shape.height * 1 / 3, (int) shape.width, (int) shape.height / 2);
 
-        cropped = new Mat(input, roi);
-
-        Imgproc.cvtColor(cropped, hsv, Imgproc.COLOR_RGB2HSV);
+        cropped = new Mat(hsv, roi);
 
         //BGR
         //Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
 
-        Scalar lowerHSVred = new Scalar(0, 64, 10);
-        Scalar lowHSVred = new Scalar(10, 255, 255);
-        Scalar highHSVred = new Scalar(160, 64, 10);
+        Scalar lowerHSVred = new Scalar(0, 55, 30);
+        Scalar lowHSVred = new Scalar(20, 255, 255);
+        Scalar highHSVred = new Scalar(155, 55, 30);
         Scalar higherHSVred = new Scalar(180, 255, 255);
 
 //        Scalar lowHSVred = new Scalar(0, 130, 120);
 //        Scalar highHSVred = new Scalar(255, 255, 255);
 
-        Core.inRange(hsv, lowerHSVred, lowHSVred, red);
-        Core.inRange(hsv, highHSVred, higherHSVred, red2);
+        Core.inRange(cropped, lowerHSVred, lowHSVred, red);
+        Core.inRange(cropped, highHSVred, higherHSVred, red2);
 
         Core.bitwise_or(red, red2, redCombined);
 
@@ -128,6 +128,7 @@ public class redPropLeft extends OpenCvPipeline {
         Imgproc.line(input, new Point( 440, 335), new Point(1020, 335), new Scalar(100, 100, 200), 5); //center line
 
         if(boundRect.length != 0){
+            position = PROPPOSITION.NONE;
             onLine(boundRect);
 
             if(position == PROPPOSITION.NONE){
