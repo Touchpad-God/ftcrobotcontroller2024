@@ -85,7 +85,7 @@ public class IntakeOuttake {
     private double outtakeprevError = 0.0;
 
     // state machine initialization
-    public enum IntakeState {INTAKING, AUTOINTAKING, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
+    public enum IntakeState {INTAKING, AUTOINTAKING, AUTOBEAMNOCOLOR, AUTOBOTHCOLOR, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING}
     public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
     public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
     public static volatile IntakeState intakeState = IntakeState.IDLE;
@@ -154,7 +154,7 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTOINTAKING:
-                outtakeTicks = 13;
+                outtakeTicks = 10;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
@@ -162,9 +162,20 @@ public class IntakeOuttake {
                 clawRight.setPosition(clawClosedRight);
                 if (beam.getDetections() >= 1) {
                     intakeServo.setPosition(intakePositions[locationPixel - 2]);
-                } else if (beam.getDetections() >= 4) {
-                    intakeState = IntakeState.BEAMNOCOLOR;
+                } else if (beam.getDetections() >= 3) {
+                    intakeState = IntakeState.AUTOBEAMNOCOLOR;
                 }
+                break;
+                // TODO: Make auto versions of BEAMNOCOLOR and BOTHCOLOR that automatically eject.
+            case AUTOBEAMNOCOLOR:
+                if (!pixel1.equals("") && !pixel2.equals("")) {
+                    intakeState = IntakeState.AUTOBOTHCOLOR;
+                    intakeIntake.setPower(-intakePower);
+                    intakeTransfer.setPower(transferPower);
+                }
+                break;
+            case AUTOBOTHCOLOR:
+                intakeState = IntakeState.EJECTING;
                 break;
             case BEAMNOCOLOR:
                 if (!pixel1.equals("") && !pixel2.equals("")) {
