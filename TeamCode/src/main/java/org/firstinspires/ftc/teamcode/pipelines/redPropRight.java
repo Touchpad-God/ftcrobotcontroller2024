@@ -52,16 +52,10 @@ public class redPropRight extends OpenCvPipeline {
 
         cropped = new Mat(hsv, roi);
 
-        //BGR
-        //Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2BGR);
-
         Scalar lowerHSVred = new Scalar(0, 55, 30);
         Scalar lowHSVred = new Scalar(20, 255, 255);
         Scalar highHSVred = new Scalar(155, 55, 30);
         Scalar higherHSVred = new Scalar(180, 255, 255);
-
-//        Scalar lowHSVred = new Scalar(0, 130, 120);
-//        Scalar highHSVred = new Scalar(255, 255, 255);
 
         Core.inRange(cropped, lowerHSVred, lowHSVred, red);
         Core.inRange(cropped, highHSVred, higherHSVred, red2);
