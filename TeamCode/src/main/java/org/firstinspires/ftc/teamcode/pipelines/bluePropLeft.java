@@ -117,7 +117,7 @@ public class bluePropLeft extends OpenCvPipeline {
         avgArea /= total;
 
         for(int i = 0; i != boundRect.length; i++){
-            if(boundRect[i].area() > (input.width() * input.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
+            if(boundRect[i].height >= cropped.height() / 2 && boundRect[i].area() > (input.width() * input.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
                 Imgproc.rectangle(input, boundRect[i], new Scalar(250, 100, 200), 2);
             }
         }
@@ -163,7 +163,7 @@ public class bluePropLeft extends OpenCvPipeline {
     public int largestContour(Rect[] boundRect){
         int maxIndex = 0;
         for(int i = 0; i < boundRect.length; i++){
-            if(boundRect[i].area() > boundRect[maxIndex].area()){
+            if(boundRect[i].height >= cropped.height() / 2 && boundRect[i].area() > boundRect[maxIndex].area()){
                 maxIndex = i;
             }
         }
