@@ -48,7 +48,7 @@ public class bluePropLeft extends OpenCvPipeline {
 
         Size shape = input.size();
 
-        Rect roi = new Rect(0, (int) shape.height / 3, (int) shape.width, (int) shape.height * 3 / 7);
+        Rect roi = new Rect(0, (int) shape.height / 6, (int) shape.width, (int) shape.height * 3 / 10);
 
         cropped = new Mat(hsv, roi);
 
@@ -77,7 +77,7 @@ public class bluePropLeft extends OpenCvPipeline {
         hsv.release();
         //blue.release();
         //blue2.release();
-        blueCombined.release();
+        //blueCombined.release();
         edges.release();
         hierarchy.release();
         cropped.release();
@@ -108,7 +108,7 @@ public class bluePropLeft extends OpenCvPipeline {
         double total = 0;
 
         for(int i = 0; i != boundRect.length; i++){
-            if(boundRect[i].area() > (input.width() * input.height() * 0.001)) {
+            if(boundRect[i].area() > (cropped.width() * cropped.height() * 0.001)) {
                 avgArea += boundRect[i].area();
                 total++;
             }
@@ -117,13 +117,13 @@ public class bluePropLeft extends OpenCvPipeline {
         avgArea /= total;
 
         for(int i = 0; i != boundRect.length; i++){
-            if(boundRect[i].area() > (input.width() * input.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
-                Imgproc.rectangle(input, boundRect[i], new Scalar(250, 100, 200), 2);
+            if(boundRect[i].area() > (cropped.width() * cropped.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
+                Imgproc.rectangle(cropped, boundRect[i], new Scalar(250, 100, 200), 2);
             }
         }
 
-        Imgproc.line(input, new Point(0, (double) 380 / 2), new Point((double) 235 / 2, (double) 335 / 2), new Scalar(50, 50, 100), 2); //left line
-        Imgproc.line(input, new Point( 220, (double) 335 / 2), new Point(510, (double) 335 /2), new Scalar(50, 50, 100), 2); //center line
+        Imgproc.line(cropped, new Point(0, (double) 380 / 2), new Point((double) 235 / 2, (double) 335 / 2), new Scalar(50, 50, 100), 2); //left line
+        Imgproc.line(cropped, new Point( 220, (double) 335 / 2), new Point(510, (double) 335 /2), new Scalar(50, 50, 100), 2); //center line
 
         if(boundRect.length != 0){
             position = PROPPOSITION.NONE;
@@ -147,7 +147,7 @@ public class bluePropLeft extends OpenCvPipeline {
 
         telemetry.addData("Prop position", position);
 
-        return input;
+        return blueCombined;
     }
 
     public void propPosition(int centerX){

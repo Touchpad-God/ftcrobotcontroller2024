@@ -48,7 +48,7 @@ public class bluePropRight extends OpenCvPipeline {
 
         Size shape = input.size();
 
-        Rect roi = new Rect(0, (int) shape.height * 1 / 3, (int) shape.width, (int) shape.height / 2);
+        Rect roi = new Rect(0, (int) shape.height / 6, (int) shape.width, (int) shape.height * 3 / 10);
 
         cropped = new Mat(hsv, roi);
 
