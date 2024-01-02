@@ -11,6 +11,7 @@ import org.firstinspires.ftc.ftccommon.internal.manualcontrol.parameters.ImuPara
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.ThreadedIMU;
 
 @TeleOp
 public class CenterStageTeleOp2 extends LinearOpMode {
@@ -54,7 +55,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         motorLb = hardwareMap.get(DcMotor.class, "BL");
         motorRf = hardwareMap.get(DcMotor.class, "FR");
         motorRb = hardwareMap.get(DcMotor.class, "BR");
-        IMU imu = hardwareMap.get(IMU.class, "imu 2");
+        ThreadedIMU imu = new ThreadedIMU(hardwareMap);
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
         hangL = hardwareMap.get(Servo.class, "hangL");
@@ -67,11 +68,11 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         motorRf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorRb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        Thread t = new Thread(imu);
+
         waitForStart();
+        t.start();
         IntakeOuttakeTeleOp intakeOuttake = new IntakeOuttakeTeleOp(hardwareMap, getRuntime(), telemetry);
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
         Servo drone = hardwareMap.get(Servo.class, "drone");
         drone.setPosition(1);
 
@@ -82,7 +83,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             x = Math.pow(gamepad1.left_stick_x, 3);
             y = Math.pow(-gamepad1.left_stick_y, 3);
             rot = Math.pow(gamepad1.right_stick_x, 3);
-            double currHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+            double currHeading = imu.getYaw();
             double theta = -(currHeading - headingOffset - INITIALOFFSET);
             double rotX = x * Math.cos(theta) - y * Math.sin(theta);
             double rotY = x * Math.sin(theta) + y * Math.cos(theta);
@@ -144,5 +145,6 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
         intakeOuttake.beam.stop();
         intakeOuttake.s.stop();
+        imu.stop();
     }
 }
