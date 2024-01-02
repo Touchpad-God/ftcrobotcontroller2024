@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /*
 
-TODO:
+TODO: Find out why this thing doesn't work.
 
  - State machine (done)
  - Timer integration (done)

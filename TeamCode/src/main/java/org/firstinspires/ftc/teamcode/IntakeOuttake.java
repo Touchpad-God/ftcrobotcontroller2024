@@ -166,7 +166,6 @@ public class IntakeOuttake {
                     intakeState = IntakeState.AUTOBEAMNOCOLOR;
                 }
                 break;
-                // TODO: Make auto versions of BEAMNOCOLOR and BOTHCOLOR that automatically eject.
             case AUTOBEAMNOCOLOR:
                 if (!pixel1.equals("") && !pixel2.equals("")) {
                     intakeState = IntakeState.AUTOBOTHCOLOR;
