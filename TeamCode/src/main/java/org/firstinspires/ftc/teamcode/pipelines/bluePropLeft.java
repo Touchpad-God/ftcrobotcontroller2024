@@ -117,7 +117,7 @@ public class bluePropLeft extends OpenCvPipeline {
         avgArea /= total;
 
         for(int i = 0; i != boundRect.length; i++){
-            if(boundRect[i].height >= cropped.height() / 2 && boundRect[i].area() > (input.width() * input.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
+            if(boundRect[i].area() > (input.width() * input.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
                 Imgproc.rectangle(input, boundRect[i], new Scalar(250, 100, 200), 2);
             }
         }
@@ -175,6 +175,9 @@ public class bluePropLeft extends OpenCvPipeline {
         Point centerLine = new Point((double) 730 /2, (double) 330 /2);
 
         for(Rect rect: boundRect){
+            if (rect.height < cropped.height() / 2) {
+                continue;
+            }
             if(rect.contains(leftLine)){
                 position = PROPPOSITION.LEFT;
             } else if(rect.contains(centerLine)){
