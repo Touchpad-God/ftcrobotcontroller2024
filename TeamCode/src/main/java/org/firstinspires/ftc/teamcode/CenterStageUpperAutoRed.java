@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,10 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.redPropRight;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraException;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
@@ -192,12 +186,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineToSplineHeading(new Pose2d(new Vector2d(37.0, 13.5), Math.toRadians(90))).build());
 
-
-//            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, 12, Math.toRadians(0)))
-//                    .turn(Math.toRadians(90));
-//
-//            drive.followTrajectorySequence(traj.build());
-
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
                 idle();
@@ -228,12 +216,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         while (!t.finished()) {
         }
         t.markReady();
-//        t.start(1880);
-//        while (!t.finished() && IntakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
-//            drive.setMotorPowers(0.17, 0.17, 0.17, 0.17);
-//        }
-//        t.markReady();
-//        drive.setMotorPowers(0, 0, 0, 0);
 
         drive.followTrajectory(driveToBackdropReturn);
 
@@ -258,12 +240,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         while (!t.finished()) {
         }
         t.markReady();
-//        t.start(1880);
-//        while (!t.finished() && IntakeOuttake.intakeState == IntakeOuttake.IntakeState.AUTOINTAKING) {
-//            drive.setMotorPowers(0.17, 0.17, 0.17, 0.17);
-//        }
-//        t.markReady();
-//        drive.setMotorPowers(0, 0, 0, 0);
 
         drive.followTrajectory(driveToBackdropReturn);
 

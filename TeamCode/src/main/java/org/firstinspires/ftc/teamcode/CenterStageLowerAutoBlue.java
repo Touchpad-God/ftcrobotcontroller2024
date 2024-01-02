@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.pipelines.bluePropRight;
 import org.firstinspires.ftc.teamcode.pipelines.redPropLeft;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
@@ -102,8 +102,8 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
         //vision
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
 
-        redPropLeft redPropPipeline = new redPropLeft(telemetry);
-        camera.setPipeline(redPropPipeline);
+        bluePropRight bluePropPipeline = new bluePropRight(telemetry);
+        camera.setPipeline(bluePropPipeline);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
@@ -132,11 +132,11 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
 
         drive.setPoseEstimate(new Pose2d(-61.5, -39, Math.toRadians(180)));
 
-        if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER || redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) {
+        if (bluePropPipeline.position == bluePropRight.PROPPOSITION.CENTER || bluePropPipeline.position == bluePropRight.PROPPOSITION.RIGHT) {
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(-37.5, -36)).build());
         }
 
-        if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER) { // center
+        if (bluePropPipeline.position == bluePropRight.PROPPOSITION.CENTER) { // center
             backdropX = 36;
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
@@ -158,7 +158,7 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
 
             drive.followTrajectorySequence(driveToAudienceCenter);
 
-        } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) { // right
+        } else if (bluePropPipeline.position == bluePropRight.PROPPOSITION.RIGHT) { // right
             backdropX = 42;
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(-37.5, -36, Math.toRadians(180)))
@@ -185,7 +185,7 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
 
             drive.followTrajectorySequence(driveToAudienceRight);
 
-        } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.LEFT) { // left
+        } else if (bluePropPipeline.position == bluePropRight.PROPPOSITION.LEFT) { // left
             backdropX = 30;
 
             traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
