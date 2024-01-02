@@ -69,7 +69,7 @@ public class DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 54.01836147694584;//51.858;
+    public static double MAX_VEL = 54.01836147694584;//51.858; //54.01836147694584
     public static double MAX_ACCEL = 54.01836147694584;
     public static double MAX_ANG_VEL = 2.4873897552490236;
     public static double MAX_ANG_ACCEL = 2.4873897552490236;

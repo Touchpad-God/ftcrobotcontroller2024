@@ -83,10 +83,10 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
         driveToBackdropFromVisionCenter = drive.trajectoryBuilder(new Pose2d(-37.5, 16, Math.toRadians(180)))
                 .lineToSplineHeading(new Pose2d(-36, 48, Math.toRadians(270)))
                 .build();
-        driveToBackdropFromVisionRight = drive.trajectoryBuilder(new Pose2d(-34.5, 36, Math.toRadians(90)))
+        driveToBackdropFromVisionLeft = drive.trajectoryBuilder(new Pose2d(-34.5, 36, Math.toRadians(90)))
                 .lineToSplineHeading(new Pose2d(-30, 48, Math.toRadians(270)))
                 .build();
-        driveToBackdropFromVisionLeft = drive.trajectoryBuilder(new Pose2d(-37.5, 14.5, Math.toRadians(90)))
+        driveToBackdropFromVisionRight = drive.trajectoryBuilder(new Pose2d(-37.5, 14.5, Math.toRadians(90)))
                 .lineToSplineHeading(new Pose2d(-42, 48.5, Math.toRadians(270)))
                 .build();
 
@@ -153,7 +153,7 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
         } else if (bluePropPipeline.position == bluePropLeft.PROPPOSITION.RIGHT) { //right
             traj = drive.trajectorySequenceBuilder(new Pose2d(-61.5, 15, Math.toRadians(180)))
                     .lineToConstantHeading(new Vector2d(-34.5, 36))
-                    .turn(Math.toRadians(90));
+                    .turn(Math.toRadians(-90));
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
@@ -180,7 +180,7 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(-37.5, 14.5)).build());
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(-37.5, 12, Math.toRadians(180)))
-                    .turn(Math.toRadians(90));
+                    .turn(Math.toRadians(-90));
 
             drive.followTrajectorySequence(traj.build());
 

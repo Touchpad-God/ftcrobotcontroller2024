@@ -87,7 +87,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionLeft = drive.trajectoryBuilder(new Pose2d(37.5, 14.5, Math.toRadians(90)))
-                .lineToSplineHeading(new Pose2d(30, 48.5, Math.toRadians(270)))
+                .lineToSplineHeading(new Pose2d(31, 48.5, Math.toRadians(270)))
                 .build();
 
         driveToAudienceLeft = drive.trajectoryBuilder(new Pose2d(30, 48.5, Math.toRadians(270)))
@@ -210,7 +210,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         }
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
-                .forward(5.0, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(3.5, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(1000);
         while (!t.finished()) {
@@ -237,8 +237,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .forward(9.5, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);
-        while (!t.finished()) {
-        }
+        while (!t.finished()) {}
         t.markReady();
 
         drive.followTrajectory(driveToBackdropReturn);

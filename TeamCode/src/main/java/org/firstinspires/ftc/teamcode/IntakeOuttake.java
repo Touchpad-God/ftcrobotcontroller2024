@@ -34,7 +34,7 @@ public class IntakeOuttake {
     double intakePos1 = 0.4150;
     double intakePos2 = 0.4267;
     double intakePos3 = 0.4844;
-    double intakePos4 = 0.5350;
+    double intakePos4 = 0.5250;
     double intakePos5 = 0.5550;
     int locationPixel = 0;
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
@@ -161,7 +161,7 @@ public class IntakeOuttake {
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
                 if (beam.getDetections() >= 1) {
-                    intakeServo.setPosition(intakePositions[locationPixel - 2]);
+                    intakeServo.setPosition(intakePositions[locationPixel - 1]);
                 } else if (beam.getDetections() >= 3) {
                     intakeState = IntakeState.AUTOBEAMNOCOLOR;
                 }
@@ -317,9 +317,11 @@ public class IntakeOuttake {
                 break;
             case AUTORAISED:
                 outtakeTicks = 150;
-                if (outtakeRaised()) {
+                timer.start(300);
+                if (timer.finished() && outtakeRaised()) {
                     horizontalSlideServo.setPosition(horizontalOpen);
                     outtakeState = OuttakeState.POS4;
+                    timer.markReady();
                 }
                 break;
             case AUTODROP:

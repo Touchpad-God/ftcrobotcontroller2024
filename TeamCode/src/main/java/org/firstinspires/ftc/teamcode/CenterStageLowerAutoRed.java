@@ -52,7 +52,7 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(59, 0), Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(36, 48), Math.toRadians(180)).build();
 
-        driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(-90)))
+        driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(37.5, -37, Math.toRadians(-90)))
                 .addSpatialMarker(new Vector2d(59, 10), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .lineTo(new Vector2d(59, -36))
                 .lineToConstantHeading(new Vector2d(59, 0))
@@ -132,12 +132,14 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
 
         drive.setPoseEstimate(new Pose2d(61.5, -39, Math.toRadians(0)));
 
-        if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER || redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) {
-            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, -36)).build());
-        }
+//        if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER || redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) {
+//            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, -36)).build());
+//        }
 
         if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER) { // center
             backdropX = 36;
+
+            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, -36)).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
@@ -161,7 +163,8 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
         } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) { // right
             backdropX = 42;
 
-            traj = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
+            traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .lineTo(new Vector2d(37.5, -37))
                     .turn(Math.toRadians(-90));
 
             drive.followTrajectorySequence(traj.build());
