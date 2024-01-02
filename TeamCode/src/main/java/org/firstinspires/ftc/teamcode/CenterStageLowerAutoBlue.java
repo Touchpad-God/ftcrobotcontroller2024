@@ -239,6 +239,7 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
         while (opModeIsActive()) {}
 
         intakeOuttake.stop();
+        drive.imu.stop();
     }
 }
 

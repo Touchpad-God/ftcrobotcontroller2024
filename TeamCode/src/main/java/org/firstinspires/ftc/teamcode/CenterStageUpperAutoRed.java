@@ -256,6 +256,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         }
 
         intakeOuttake.stop();
+        drive.imu.stop();
     }
 }
 
