@@ -53,7 +53,7 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
     public IntakeOuttakeTeleOp(HardwareMap hardwareMap, double currTime, Telemetry telemetry) {
         super(hardwareMap);
         blinky = new LEDStrip(hardwareMap, telemetry);
-        s = new SubsystemThread(hardwareMap);
+        s = new SubsystemThread(hardwareMap, blinky);
         t = new Thread(s);
         t.start();
     }
@@ -138,7 +138,6 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         } else {
             blinky.updatePixels(pixel2, pixel1);
         }
-        blinky.update();
 
         gamepad1Prev.copy(gamepad1);
         gamepad2Prev.copy(gamepad2);
@@ -169,12 +168,15 @@ class SubsystemThread extends IntakeOuttake implements Runnable {
     private HardwareMap hardwareMap;
     private double time;
     private double timeZero;
-    public SubsystemThread(HardwareMap hardwareMap) {
+    private LEDStrip led;
+
+    public SubsystemThread(HardwareMap hardwareMap, LEDStrip led) {
         super(hardwareMap);
         this.hardwareMap = hardwareMap;
         this.running = true;
         this.time = 0;
         this.timeZero = System.currentTimeMillis() / 1000.0;
+        this.led = led;
     }
     public void run() {
         while (running) {
@@ -182,6 +184,7 @@ class SubsystemThread extends IntakeOuttake implements Runnable {
             intake(this.time);
             transfer(this.time);
             outtake(this.time);
+            this.led.update();
             runTo(outtakeTicks, this.time);
         }
     }
