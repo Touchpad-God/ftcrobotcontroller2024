@@ -31,16 +31,14 @@ class LEDStrip {
     final double YELLOW = 0.6945;
 
     public Servo blinkinLed;
-    public double color1;
-    public double color2;
-    private Telemetry telemetry;
+    public volatile double color1;
+    public volatile double color2;
 
     public LEDStrip(HardwareMap hardwareMap, Telemetry telemetry) {
         this.blinkinLed = hardwareMap.get(Servo.class, "led");
         this.blinkinLed.setPosition(this.BLACK);
         this.color1 = this.BLACK;
         this.color2 = this.BLACK;
-        this.telemetry = telemetry;
     }
 
     public void updatePixels(String color1string, String color2string) {
@@ -79,8 +77,6 @@ class LEDStrip {
                 color2 = BLACK;
                 break;
         }
-        telemetry.addData("Color 1", color1);
-        telemetry.addData("Color 2", color2);
 
     }
 
