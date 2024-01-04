@@ -89,6 +89,7 @@ class LEDStrip {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE1;
                 }
+                break;
             case PAUSE1:
                 timer.start(550);
                 this.blinkinLed.setPosition(this.BLACK);
@@ -96,6 +97,7 @@ class LEDStrip {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN2A;
                 }
+                break;
             case PATTERN2A:
                 timer.start(750);
                 this.blinkinLed.setPosition(this.color2);
@@ -103,6 +105,7 @@ class LEDStrip {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE2;
                 }
+                break;
             case PAUSE2:
                 timer.start(550);
                 this.blinkinLed.setPosition(this.BLACK);
@@ -110,6 +113,7 @@ class LEDStrip {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN2B;
                 }
+                break;
             case PATTERN2B:
                 timer.start(750);
                 this.blinkinLed.setPosition(this.color2);
@@ -117,6 +121,7 @@ class LEDStrip {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PAUSE3;
                 }
+                break;
             case PAUSE3:
                 timer.start(550);
                 this.blinkinLed.setPosition(this.BLACK);
@@ -124,6 +129,7 @@ class LEDStrip {
                     timer.markReady();
                     ledState = BLINKYBLINKY.PATTERN1;
                 }
+                break;
         }
     }
 }
