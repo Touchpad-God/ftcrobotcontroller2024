@@ -54,6 +54,8 @@ public class redPropRight extends OpenCvPipeline {
 
         Imgproc.resize(cropped, cropped, new Size(), 0.5, 0.5, Imgproc.INTER_AREA);
 
+        Imgproc.GaussianBlur(cropped, cropped, blur, 0);
+
         Scalar lowerHSVred = new Scalar(0, 65, 30);
         Scalar lowHSVred = new Scalar(25, 255, 255);
         Scalar highHSVred = new Scalar(150, 65, 30);
@@ -63,8 +65,6 @@ public class redPropRight extends OpenCvPipeline {
         Core.inRange(cropped, highHSVred, higherHSVred, red2);
 
         Core.bitwise_or(red, red2, redCombined);
-
-        Imgproc.GaussianBlur(redCombined, redCombined, blur, 0);
 
         Imgproc.Canny(redCombined, edges, 100, 300);
 
