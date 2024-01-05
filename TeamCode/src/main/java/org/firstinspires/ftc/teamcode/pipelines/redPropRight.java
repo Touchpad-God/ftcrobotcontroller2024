@@ -170,8 +170,8 @@ public class redPropRight extends OpenCvPipeline {
     }
 
     public void onLine(Rect[] boundRect){
-        Point rightLine = new Point(1120 / 2, 360 / 2);
-        Point centerLine = new Point(460 / 2, 325 / 2);
+        Point rightLine = new Point(1120 / 2, 60);
+        Point centerLine = new Point(460 / 2, 60);
 
         for(Rect rect: boundRect){
             if(rect.contains(rightLine)){
