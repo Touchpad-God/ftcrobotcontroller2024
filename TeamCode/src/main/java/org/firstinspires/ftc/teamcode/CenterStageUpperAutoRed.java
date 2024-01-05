@@ -217,6 +217,9 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .forward(4.0, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);
+        if (intakeOuttake.locationPixel == 4) {
+            intakeOuttake.locationPixel--;
+        }
         while (!t.finished()) {
         }
         t.markReady();
