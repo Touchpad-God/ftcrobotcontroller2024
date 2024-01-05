@@ -83,7 +83,7 @@ class LEDStrip {
     public void update() {
         switch (ledState) {
             case PATTERN1:
-                timer.start(1750);
+                timer.start(1000);
                 this.blinkinLed.setPosition(this.color1);
                 if (timer.finished()) {
                     timer.markReady();
@@ -91,7 +91,7 @@ class LEDStrip {
                 }
                 break;
             case PAUSE1:
-                timer.start(550);
+                timer.start(500);
                 this.blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();
@@ -99,7 +99,7 @@ class LEDStrip {
                 }
                 break;
             case PATTERN2A:
-                timer.start(750);
+                timer.start(500);
                 this.blinkinLed.setPosition(this.color2);
                 if (timer.finished()) {
                     timer.markReady();
@@ -107,7 +107,7 @@ class LEDStrip {
                 }
                 break;
             case PAUSE2:
-                timer.start(550);
+                timer.start(500);
                 this.blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();
@@ -115,7 +115,7 @@ class LEDStrip {
                 }
                 break;
             case PATTERN2B:
-                timer.start(750);
+                timer.start(500);
                 this.blinkinLed.setPosition(this.color2);
                 if (timer.finished()) {
                     timer.markReady();
@@ -123,7 +123,7 @@ class LEDStrip {
                 }
                 break;
             case PAUSE3:
-                timer.start(550);
+                timer.start(500);
                 this.blinkinLed.setPosition(this.BLACK);
                 if (timer.finished()) {
                     timer.markReady();

@@ -73,11 +73,11 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         driveToBackdropReturn = drive.trajectoryBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)), true)
                 .addTemporalMarker(0.3, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
-                .addSpatialMarker(new Vector2d(12, 12), () -> {
-                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+                .addDisplacementMarker(() -> {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
                 })
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90))
+                .addDisplacementMarker(() -> {IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;})
                 .build();
 
         driveToBackdropFromVisionCenter = drive.trajectoryBuilder(new Pose2d(37.5, 16, Math.toRadians(0)))
@@ -87,39 +87,39 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionLeft = drive.trajectoryBuilder(new Pose2d(37.5, 14.5, Math.toRadians(90)))
-                .lineToSplineHeading(new Pose2d(31, 48.5, Math.toRadians(270)))
+                .lineToSplineHeading(new Pose2d(31, 49.5, Math.toRadians(270)))
                 .build();
 
         driveToAudienceLeft = drive.trajectoryBuilder(new Pose2d(30, 48.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -53.5), Math.toRadians(270))
                 .build();
 
         driveToAudienceRight = drive.trajectoryBuilder(new Pose2d(42, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -53.5), Math.toRadians(270))
                 .build();
 
         driveToAudienceCenter = drive.trajectoryBuilder(new Pose2d(36, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -55.5), Math.toRadians(270))
                 .build();
 
         driveToAudienceCycle = drive.trajectoryBuilder(new Pose2d(30, 48.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 1)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
                 .build();
 
         waitForStart();
@@ -135,7 +135,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         drive.setPoseEstimate(new Pose2d(61.5, 15, Math.toRadians(0)));
 
         if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER) {
-            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(36.5, 16)).build());
+            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, 16)).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
@@ -160,7 +160,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT) { //right
             traj = drive.trajectorySequenceBuilder(new Pose2d(61.5, 15, Math.toRadians(0)))
-                    .lineToLinearHeading(new Pose2d(new Vector2d(34.5, 36), Math.toRadians(90)));
+                    .lineToLinearHeading(new Pose2d(new Vector2d(35.5, 36), Math.toRadians(90)));
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
@@ -184,7 +184,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             drive.followTrajectory(driveToAudienceRight);
 
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
-            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineToSplineHeading(new Pose2d(new Vector2d(37.0, 13.5), Math.toRadians(90))).build());
+            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineToSplineHeading(new Pose2d(new Vector2d(38.0, 13.5), Math.toRadians(90))).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
@@ -210,9 +210,9 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         }
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
-                .forward(3.5, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(4.0, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
-        t.start(1000);
+        t.start(500);
         while (!t.finished()) {
         }
         t.markReady();
@@ -234,11 +234,12 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         drive.followTrajectory(driveToAudienceCycle);
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
-                .forward(9.5, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(6.0, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);
         while (!t.finished()) {}
         t.markReady();
+
 
         drive.followTrajectory(driveToBackdropReturn);
 

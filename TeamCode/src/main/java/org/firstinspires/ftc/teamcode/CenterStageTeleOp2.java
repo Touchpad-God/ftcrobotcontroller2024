@@ -4,13 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
-import org.firstinspires.ftc.ftccommon.internal.manualcontrol.parameters.ImuParameters;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.ThreadedIMU;
 
 @TeleOp
@@ -36,12 +30,12 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     boolean dpadLeftPrev = false;
     boolean dpadUpPrev = false;
     boolean dpadDownPrev = false;
-    boolean rightStickPressedLast = false;
+    boolean slowLast = false;
 
     boolean slowMode = false;
 
-    public static double fast = 0.8;
-    public static double slow = 0.5;
+    public static double fast = 1.0;
+    public static double slow = 0.45;
 
     int hangPos = 0;
 
@@ -113,7 +107,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
                 motorRb.setPower((+y -rot) * drivetrainMult);
             }
 
-            if (gamepad1.right_stick_button && !rightStickPressedLast) {
+            if (gamepad1.right_bumper && !slowLast) {
                 slowMode = !slowMode;
             }
             if (gamepad1.dpad_left && !dpadLeftPrev) {
@@ -134,7 +128,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             dpadUpPrev = gamepad1.dpad_up;
             dpadDownPrev = gamepad1.dpad_down;
             wasGamepadAPressed = gamepad1.a;
-            rightStickPressedLast = gamepad1.right_stick_button;
+            slowLast = gamepad1.right_bumper;
             dpadLeftPrev = gamepad1.dpad_left;
             telemetry.addData("locationPixel", intakeOuttake.locationPixel);
             telemetry.addData("Current heading", theta);

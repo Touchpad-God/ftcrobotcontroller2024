@@ -52,9 +52,11 @@ public class redPropRight extends OpenCvPipeline {
 
         cropped = new Mat(hsv, roi);
 
-        Scalar lowerHSVred = new Scalar(0, 55, 30);
-        Scalar lowHSVred = new Scalar(20, 255, 255);
-        Scalar highHSVred = new Scalar(155, 55, 30);
+        Imgproc.resize(cropped, cropped, new Size(), 0.5, 0.5, Imgproc.INTER_AREA);
+
+        Scalar lowerHSVred = new Scalar(0, 65, 30);
+        Scalar lowHSVred = new Scalar(25, 255, 255);
+        Scalar highHSVred = new Scalar(150, 65, 30);
         Scalar higherHSVred = new Scalar(180, 255, 255);
 
         Core.inRange(cropped, lowerHSVred, lowHSVred, red);
@@ -73,7 +75,7 @@ public class redPropRight extends OpenCvPipeline {
         hsv.release();
         red.release();
         red2.release();
-        redCombined.release();
+        //redCombined.release();
         edges.release();
         hierarchy.release();
         cropped.release();
@@ -143,7 +145,7 @@ public class redPropRight extends OpenCvPipeline {
 
         telemetry.addData("Prop position", position);
 
-        return input;
+        return redCombined;
     }
 
     public void propPosition(int centerX){

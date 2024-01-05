@@ -160,10 +160,11 @@ public class IntakeOuttake {
                 intakeServo.setPosition(intakePositions[locationPixel]);
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
-                if (beam.getDetections() >= 1) {
-                    intakeServo.setPosition(intakePositions[locationPixel - 1]);
-                } else if (beam.getDetections() >= 3) {
-                    intakeState = IntakeState.AUTOBEAMNOCOLOR;
+                if (!pixel1.equals("") || !pixel2.equals("")) {
+                    intakeServo.setPosition(intakePositions[locationPixel - 2]);
+                }
+                if (!pixel1.equals("") && !pixel2.equals("")) {
+                    intakeState = IntakeState.AUTOBOTHCOLOR;
                 }
                 break;
             case AUTOBEAMNOCOLOR:

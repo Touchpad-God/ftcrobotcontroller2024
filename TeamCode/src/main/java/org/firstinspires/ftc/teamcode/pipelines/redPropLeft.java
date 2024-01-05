@@ -52,6 +52,8 @@ public class redPropLeft extends OpenCvPipeline {
 
         cropped = new Mat(hsv, roi);
 
+        Imgproc.resize(cropped, cropped, new Size(), 0.5, 0.5, Imgproc.INTER_AREA);
+
         Scalar lowerHSVred = new Scalar(0, 55, 30);
         Scalar lowHSVred = new Scalar(20, 255, 255);
         Scalar highHSVred = new Scalar(155, 55, 30);
