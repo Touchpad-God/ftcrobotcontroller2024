@@ -33,6 +33,8 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
     public int whitePixelLocation = 12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
+    Timer t = new Timer();
+
     //vision
     private OpenCvCamera camera;
     @Override

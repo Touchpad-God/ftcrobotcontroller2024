@@ -81,8 +81,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .build();
 
         driveToBackdropFromVisionCenter = drive.trajectoryBuilder(new Pose2d(37.5, 16, Math.toRadians(0)))
-            .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270)))
-            .build();
+                .lineToSplineHeading(new Pose2d(36, 48, Math.toRadians(270)))
+                .build();
         driveToBackdropFromVisionRight = drive.trajectoryBuilder(new Pose2d(34.5, 36, Math.toRadians(90)))
                 .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)))
                 .build();
