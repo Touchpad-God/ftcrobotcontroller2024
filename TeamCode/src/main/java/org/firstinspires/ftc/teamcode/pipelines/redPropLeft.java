@@ -150,9 +150,9 @@ public class redPropLeft extends OpenCvPipeline {
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 0 && centerX <= 325){
+        if(centerX >= 0 && centerX <= 325 / 2){
             position = PROPPOSITION.LEFT;
-        } else if(centerX >= 490 && centerX <= 1020){
+        } else if(centerX >= 490 / 2 && centerX <= 1020 / 2){
             position = PROPPOSITION.CENTER;
         } else{
             position = PROPPOSITION.NONE;
@@ -170,8 +170,8 @@ public class redPropLeft extends OpenCvPipeline {
     }
 
     public void onLine(Rect[] boundRect){
-        Point leftLine = new Point(180, 340);
-        Point centerLine = new Point(730, 330);
+        Point leftLine = new Point(180 / 2, 340 / 2);
+        Point centerLine = new Point(730 / 2, 330 / 2);
 
         for(Rect rect: boundRect){
             if(rect.contains(leftLine)){
