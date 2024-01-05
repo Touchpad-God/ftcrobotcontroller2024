@@ -34,7 +34,7 @@ public class redPropRight extends OpenCvPipeline {
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
 
-    public static int contourSize = 10000;
+    public static int contourSize = 2500;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -162,7 +162,7 @@ public class redPropRight extends OpenCvPipeline {
     public int largestContour(Rect[] boundRect){
         int maxIndex = 0;
         for(int i = 0; i < boundRect.length; i++){
-            if(boundRect[i].area() > boundRect[maxIndex].area()){
+            if(boundRect[i].height >= cropped.height() / 2 && boundRect[i].area() > boundRect[maxIndex].area()){
                 maxIndex = i;
             }
         }
@@ -174,6 +174,9 @@ public class redPropRight extends OpenCvPipeline {
         Point centerLine = new Point(460 / 2, 60);
 
         for(Rect rect: boundRect){
+            if (rect.height < cropped.height() / 2) {
+                continue;
+            }
             if(rect.contains(rightLine)){
                 position = PROPPOSITION.RIGHT;
             } else if(rect.contains(centerLine)){
