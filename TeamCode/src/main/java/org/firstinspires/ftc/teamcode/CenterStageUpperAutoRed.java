@@ -95,8 +95,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -53.5), Math.toRadians(270))
-                                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceRight = drive.trajectoryBuilder(new Pose2d(42, 48, Math.toRadians(270)))
@@ -104,7 +104,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -53.5), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
@@ -113,7 +113,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -55.5), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, -54.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
