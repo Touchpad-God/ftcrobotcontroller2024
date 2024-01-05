@@ -64,6 +64,7 @@ public class redPropLeft extends OpenCvPipeline {
 
         Core.bitwise_or(red, red2, redCombined);
 
+        Imgproc.medianBlur(redCombined, redCombined, 5);
         Imgproc.GaussianBlur(redCombined, redCombined, blur, 0);
 
         Imgproc.Canny(redCombined, edges, 100, 300);
