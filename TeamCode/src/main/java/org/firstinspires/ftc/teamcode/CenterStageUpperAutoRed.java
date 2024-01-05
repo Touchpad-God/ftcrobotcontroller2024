@@ -94,32 +94,36 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -53.5), Math.toRadians(270))
+                                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceRight = drive.trajectoryBuilder(new Pose2d(42, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -53.5), Math.toRadians(270))
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceCenter = drive.trajectoryBuilder(new Pose2d(36, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -55.5), Math.toRadians(270))
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceCycle = drive.trajectoryBuilder(new Pose2d(30, 48.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 1)
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         waitForStart();
