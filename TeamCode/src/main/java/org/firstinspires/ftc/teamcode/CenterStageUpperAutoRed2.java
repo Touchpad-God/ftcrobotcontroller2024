@@ -272,7 +272,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 return;
             }
 
-
         }
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
@@ -340,6 +339,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             }
         }
 
-        stop();
+        requestOpModeStop();
     }
 }

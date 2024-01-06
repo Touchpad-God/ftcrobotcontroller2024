@@ -62,6 +62,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         inOutThread.start();
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
+        int movementOffset = 0;
+
         //vision
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
         redPropRight redPropPipeline = new redPropRight(telemetry);
@@ -121,19 +123,19 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         driveToAudienceCenter = drive.trajectorySequenceBuilder(new Pose2d(36, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
+                .splineTo(new Vector2d(12, 10), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -54.5), Math.toRadians(270))
+                .splineTo(new Vector2d(whitePixelLocation, -56.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceCycle = drive.trajectorySequenceBuilder(new Pose2d(30, 48.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
+                .splineTo(new Vector2d(12, 10), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 1)
                 .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
+                .splineTo(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
@@ -171,6 +173,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
 
+            movementOffset = 2;
+
             if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
@@ -201,6 +205,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
 
+            movementOffset = 0;
+
             if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
@@ -228,6 +234,8 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
 
+            movementOffset = 0;
+
             if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
@@ -238,7 +246,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         }
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
-                .forward(4.0, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(4.0 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);
         if (intakeOuttake.locationPixel == 4) {
@@ -265,7 +273,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         drive.followTrajectorySequence(driveToAudienceCycle);
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
-                .forward(6.0, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(4.0 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(300);
         while (!t.finished()) {}

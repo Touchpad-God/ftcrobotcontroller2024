@@ -55,8 +55,8 @@ import java.util.List;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(10.5, 0.2, 1.2);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7.4, 0.3, 1.2);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(12, 0.2, 1.5);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(7.0, 0.3, 1.1);
     public static Pose2d ADMISSIBLE_ERROR = new Pose2d(0.5, 0.5, Math.toRadians(0.5));
     public static double TIMEOUT = 0.3;
 
