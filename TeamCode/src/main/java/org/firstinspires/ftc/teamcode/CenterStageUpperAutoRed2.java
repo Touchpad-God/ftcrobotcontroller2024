@@ -80,10 +80,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .lineToSplineHeading(new Pose2d(42, 48, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(37.5, 14.5, Math.toRadians(90)))
-                .lineToSplineHeading(new Pose2d(31, 49.5, Math.toRadians(270)))
+                .lineToSplineHeading(new Pose2d(31, 50.5, Math.toRadians(270)))
                 .build();
 
-        driveToAudienceLeft = drive.trajectorySequenceBuilder(new Pose2d(30, 48.5, Math.toRadians(270)))
+        driveToAudienceLeft = drive.trajectorySequenceBuilder(new Pose2d(30, 50.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
