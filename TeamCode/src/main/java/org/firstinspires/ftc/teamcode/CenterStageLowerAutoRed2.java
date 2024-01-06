@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,6 +15,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+@Autonomous
 public class CenterStageLowerAutoRed2 extends OpMode {
     redPropLeft redPropPipeline;
     protected Servo butterflyLeft;
@@ -132,7 +134,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     }
 
     @Override
-    public void loop() {
+    public void start() {
         camera.closeCameraDeviceAsync(() -> {
             telemetry.addData("Camera Status", "Camera closed");
             telemetry.update();
@@ -290,7 +292,10 @@ public class CenterStageLowerAutoRed2 extends OpMode {
             }
         }
 
-        requestOpModeStop();
+    }
+
+    @Override
+    public void loop() {
 
     }
 }

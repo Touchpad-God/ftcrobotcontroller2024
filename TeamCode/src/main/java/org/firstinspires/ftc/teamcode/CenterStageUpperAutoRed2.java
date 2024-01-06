@@ -146,7 +146,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     }
 
     @Override
-    public void loop() {
+    public void start() {
         camera.closeCameraDeviceAsync(() -> {
             telemetry.addData("Camera Status", "Camera closed");
             telemetry.update();
@@ -350,6 +350,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             }
         }
 
-        requestOpModeStop();
+    }
+
+    @Override
+    public void loop() {
+
     }
 }

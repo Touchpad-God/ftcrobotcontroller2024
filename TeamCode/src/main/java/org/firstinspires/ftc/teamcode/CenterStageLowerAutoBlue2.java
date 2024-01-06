@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -16,6 +17,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+@Autonomous
 public class CenterStageLowerAutoBlue2 extends OpMode {
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
@@ -46,6 +48,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     private OpenCvCamera camera;
 
     Thread.UncaughtExceptionHandler h = (th, ex) -> RobotLog.ee("TEAMCODE", ex, ex.toString());
+
     @Override
     public void init() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -140,7 +143,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     }
 
     @Override
-    public void loop() {
+    public void start() {
         camera.closeCameraDeviceAsync(() -> {
             telemetry.addData("Camera Status", "Camera closed");
             telemetry.update();
@@ -304,6 +307,10 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 }
         }
 
-        requestOpModeStop();
+    }
+
+    @Override
+    public void loop() {
+
     }
 }
