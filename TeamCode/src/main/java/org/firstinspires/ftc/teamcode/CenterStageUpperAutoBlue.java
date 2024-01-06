@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.bluePropLeft;
 import org.firstinspires.ftc.teamcode.pipelines.redPropRight;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -22,18 +23,20 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
     protected Servo butterflyRight;
     public static final int IMU_DIFF = -90;
     TrajectorySequenceBuilder traj;
-    Trajectory driveToBackdropFromVisionLeft;
-    Trajectory driveToBackdropFromVisionRight;
-    Trajectory driveToBackdropFromVisionCenter;
-    Trajectory driveToBackdropReturn;
-    Trajectory driveToAudienceLeft;
-    Trajectory driveToAudienceRight;
-    Trajectory driveToAudienceCenter;
+    TrajectorySequence driveToBackdropFromVisionLeft;
+    TrajectorySequence driveToBackdropFromVisionRight;
+    TrajectorySequence driveToBackdropFromVisionCenter;
+    TrajectorySequence driveToBackdropReturn;
+    TrajectorySequence driveToAudienceLeft;
+    TrajectorySequence driveToAudienceRight;
+    TrajectorySequence driveToAudienceCenter;
     static IntakeOuttakeAuto intakeOuttake;
     Timer t = new Timer();
 
     public int whitePixelLocation = -12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
+
+    public static boolean parking = false;
 
     //vision
     private OpenCvCamera camera;
@@ -70,7 +73,7 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
                 telemetry.update();
             }});
 
-        driveToBackdropReturn = drive.trajectoryBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)), true)
+        driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .addTemporalMarker(0.3, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
                 .addSpatialMarker(new Vector2d(-12, 12), () -> {
@@ -80,17 +83,17 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(-34, 49.5), Math.toRadians(90))
                 .build();
 
-        driveToBackdropFromVisionCenter = drive.trajectoryBuilder(new Pose2d(-37.5, 16, Math.toRadians(180)))
+        driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(-37.5, 16, Math.toRadians(180)))
                 .lineToSplineHeading(new Pose2d(-37, 48, Math.toRadians(270)))
                 .build();
-        driveToBackdropFromVisionLeft = drive.trajectoryBuilder(new Pose2d(-36.5, 36, Math.toRadians(90)))
+        driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(-36.5, 36, Math.toRadians(90)))
                 .lineToSplineHeading(new Pose2d(-42, 48, Math.toRadians(270)))
                 .build();
-        driveToBackdropFromVisionRight = drive.trajectoryBuilder(new Pose2d(-36.5, 14.5, Math.toRadians(90)))
+        driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(-36.5, 14.5, Math.toRadians(90)))
                 .lineToSplineHeading(new Pose2d(-30, 48.5, Math.toRadians(270)))
                 .build();
 
-        driveToAudienceLeft = drive.trajectoryBuilder(new Pose2d(-42, 48.5, Math.toRadians(270)))
+        driveToAudienceLeft = drive.trajectorySequenceBuilder(new Pose2d(-42, 48.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(-10, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(-10, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
@@ -98,7 +101,7 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
-        driveToAudienceRight = drive.trajectoryBuilder(new Pose2d(-30, 48, Math.toRadians(270)))
+        driveToAudienceRight = drive.trajectorySequenceBuilder(new Pose2d(-30, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(-10, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(-10, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
@@ -106,7 +109,7 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
-        driveToAudienceCenter = drive.trajectoryBuilder(new Pose2d(-37, 48, Math.toRadians(270)))
+        driveToAudienceCenter = drive.trajectorySequenceBuilder(new Pose2d(-37, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(-10, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(-10, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
@@ -140,14 +143,18 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
             }
             t.markReady();
 
-            drive.followTrajectory(driveToBackdropFromVisionCenter);
+            drive.followTrajectorySequence(driveToBackdropFromVisionCenter);
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
 
-            drive.followTrajectory(driveToAudienceCenter);
+            if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                return;
+            }
 
 
         } else if (bluePropPipeline.position == bluePropLeft.PROPPOSITION.LEFT) { // left, opposite trajectories intended
@@ -167,14 +174,18 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
             }
             t.markReady();
 
-            drive.followTrajectory(driveToBackdropFromVisionLeft);
+            drive.followTrajectorySequence(driveToBackdropFromVisionLeft);
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
 
-            drive.followTrajectory(driveToAudienceLeft);
+            if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                return;
+            }
 
         } else if (bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.RIGHT) { // right, opposite trajectories intended
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
@@ -193,15 +204,18 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
             }
             t.markReady();
 
-            drive.followTrajectory(driveToBackdropFromVisionRight);
+            drive.followTrajectorySequence(driveToBackdropFromVisionRight);
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 idle();
             }
 
-            drive.followTrajectory(driveToAudienceRight);
-
+            if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                return;
+            }
 
         }
 
@@ -213,7 +227,7 @@ public class CenterStageUpperAutoBlue extends LinearOpMode{
         }
         t.markReady();
 
-        drive.followTrajectory(driveToBackdropReturn);
+        drive.followTrajectorySequence(driveToBackdropReturn);
 
         IntakeOuttake.outtakeTicks = 300;
         IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
