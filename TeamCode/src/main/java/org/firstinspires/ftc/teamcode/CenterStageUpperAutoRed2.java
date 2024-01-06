@@ -31,6 +31,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     static IntakeOuttakeAuto intakeOuttake;
     redPropRight redPropPipeline;
     Timer t = new Timer();
+    int movementOffset;
 
     Thread inOutThread;
     SampleMecanumDrive drive;
@@ -46,6 +47,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     Thread.UncaughtExceptionHandler h = (th, ex) -> RobotLog.ee("TEAMCODE", ex, ex.toString());
     @Override
     public void init() {
+        int movementOffset = 0;
+
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .addTemporalMarker(0.3, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .setReversed(true)
@@ -86,19 +89,19 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         driveToAudienceCenter = drive.trajectorySequenceBuilder(new Pose2d(36, 48, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
+                .splineTo(new Vector2d(12, 10), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -54.5), Math.toRadians(270))
+                .splineTo(new Vector2d(whitePixelLocation, -56.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceCycle = drive.trajectorySequenceBuilder(new Pose2d(30, 48.5, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
+                .splineTo(new Vector2d(12, 10), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 1)
                 .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
-                .splineToConstantHeading(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
+                .splineTo(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
@@ -185,6 +188,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 }
             }
 
+            movementOffset = 2;
+
             if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
@@ -227,6 +232,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 }
             }
 
+            movementOffset = 0;
+
             if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
@@ -266,6 +273,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 }
             }
 
+            movementOffset = 0;
+
             if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
@@ -275,7 +284,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         }
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
-                .forward(4.0, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(4.0 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);
         if (intakeOuttake.locationPixel == 4) {
@@ -310,7 +319,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         drive.followTrajectorySequence(driveToAudienceCycle);
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
-                .forward(6.0, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(4.0 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(300);
         while (!t.finished()) {}
