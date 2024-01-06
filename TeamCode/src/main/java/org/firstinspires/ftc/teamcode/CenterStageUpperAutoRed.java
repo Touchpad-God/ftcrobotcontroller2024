@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -33,6 +34,9 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     static IntakeOuttakeAuto intakeOuttake;
     Timer t = new Timer();
 
+    Thread inOutThread;
+    SampleMecanumDrive drive;
+
     public static boolean parking = false;
 
     public int whitePixelLocation = 12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
@@ -41,16 +45,20 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     //vision
     private OpenCvCamera camera;
 
+    Thread.UncaughtExceptionHandler h = (th, ex) -> RobotLog.ee("TEAMCODE", ex, ex.toString());
+
     @Override
     public void runOpMode() throws InterruptedException {
+        //RobotLog.onApplicationStart();
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
         butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap);
         butterflyLeft.setPosition(0.3022);
         butterflyRight.setPosition(0.62);
         intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
 
-        Thread inOutThread = new Thread(intakeOuttake);
+        inOutThread = new Thread(intakeOuttake);
+        inOutThread.setUncaughtExceptionHandler(h);
         inOutThread.start();
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
@@ -75,12 +83,12 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .addTemporalMarker(0.3, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
+                .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, 12), Math.toRadians(90))
-                .addDisplacementMarker(() -> {
-                    IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
-                })
+                .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS)
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90))
                 .addDisplacementMarker(() -> {IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;})
+                .setReversed(false)
                 .build();
 
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(37.5, 16, Math.toRadians(0)))
@@ -138,6 +146,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
 
         });
 
+        intakeOuttake.locationPixel = 4;
 
         drive.setPoseEstimate(new Pose2d(61.5, 15, Math.toRadians(0)));
 
@@ -179,7 +188,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
 
-            t.start(400);
+            t.start(300);
             while(!t.finished()) {
                 idle();
             }
@@ -206,7 +215,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 idle();
             }
 
-            t.start(400);
+            t.start(300);
             while(!t.finished()) {
                 idle();
             }
@@ -256,9 +265,9 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         drive.followTrajectorySequence(driveToAudienceCycle);
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
-                .forward(6.0, (v, pose2d, pose2d1, pose2d2) -> 4.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(6.0, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
-        t.start(500);
+        t.start(300);
         while (!t.finished()) {}
         t.markReady();
 
@@ -280,5 +289,6 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
         intakeOuttake.stop();
         drive.imu.stop();
     }
+
 }
 

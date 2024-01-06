@@ -161,7 +161,7 @@ public class IntakeOuttake {
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
                 if (!pixel1.equals("") || !pixel2.equals("")) {
-                    intakeServo.setPosition(intakePositions[locationPixel - 2]);
+                    intakeServo.setPosition(intakePositions[Math.max(locationPixel - 2, 0)]);
                 }
                 if (!pixel1.equals("") && !pixel2.equals("")) {
                     intakeState = IntakeState.AUTOBOTHCOLOR;

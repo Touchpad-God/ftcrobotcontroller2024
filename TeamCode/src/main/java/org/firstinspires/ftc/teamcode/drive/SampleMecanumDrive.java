@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -83,6 +84,8 @@ public class SampleMecanumDrive extends MecanumDrive {
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
+    Thread.UncaughtExceptionHandler h = (th, ex) -> RobotLog.ee("TEAMCODE", ex, ex.toString());
+
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
@@ -102,6 +105,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         imu = new ThreadedIMU(hardwareMap);
 
         t = new Thread(imu);
+        t.setUncaughtExceptionHandler(h);
         t.start();
 
         leftFront = hardwareMap.get(DcMotorEx.class, "FL");
