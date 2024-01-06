@@ -49,6 +49,18 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     Thread.UncaughtExceptionHandler h = (th, ex) -> RobotLog.ee("TEAMCODE", ex, ex.toString());
     @Override
     public void init() {
+        butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
+        butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
+        drive = new SampleMecanumDrive(hardwareMap);
+        butterflyLeft.setPosition(0.3022);
+        butterflyRight.setPosition(0.62);
+        intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
+
+        inOutThread = new Thread(intakeOuttake);
+        inOutThread.setUncaughtExceptionHandler(h);
+        inOutThread.start();
+        IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
+
         int movementOffset = 0;
 
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
@@ -106,18 +118,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .splineTo(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
-
-        butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
-        butterflyRight = hardwareMap.get(Servo.class, "butterflyR");
-        drive = new SampleMecanumDrive(hardwareMap);
-        butterflyLeft.setPosition(0.3022);
-        butterflyRight.setPosition(0.62);
-        intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
-
-        inOutThread = new Thread(intakeOuttake);
-        inOutThread.setUncaughtExceptionHandler(h);
-        inOutThread.start();
-        IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         //vision
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
