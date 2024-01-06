@@ -30,6 +30,8 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
     TrajectorySequence driveToAudienceCenter;
     static IntakeOuttakeAuto intakeOuttake;
 
+    public static boolean parking = false;
+
     public int whitePixelLocation = -12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
@@ -76,7 +78,7 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-10, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -53), Math.toRadians(270))
-//                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceCenter = drive.trajectorySequenceBuilder(new Pose2d(-36, 48, Math.toRadians(270)))
@@ -158,7 +160,11 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
                 idle();
             }
 
-            drive.followTrajectorySequence(driveToAudienceCenter);
+            if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                return;
+            }
 
         } else if (bluePropPipeline.position == bluePropRight.PROPPOSITION.RIGHT) { // right
             backdropX = 42;
@@ -185,7 +191,11 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
                 idle();
             }
 
-            drive.followTrajectorySequence(driveToAudienceRight);
+            if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                return;
+            }
 
         } else if (bluePropPipeline.position == bluePropRight.PROPPOSITION.LEFT) { // left
             backdropX = 30;
@@ -212,7 +222,11 @@ public class CenterStageLowerAutoBlue extends LinearOpMode {
                 idle();
             }
 
-            drive.followTrajectorySequence(driveToAudienceLeft);
+            if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                return;
+            }
 
         }
 

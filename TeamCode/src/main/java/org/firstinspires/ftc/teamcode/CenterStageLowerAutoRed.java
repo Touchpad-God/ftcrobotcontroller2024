@@ -33,6 +33,8 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
     public int whitePixelLocation = 12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
+    public static boolean parking = false;
+
     Timer t = new Timer();
 
     //vision
@@ -160,7 +162,11 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 idle();
             }
 
-            drive.followTrajectorySequence(driveToAudienceCenter);
+            if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                return;
+            }
 
         } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) { // right
             backdropX = 42;
@@ -188,7 +194,11 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 idle();
             }
 
-            drive.followTrajectorySequence(driveToAudienceRight);
+            if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                return;
+            }
 
         } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.LEFT) { // left
             backdropX = 30;
@@ -217,13 +227,15 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 idle();
             }
 
-            drive.followTrajectorySequence(driveToAudienceLeft);
+            if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
+            else {
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                return;
+            }
 
         }
 
-
-
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .forward(4, (v, pose2d, pose2d1, pose2d2) -> 2.5, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         
