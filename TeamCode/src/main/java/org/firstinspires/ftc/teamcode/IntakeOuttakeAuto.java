@@ -24,9 +24,9 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
                 currTime = ((double) System.currentTimeMillis() / 1000) - startTime;
 
                 //intakePos(pos);
+                outtake(currTime);
                 intake(currTime);
                 transfer(currTime);
-                outtake(currTime);
                 sensors();
                 runTo(outtakeTicks, currTime);
             } catch (Exception e) {

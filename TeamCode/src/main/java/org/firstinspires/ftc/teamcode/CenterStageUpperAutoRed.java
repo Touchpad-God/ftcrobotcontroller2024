@@ -109,7 +109,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -30), () -> IntakeOuttake.outtakeTicks = 30)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
@@ -118,7 +118,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -30), () -> IntakeOuttake.outtakeTicks = 30)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
@@ -127,7 +127,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineTo(new Vector2d(12, 10), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -30), () -> IntakeOuttake.outtakeTicks = 30)
                 .splineTo(new Vector2d(whitePixelLocation, -56.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
@@ -136,7 +136,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineTo(new Vector2d(12, 10), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 1)
-                .addDisplacementMarker(() -> IntakeOuttake.outtakeTicks = 10)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -30), () -> IntakeOuttake.outtakeTicks = 30)
                 .splineTo(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
@@ -255,6 +255,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
             intakeOuttake.locationPixel--;
         }
         while (!t.finished()) {
+            idle();
         }
         t.markReady();
 
@@ -278,7 +279,9 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .forward(4.0 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(300);
-        while (!t.finished()) {}
+        while (!t.finished()) {
+            idle();
+        }
         t.markReady();
 
 
