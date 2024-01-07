@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.drive.ThreadedIMU;
 
@@ -45,6 +46,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double x, y, rot;
     @Override
     public void runOpMode() throws InterruptedException{
+        RobotLog.onApplicationStart();
         motorLf = hardwareMap.get(DcMotor.class, "FL");
         motorLb = hardwareMap.get(DcMotor.class, "BL");
         motorRf = hardwareMap.get(DcMotor.class, "FR");

@@ -91,7 +91,7 @@ public class IntakeOuttake {
     public static volatile IntakeState intakeState = IntakeState.IDLE;
     public static volatile OuttakeState outtakeState = OuttakeState.IDLE;
     public static volatile TransferState transferState = TransferState.IDLE;
-    public static volatile int outtakeTicks = 0;
+    public static volatile double outtakeTicks = 0;
 
     public int clawRotation = 0;
 
@@ -389,8 +389,8 @@ public class IntakeOuttake {
         outtakeTicks = (outtakeNumber * outtakeOffset) + 192;
     }
 
-    public void runTo(int ticks, double currTime) {
-        int error = outtakeMotor2.getCurrentPosition() - ticks;
+    public void runTo(double ticks, double currTime) {
+        double error = outtakeMotor2.getCurrentPosition() - ticks;
         if (outtakeprevTime == 0.0) {
             outtakeprevTime = currTime;
             outtakeprevError = error;

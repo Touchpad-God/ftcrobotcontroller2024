@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -131,6 +132,18 @@ public class IntakeOuttakeTeleOp extends IntakeOuttake{
         else if (gamepad2.dpad_up && !gamepad2Prev.dpad_up) {
             if (locationPixel != 5) locationPixel++;
             intakeServo.setPosition(intakePositions[locationPixel]);
+        }
+        if (gamepad1.right_trigger > 0.1) {
+            outtakeTicks += 2;
+        } else if (gamepad1.left_trigger > 0.1) {
+            outtakeTicks -= 2;
+        }
+        if (gamepad1.dpad_right) {
+            outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            outtakeTicks = 0;
+            outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         if (clawRotation < 2) {
