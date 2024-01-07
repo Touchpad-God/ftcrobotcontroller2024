@@ -225,8 +225,8 @@ public class IntakeOuttake {
                 }
                 break;
             case ON:
-                outtakeTicks = 125;
-                if (outtakeMotor1.getCurrentPosition() < -115 && outtakeMotor2.getCurrentPosition() > 115) {
+                outtakeTicks = 150;
+                if (outtakeMotor1.getCurrentPosition() < -145 && outtakeMotor2.getCurrentPosition() > 145) {
                     transferState = TransferState.OUT;
                 }
                 break;

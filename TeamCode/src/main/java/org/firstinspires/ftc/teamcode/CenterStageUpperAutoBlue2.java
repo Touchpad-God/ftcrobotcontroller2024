@@ -136,7 +136,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
         drive.setPoseEstimate(new Pose2d(-61.5, 15, Math.toRadians(180)));
 
         if (bluePropPipeline.position == bluePropLeft.PROPPOSITION.CENTER) {
-            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(-37.5, 16)).build());
+            drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(-36.5, 16)).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4) {
@@ -219,7 +219,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
         } else if (bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.RIGHT) { // right, opposite trajectories intended
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineTo(new Vector2d(-36.5, 14.5))
+                    .lineTo(new Vector2d(-36.0, 14.5))
                     .turn(Math.toRadians(-90))
                     .build());
 

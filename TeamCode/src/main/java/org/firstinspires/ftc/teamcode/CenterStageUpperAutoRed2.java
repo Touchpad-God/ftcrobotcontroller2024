@@ -94,9 +94,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .strafeRight(12)
                 .splineToConstantHeading(new Vector2d(12, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.outtakeTicks = intakingOffset)
+                .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
+                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
+                    IntakeOuttake.outtakeTicks = intakingOffset;
+                })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceRight = drive.trajectorySequenceBuilder(driveToBackdropFromVisionRight.end())
@@ -104,9 +106,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .strafeRight(20)
                 .splineToConstantHeading(new Vector2d(13, 12), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.outtakeTicks = intakingOffset)
+                .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
+                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
+                    IntakeOuttake.outtakeTicks = intakingOffset;
+                })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, -52.5), Math.toRadians(270))
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceCenter = drive.trajectorySequenceBuilder(driveToBackdropFromVisionCenter.end())
@@ -114,9 +118,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .strafeRight(17)
                 .splineToConstantHeading(new Vector2d(12, 10), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
-                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.outtakeTicks = intakingOffset)
+                .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
+                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
+                    IntakeOuttake.outtakeTicks = intakingOffset;
+                })
                 .splineTo(new Vector2d(whitePixelLocation, -56.5), Math.toRadians(270))
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         driveToAudienceCycle = drive.trajectorySequenceBuilder(driveToBackdropReturn.end())
@@ -124,9 +130,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .splineToConstantHeading(new Vector2d(12, 24), Math.toRadians(270))
                 .splineTo(new Vector2d(12, 10), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 1)
-                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.outtakeTicks = intakingOffset)
+                .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
+                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
+                    IntakeOuttake.outtakeTicks = intakingOffset;
+                })
                 .splineTo(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
                 .build();
 
         //vision

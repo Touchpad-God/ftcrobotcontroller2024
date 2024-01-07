@@ -50,23 +50,29 @@ public class CenterStageLowerAutoRed2 extends OpMode {
         intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
 
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(37.5, -36, Math.toRadians(0)))
-                .addSpatialMarker(new Vector2d(59, 10), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
+//                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
+//                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .splineToConstantHeading(new Vector2d(44, -42), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(59, -36, Math.toRadians(-90)), Math.toRadians(90))
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(59, 0), Math.toRadians(90))
+                .UNSTABLE_addDisplacementMarkerOffset(1, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .splineToConstantHeading(new Vector2d(34, 48), Math.toRadians(180)).build();
 
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(37.5, -37, Math.toRadians(-90)))
-                .addSpatialMarker(new Vector2d(59, 10), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
+//                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
+//                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .lineTo(new Vector2d(59, -36))
                 .lineToConstantHeading(new Vector2d(59, 0))
+                .UNSTABLE_addDisplacementMarkerOffset(1, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .splineToConstantHeading(new Vector2d(42, 46), Math.toRadians(180)).build();
 
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(47.5, -47, Math.toRadians(0)))
-                .addSpatialMarker(new Vector2d(59, 10), () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
+//                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
+//                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .lineToSplineHeading(new Pose2d(59, -30, Math.toRadians(270)))
                 .lineToConstantHeading(new Vector2d(59, 12))
+                .UNSTABLE_addDisplacementMarkerOffset(1, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
                 .splineToConstantHeading(new Vector2d(27, 47), Math.toRadians(180)).build();
 
         driveToAudienceRight = drive.trajectorySequenceBuilder(new Pose2d(42, 46, Math.toRadians(270)))
@@ -176,7 +182,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(36).build());
                 return;
             }
 
@@ -217,7 +223,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(36).build());
                 return;
             }
 
@@ -260,7 +266,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(36).build());
                 return;
             }
 
