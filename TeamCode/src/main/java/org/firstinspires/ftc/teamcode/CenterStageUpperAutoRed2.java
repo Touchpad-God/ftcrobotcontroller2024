@@ -40,7 +40,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     Thread inOutThread;
     SampleMecanumDrive drive;
 
-    public static boolean parking = false;
+    public static boolean parking = true;
 
     public int whitePixelLocation = 10; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
@@ -369,7 +369,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 throw new RuntimeException(e);
             }
         }
-
+        requestOpModeStop();
     }
 
     @Override

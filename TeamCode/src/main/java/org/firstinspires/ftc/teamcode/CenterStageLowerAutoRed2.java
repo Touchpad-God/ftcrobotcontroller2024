@@ -34,7 +34,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public int whitePixelLocation = 12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
-    public static boolean parking = false;
+    public static boolean parking = true;
 
     Timer t = new Timer();
 
@@ -291,7 +291,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
                 throw new RuntimeException(e);
             }
         }
-
+        requestOpModeStop();
     }
 
     @Override
