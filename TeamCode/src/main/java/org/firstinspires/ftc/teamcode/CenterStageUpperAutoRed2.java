@@ -48,7 +48,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     //vision
     private OpenCvCamera camera;
 
-    Thread.UncaughtExceptionHandler h = (th, ex) -> RobotLog.ee("TEAMCODE", ex, ex.toString());
+    Thread.UncaughtExceptionHandler h = (th, ex) -> {throw new RuntimeException("Uncaught", ex);};
     @Override
     public void init() {
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");

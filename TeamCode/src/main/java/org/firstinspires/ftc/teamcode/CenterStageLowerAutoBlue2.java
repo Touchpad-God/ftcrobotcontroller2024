@@ -47,7 +47,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     //vision
     private OpenCvCamera camera;
 
-    Thread.UncaughtExceptionHandler h = (th, ex) -> RobotLog.ee("TEAMCODE", ex, ex.toString());
+    Thread.UncaughtExceptionHandler h = (th, ex) -> {throw new RuntimeException("Uncaught", ex);};
 
     @Override
     public void init() {
@@ -113,6 +113,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 .splineToConstantHeading(new Vector2d(-34, 48), Math.toRadians(90)).build();
 
         Thread inOutThread = new Thread(intakeOuttake);
+        inOutThread.setUncaughtExceptionHandler(h);
         inOutThread.start();
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
@@ -159,7 +160,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(-37.5, -40)).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -202,7 +203,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -243,7 +244,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                     .lineTo(new Vector2d(-36, -39)).turn(Math.toRadians(90)).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

@@ -47,7 +47,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     //vision
     private OpenCvCamera camera;
 
-    Thread.UncaughtExceptionHandler h = (th, ex) -> RobotLog.ee("TEAMCODE", ex, ex.toString());
+    Thread.UncaughtExceptionHandler h = (th, ex) -> {throw new RuntimeException(ex.toString(), ex);};
 
     @Override
     public void runOpMode() throws InterruptedException {

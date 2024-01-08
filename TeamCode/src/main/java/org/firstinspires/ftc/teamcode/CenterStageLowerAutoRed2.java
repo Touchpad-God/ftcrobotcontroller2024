@@ -38,6 +38,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
     Timer t = new Timer();
 
+    Thread.UncaughtExceptionHandler h = (th, ex) -> {throw new RuntimeException("Uncaught", ex);};
     //vision
     private OpenCvCamera camera;
     @Override
@@ -107,6 +108,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90)).build();
 
         Thread inOutThread = new Thread(intakeOuttake);
+        inOutThread.setUncaughtExceptionHandler(h);
         inOutThread.start();
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
@@ -154,9 +156,9 @@ public class CenterStageLowerAutoRed2 extends OpMode {
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(37.5, -39)).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -165,10 +167,11 @@ public class CenterStageLowerAutoRed2 extends OpMode {
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.RETRACT;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
-                }            }
+                }
+            }
 
             drive.followTrajectorySequence(driveToBackdropFromVisionCenter);
 
@@ -196,7 +199,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -236,7 +239,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
