@@ -160,7 +160,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(-37.5, -40)).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -203,7 +203,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -244,7 +244,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                     .lineTo(new Vector2d(-36, -39)).turn(Math.toRadians(90)).build());
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
