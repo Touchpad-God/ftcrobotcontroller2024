@@ -73,9 +73,9 @@ public class IntakeOuttake {
     public static double highP = 0.04;
     public static double highI = 0.00000;
     public static double highD = 0.0012;
-    public static double lowP = 0.01;
-    public static double lowI = 0.0;
-    public static double lowD = 0.0002;
+    public static double lowP = 0.015;
+    public static double lowI = 0.00015;
+    public static double lowD = 0.00025;
     public static double downP = 0.06;
     public static double downI = 0.0002;
     public static double downD = 0.0016;

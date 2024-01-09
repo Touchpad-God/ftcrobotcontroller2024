@@ -85,7 +85,7 @@ class LEDStrip {
                 this.blinkinLed.setPosition(this.color1);
                 if (timer.finished()) {
                     timer.markReady();
-                    ledState = BLINKYBLINKY.PAUSE1;
+                    ledState = BLINKYBLINKY.PATTERN2A;
                 }
                 break;
             case PAUSE1:
@@ -97,11 +97,11 @@ class LEDStrip {
                 }
                 break;
             case PATTERN2A:
-                timer.start(500);
+                timer.start(2000);
                 this.blinkinLed.setPosition(this.color2);
                 if (timer.finished()) {
                     timer.markReady();
-                    ledState = BLINKYBLINKY.PAUSE2;
+                    ledState = BLINKYBLINKY.PATTERN1;
                 }
                 break;
             case PAUSE2:
