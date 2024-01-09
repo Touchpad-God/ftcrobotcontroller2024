@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import androidx.core.widget.TextViewCompat;
-
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -17,6 +16,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+@Config
 @Autonomous
 public class CenterStageUpperAutoBlue2 extends OpMode {
 
