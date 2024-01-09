@@ -54,6 +54,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double TO_BD_END_X = 36;
     public static double TO_BD_END_Y = 49.5;
 
+    public static double PARKING_DIST = 36;
+
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
     public static final int IMU_DIFF = -90;
@@ -252,7 +254,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 drive.followTrajectorySequence(driveToAudienceCenter);
             }
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARKING_DIST).build());
                 return;
             }
 
@@ -300,7 +302,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 drive.followTrajectorySequence(driveToAudienceRight);
             }
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARKING_DIST).build());
                 return;
             }
 
@@ -345,7 +347,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 drive.followTrajectorySequence(driveToAudienceLeft);
             }
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(48).build());
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARKING_DIST).build());
                 return;
             }
 
