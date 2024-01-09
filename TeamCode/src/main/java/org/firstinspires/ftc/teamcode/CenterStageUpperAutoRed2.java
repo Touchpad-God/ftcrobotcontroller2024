@@ -30,20 +30,20 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double BACKDROP_LEFT_Y = 50.5;
     public static double BACKDROP_CENTER_X = 36;
     public static double BACKDROP_CENTER_Y = 48;
-    public static double BACKDROP_RIGHT_X = 42;
+    public static double BACKDROP_RIGHT_X = 43.5;
     public static double BACKDROP_RIGHT_Y = 49;
 
     public static double LEFT_CYCLE_STRAFE_DIST = 12;
     public static double LEFT_CYCLE_WAYPOINT_X = 12;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
     public static double LEFT_CYCLE_END_Y = -52.5;
-    public static double RIGHT_CYCLE_STRAFE_DIST = 20;
+    public static double RIGHT_CYCLE_STRAFE_DIST = 17;
     public static double RIGHT_CYCLE_WAYPOINT_X = 13;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
     public static double RIGHT_CYCLE_END_Y = -52.5;
-    public static double CENTER_CYCLE_STRAFE_DIST = 17;
+    public static double CENTER_CYCLE_STRAFE_DIST = 16;
     public static double CENTER_CYCLE_WAYPOINT_X = 12;
-    public static double CENTER_CYCLE_WAYPOINT_Y = 10;
+    public static double CENTER_CYCLE_WAYPOINT_Y = 12;
     public static double CENTER_CYCLE_END_Y = -56.5;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = 12;
@@ -118,13 +118,13 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .build();
 
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_CENTER_X, SPIKE_CENTER_Y, Math.toRadians(0)))
-                .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(90)))
-                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_X, BACKDROP_RIGHT_Y, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(BACKDROP_RIGHT_X, BACKDROP_RIGHT_Y, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_LEFT_X, SPIKE_LEFT_Y, Math.toRadians(90)))
-                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)))
+                .lineToLinearHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)))
                 .build();
 
         driveToAudienceLeft = drive.trajectorySequenceBuilder(driveToBackdropFromVisionLeft.end())

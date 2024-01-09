@@ -70,15 +70,15 @@ public class IntakeOuttake {
     final int OUTTAKEMAX = 20;
 
     // pid for outtake motors
-    public static double highP = 0.04;
+    public static double highP = 0.05;
     public static double highI = 0.00000;
     public static double highD = 0.0012;
-    public static double lowP = 0.015;
-    public static double lowI = 0.00015;
-    public static double lowD = 0.00025;
-    public static double downP = 0.06;
-    public static double downI = 0.0002;
-    public static double downD = 0.0016;
+    public static double downP = 0.015;
+    public static double downI = 0.00015;
+    public static double downD = 0.0003;
+    public static double lowP = 0.011;
+    public static double lowI = 0.0;
+    public static double lowD = 0.0002;
 
     private double outtakei = 0.0;
     private double outtakeprevTime = 0.0;
@@ -161,7 +161,7 @@ public class IntakeOuttake {
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawClosedRight);
                 if (!pixel1.equals("") || !pixel2.equals("")) {
-                    intakeServo.setPosition(intakePositions[Math.max(locationPixel - 2, 0)]);
+                    intakeServo.setPosition(intakePositions[Math.max(locationPixel - 1, 0)]);
                 }
                 if (!pixel1.equals("") && !pixel2.equals("")) {
                     intakeState = IntakeState.AUTOBOTHCOLOR;
@@ -396,7 +396,7 @@ public class IntakeOuttake {
             outtakeprevError = error;
         }
         double outtakekP, outtakekI, outtakekD;
-        if (false) {
+        if (outtakeMotor2.getCurrentPosition() < 25) {
             outtakekP = downP;
             outtakekI = downI;
             outtakekD = downD;
