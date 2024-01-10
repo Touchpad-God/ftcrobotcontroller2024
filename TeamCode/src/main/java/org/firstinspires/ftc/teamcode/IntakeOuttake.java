@@ -396,15 +396,11 @@ public class IntakeOuttake {
             outtakeprevError = error;
         }
         double outtakekP, outtakekI, outtakekD;
-        if (outtakeMotor2.getCurrentPosition() < 25) {
+        if (outtakeMotor2.getCurrentPosition() < 15 || outtakeMotor2.getCurrentPosition() > 450) {
             outtakekP = downP;
             outtakekI = downI;
             outtakekD = downD;
-        } else if (outtakeMotor2.getCurrentPosition() > 650 || outtakeMotor2.getCurrentPosition() < 6) {
-            outtakekP = highP;
-            outtakekI = highI;
-            outtakekD = highD;
-        } else {
+        else {
             outtakekP = lowP;
             outtakekI = lowI;
             outtakekD = lowD;
