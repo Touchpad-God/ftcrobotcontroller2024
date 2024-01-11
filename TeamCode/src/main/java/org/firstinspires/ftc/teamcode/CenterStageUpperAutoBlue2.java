@@ -369,7 +369,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
         drive.followTrajectorySequence(driveToAudienceCycle);
 
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(driveToAudienceCycle.end())
                 .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);
