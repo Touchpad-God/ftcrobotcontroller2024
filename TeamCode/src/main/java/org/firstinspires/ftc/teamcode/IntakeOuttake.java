@@ -400,7 +400,7 @@ public class IntakeOuttake {
             outtakekP = downP;
             outtakekI = downI;
             outtakekD = downD;
-        else {
+        } else {
             outtakekP = lowP;
             outtakekI = lowI;
             outtakekD = lowD;

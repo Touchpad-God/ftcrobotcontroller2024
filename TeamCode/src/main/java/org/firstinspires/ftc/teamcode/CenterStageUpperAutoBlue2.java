@@ -33,6 +33,10 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double BACKDROP_RIGHT_X = -30;
     public static double BACKDROP_RIGHT_Y = 48.5;
 
+    public static double CENTER_MOVEMENT_OFFSET = 2.0;
+    public static double LEFT_MOVEMENT_OFFSET = 1.0;
+    public static double RIGHT_MOVEMENT_OFFSET = 0.0;
+
     public static double LEFT_CYCLE_STRAFE_DIST = 12;
     public static double LEFT_CYCLE_WAYPOINT_X = -10;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
@@ -44,11 +48,11 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double CENTER_CYCLE_STRAFE_DIST = 17;
     public static double CENTER_CYCLE_WAYPOINT_X = -10;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -52.5;
+    public static double CENTER_CYCLE_END_Y = -56;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = -12;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
-    public static double RETURN_CYCLE_END_Y = -49.5;
+    public static double RETURN_CYCLE_END_Y = -52.5;
 
     public static double TO_BD_WAYPOINT_Y = 24;
     public static double TO_BD_END_X = -36;
@@ -206,7 +210,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
         if (bluePropPipeline.position == bluePropLeft.PROPPOSITION.CENTER) {
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(SPIKE_CENTER_X, SPIKE_CENTER_Y)).build());
 
-            movementOffset = 0.0;
+            movementOffset = CENTER_MOVEMENT_OFFSET;
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
@@ -247,7 +251,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
         } else if (bluePropPipeline.position == bluePropLeft.PROPPOSITION.LEFT) { // left, opposite trajectories intended
 
-            movementOffset = 1.0;
+            movementOffset = LEFT_MOVEMENT_OFFSET;
 
             traj = drive.trajectorySequenceBuilder(new Pose2d(-61.5, 15, Math.toRadians(180)))
                     .lineToConstantHeading(new Vector2d(SPIKE_LEFT_X, SPIKE_LEFT_Y))
@@ -292,7 +296,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
         } else if (bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.RIGHT) { // right, opposite trajectories intended
 
-            movementOffset = 0.0;
+            movementOffset = RIGHT_MOVEMENT_OFFSET;
 
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y))

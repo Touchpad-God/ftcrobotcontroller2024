@@ -33,6 +33,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double BACKDROP_RIGHT_X = 43.5;
     public static double BACKDROP_RIGHT_Y = 49;
 
+    public static double CENTER_MOVEMENT_OFFSET = 2.0;
+    public static double LEFT_MOVEMENT_OFFSET = 0.0;
+    public static double RIGHT_MOVEMENT_OFFSET = 0.0;
+
     public static double LEFT_CYCLE_STRAFE_DIST = 12;
     public static double LEFT_CYCLE_WAYPOINT_X = 12;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
@@ -71,7 +75,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     static IntakeOuttakeAuto intakeOuttake;
     redPropRight redPropPipeline;
     Timer t = new Timer();
-    int movementOffset = 0;
+    double movementOffset = 0;
 
     int intakingOffset = 15;
 
@@ -246,7 +250,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 }
             }
 
-            movementOffset = 2;
+            movementOffset = CENTER_MOVEMENT_OFFSET;
 //            IntakeOuttake.outtakeTicks = intakingOffset;
 
             if (!parking)  {
@@ -294,7 +298,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 }
             }
 
-            movementOffset = 0;
+            movementOffset = RIGHT_MOVEMENT_OFFSET;
 //            IntakeOuttake.outtakeTicks = intakingOffset;
 
             if (!parking) {
@@ -339,7 +343,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 }
             }
 
-            movementOffset = 0;
+            movementOffset = LEFT_MOVEMENT_OFFSET;
 //            IntakeOuttake.outtakeTicks = intakingOffset;
 
             if (!parking)  {
