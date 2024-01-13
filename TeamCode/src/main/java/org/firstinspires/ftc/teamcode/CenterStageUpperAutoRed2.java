@@ -106,15 +106,15 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
-                .addTemporalMarker(0.3, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
+                .addTemporalMarker(0.15, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
+                .addTemporalMarker(0.5, 0.0, () -> {
+                    IntakeOuttake.outtakeTicks = 240;
+                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
+                })
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
                 .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS)
                 .splineToConstantHeading(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(90))
-                .addSpatialMarker(new Vector2d(34, 30), () -> {
-                    IntakeOuttake.outtakeTicks = 240;
-                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
-                })
                 .addDisplacementMarker(() -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                 })
@@ -217,17 +217,14 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         drive.setPoseEstimate(new Pose2d(61.5, 15, Math.toRadians(0)));
 
+        Pose2d cycleEnd = driveToBackdropReturn.end();
+
         if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER) {
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(SPIKE_CENTER_X, SPIKE_CENTER_Y)).build());
 
-            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
-            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 
             t.start(400);
             while(!t.finished()) {
@@ -238,6 +235,14 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 }
             }
             t.markReady();
+
+            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             drive.followTrajectorySequence(driveToBackdropFromVisionCenter);
 
@@ -256,6 +261,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             if (!parking)  {
 //                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(24).build());
                 drive.followTrajectorySequence(driveToAudienceCenter);
+                cycleEnd = driveToAudienceCenter.end();
             }
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARKING_DIST).build());
@@ -264,11 +270,13 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
 
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT) { //right
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             traj = drive.trajectorySequenceBuilder(new Pose2d(61.5, 15, Math.toRadians(0)))
                     .lineToLinearHeading(new Pose2d(new Vector2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y), Math.toRadians(90)));
             drive.followTrajectorySequence(traj.build());
 
-            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
+
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
                     Thread.sleep(100);
@@ -304,6 +312,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             if (!parking) {
 //                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(30).build());
                 drive.followTrajectorySequence(driveToAudienceRight);
+                cycleEnd = driveToAudienceRight.end();
             }
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARKING_DIST).build());
@@ -311,9 +320,12 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             }
 
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineToSplineHeading(new Pose2d(new Vector2d(SPIKE_LEFT_X, SPIKE_LEFT_Y), Math.toRadians(90))).build());
 
-            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
+
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
                 try {
                     Thread.sleep(100);
@@ -349,6 +361,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             if (!parking)  {
 //                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(19).build());
                 drive.followTrajectorySequence(driveToAudienceLeft);
+                cycleEnd = driveToAudienceLeft.end();
             }
             else {
                 drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARKING_DIST).build());
@@ -357,7 +370,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         }
 
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(12, -50, Math.toRadians(270)))
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(cycleEnd)
                 .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);

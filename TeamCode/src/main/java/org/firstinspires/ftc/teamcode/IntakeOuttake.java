@@ -175,7 +175,7 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTOBOTHCOLOR:
-                intakeState = IntakeState.EJECTING;
+                intakeState = IntakeState.STOP;
                 break;
             case BEAMNOCOLOR:
                 if (!pixel1.equals("") && !pixel2.equals("")) {
@@ -302,10 +302,7 @@ public class IntakeOuttake {
                 timer.start(200);
                 differentialLeft.setPosition(leftHorizonatal);
                 differentialRight.setPosition(rightHorizontal);
-                if (timer.finished()) {
-                    outtakeState = OuttakeState.AUTODROP;
-                    timer.markReady();
-                }
+                outtakeState = OuttakeState.IDLE;
                 break;
             case DROPPED:
                 timer.start(200);

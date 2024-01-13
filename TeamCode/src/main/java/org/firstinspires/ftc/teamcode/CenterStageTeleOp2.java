@@ -40,8 +40,8 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
     int hangPos = 0;
 
-    double[] leftHang = {0.122, 0.4089, 0.7065};
-    double[] rightHang = {0.7686, 0.7686, 0.1972};
+    public static double[] leftHang = {0.122, 0.3789, 0.7065};
+    public static double[] rightHang = {0.7686, 0.7686, 0.1972};
 
     double x, y, rot;
     @Override
