@@ -128,7 +128,7 @@ public class bluePropLeft extends OpenCvPipeline {
 
         if(boundRect.length != 0){
             position = PROPPOSITION.NONE;
-            onLine(boundRect);
+            onLine(boundRect[largestContour(boundRect)]);
 
             if(position == PROPPOSITION.NONE){
                 Rect largestContour = boundRect[largestContour(boundRect)];
@@ -171,19 +171,14 @@ public class bluePropLeft extends OpenCvPipeline {
         return maxIndex;
     }
 
-    public void onLine(Rect[] boundRect){
+    public void onLine(Rect boundRect){
         Point leftLine = new Point(90, 170);
         Point centerLine = new Point((double) 730 /2, (double) 330 /2);
 
-        for(Rect rect: boundRect){
-            if (rect.height < cropped.height() / 2 || ((double) rect.height) / rect.width < 0.8) {
-                continue;
-            }
-            if(rect.contains(leftLine)){
-                position = PROPPOSITION.LEFT;
-            } else if(rect.contains(centerLine)){
-                position = PROPPOSITION.CENTER;
-            }
+        if(boundRect.contains(leftLine)){
+            position = PROPPOSITION.LEFT;
+        } else if(boundRect.contains(centerLine)){
+            position = PROPPOSITION.CENTER;
         }
     }
 }
