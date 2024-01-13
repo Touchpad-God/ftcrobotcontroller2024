@@ -110,7 +110,6 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
             @Override
             public void onOpened() {
                 telemetry.addData("Camera Status: ", "Camera opened");
-                telemetry.update();
 
                 camera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
             }
@@ -118,7 +117,6 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
             @Override
             public void onError(int errorCode) {
                 telemetry.addData("Camera Status: ", "Couldn't open camera");
-                telemetry.update();
             }});
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .addTemporalMarker(0.01, () -> {
@@ -202,7 +200,6 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public void start() {
         camera.closeCameraDeviceAsync(() -> {
             telemetry.addData("Camera Status", "Camera closed");
-            telemetry.update();
 
         });
 

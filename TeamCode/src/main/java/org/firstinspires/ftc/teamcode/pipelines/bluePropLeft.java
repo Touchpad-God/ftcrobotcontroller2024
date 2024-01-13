@@ -42,7 +42,6 @@ public class bluePropLeft extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input) {
         telemetry.addLine("BluePropLeft pipeline selected");
-        telemetry.update();
 
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
@@ -69,6 +68,8 @@ public class bluePropLeft extends OpenCvPipeline {
         Imgproc.medianBlur(blueCombined, blueCombined, 5);
         Imgproc.GaussianBlur(blueCombined, blueCombined, blur, 0);
 
+        Imgproc.rectangle(blueCombined, new Point(0, 0), new Point(blueCombined.width(), blueCombined.height()), new Scalar(0, 0, 0), 3);
+
         Imgproc.Canny(blueCombined, edges, 100, 300);
 
         List<MatOfPoint> contour = new ArrayList<>();
@@ -93,16 +94,16 @@ public class bluePropLeft extends OpenCvPipeline {
             contoursPoly[i] = new MatOfPoint2f();
             curve[i] = new MatOfPoint2f(contour.get(i).toArray());
 
-            Imgproc.approxPolyDP(curve[i], contoursPoly[i], 3, true);
+            //Imgproc.approxPolyDP(curve[i], contoursPoly[i], 3, true);
 
-            contoursPolyArray[i] = new MatOfPoint(contoursPoly[i].toArray());
+            //contoursPolyArray[i] = new MatOfPoint(curve[i].toArray());
 
-            boundRect[i] = Imgproc.boundingRect(contoursPolyArray[i]);
+            boundRect[i] = Imgproc.boundingRect(contour.get(i));
 
             //releasing matrices
             contoursPoly[i].release();
             curve[i].release();
-            contoursPolyArray[i].release();
+            //contoursPolyArray[i].release();
         }
 
         double avgArea = 0;
@@ -117,36 +118,41 @@ public class bluePropLeft extends OpenCvPipeline {
 
         avgArea /= total;
 
-        for(int i = 0; i != boundRect.length; i++){
-            if(boundRect[i].area() > (cropped.width() * cropped.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
-                Imgproc.rectangle(cropped, boundRect[i], new Scalar(250, 100, 200), 2);
-            }
-        }
+        //Imgproc.line(cropped, new Point(0, (double) 380 / 2), new Point((double) 235 / 2, (double) 335 / 2), new Scalar(50, 50, 100), 2); //left line
+        //Imgproc.line(cropped, new Point( 220, (double) 335 / 2), new Point(510, (double) 335 /2), new Scalar(50, 50, 100), 2); //center line
 
-        Imgproc.line(cropped, new Point(0, (double) 380 / 2), new Point((double) 235 / 2, (double) 335 / 2), new Scalar(50, 50, 100), 2); //left line
-        Imgproc.line(cropped, new Point( 220, (double) 335 / 2), new Point(510, (double) 335 /2), new Scalar(50, 50, 100), 2); //center line
+        telemetry.addData("size", boundRect[largestContour(boundRect, blueCombined)].width + " x " + boundRect[largestContour(boundRect, blueCombined)].height);
 
         if(boundRect.length != 0){
             position = PROPPOSITION.NONE;
-            onLine(boundRect);
+            int maxIndex = largestContour(boundRect, blueCombined);
+            onLine(boundRect[maxIndex]);
 
             if(position == PROPPOSITION.NONE){
-                Rect largestContour = boundRect[largestContour(boundRect)];
+                telemetry.addData("fallback", maxIndex);
+                Rect largestContour = boundRect[maxIndex];
 
                 int centerX = largestContour.x + largestContour.width/2;
                 int centerY = largestContour.y + largestContour.height/2;
 
                 //Imgproc.circle(input, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
 
+                Imgproc.line(blueCombined, new Point(centerX, 0), new Point(centerX, blueCombined.height()), new Scalar(255, 255, 255), 3);
+
                 if(largestContour.area() >= contourSize){
                     propPosition(centerX);
-                }else{
+                } else {
                     position = PROPPOSITION.RIGHT;
                 }
             }
         }
 
+        for(int i = 0; i != boundRect.length; i++){
+            Imgproc.rectangle(blueCombined, boundRect[i], new Scalar(250, 100, 200), 2);
+        }
+
         telemetry.addData("Prop position", position);
+        telemetry.update();
 
         return blueCombined;
     }
@@ -161,29 +167,29 @@ public class bluePropLeft extends OpenCvPipeline {
         }
     }
 
-    public int largestContour(Rect[] boundRect){
+    public int largestContour(Rect[] boundRect, Mat mat){
         int maxIndex = 0;
         for(int i = 0; i < boundRect.length; i++){
-            if(boundRect[i].height >= cropped.height() / 2 && boundRect[i].area() > boundRect[maxIndex].area()){
-                maxIndex = i;
+            cropped = new Mat(mat, boundRect[i]);
+            if (Core.mean(cropped).val[0] > 200) {
+                if(boundRect[i].area() > boundRect[maxIndex].area()){
+                    maxIndex = i;
+                }
             }
+            //telemetry.addData("maxIndex", maxIndex);
+            cropped.release();
         }
         return maxIndex;
     }
 
-    public void onLine(Rect[] boundRect){
+    public void onLine(Rect rect){
         Point leftLine = new Point(90, 170);
         Point centerLine = new Point((double) 730 /2, (double) 330 /2);
 
-        for(Rect rect: boundRect){
-            if (rect.height < cropped.height() / 2) {
-                continue;
-            }
-            if(rect.contains(leftLine)){
-                position = PROPPOSITION.LEFT;
-            } else if(rect.contains(centerLine)){
-                position = PROPPOSITION.CENTER;
-            }
+        if(rect.contains(leftLine)){
+            position = PROPPOSITION.LEFT;
+        } else if(rect.contains(centerLine)){
+            position = PROPPOSITION.CENTER;
         }
     }
 }

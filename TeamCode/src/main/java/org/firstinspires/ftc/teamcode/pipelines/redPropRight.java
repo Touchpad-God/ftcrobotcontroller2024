@@ -67,6 +67,8 @@ public class redPropRight extends OpenCvPipeline {
         Imgproc.medianBlur(redCombined, redCombined, 5);
         Imgproc.GaussianBlur(redCombined, redCombined, blur, 0);
 
+        Imgproc.rectangle(redCombined, new Point(0, 0), new Point(redCombined.width(), redCombined.height()), new Scalar(0, 0, 0), 3);
+
         Imgproc.Canny(redCombined, edges, 100, 300);
 
         List<MatOfPoint> contour = new ArrayList<>();
@@ -91,16 +93,16 @@ public class redPropRight extends OpenCvPipeline {
             contoursPoly[i] = new MatOfPoint2f();
             curve[i] = new MatOfPoint2f(contour.get(i).toArray());
 
-            Imgproc.approxPolyDP(curve[i], contoursPoly[i], 3, true);
+            //Imgproc.approxPolyDP(curve[i], contoursPoly[i], 3, true);
 
-            contoursPolyArray[i] = new MatOfPoint(contoursPoly[i].toArray());
+            //contoursPolyArray[i] = new MatOfPoint(curve[i].toArray());
 
-            boundRect[i] = Imgproc.boundingRect(contoursPolyArray[i]);
+            boundRect[i] = Imgproc.boundingRect(contour.get(i));
 
             //releasing matrices
             contoursPoly[i].release();
             curve[i].release();
-            contoursPolyArray[i].release();
+            //contoursPolyArray[i].release();
         }
 
         double avgArea = 0;
@@ -115,21 +117,16 @@ public class redPropRight extends OpenCvPipeline {
 
         avgArea /= total;
 
-        for(int i = 0; i != boundRect.length; i++){
-            if(boundRect[i].area() > (input.width() * input.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
-                Imgproc.rectangle(redCombined, boundRect[i], new Scalar(250, 100, 200), 4);
-            }
-        }
-
         Imgproc.line(input, new Point( 160, 325), new Point(760, 325), new Scalar(100, 100, 200), 5); //center line
         Imgproc.line(input, new Point(1010, 340), new Point(1280, 385), new Scalar(100, 100, 200), 5); //right line
 
         if(boundRect.length != 0){
             position = PROPPOSITION.NONE;
-            onLine(boundRect);
+            int maxIndex = largestContour(boundRect, redCombined);
+            onLine(boundRect[maxIndex]);
 
             if(position == PROPPOSITION.NONE){
-                Rect largestContour = boundRect[largestContour(boundRect)];
+                Rect largestContour = boundRect[maxIndex];
 
                 int centerX = largestContour.x + largestContour.width/2;
                 int centerY = largestContour.y + largestContour.height/2;
@@ -146,6 +143,12 @@ public class redPropRight extends OpenCvPipeline {
 
         telemetry.addData("Prop position", position);
 
+        for(int i = 0; i != boundRect.length; i++){
+            if(boundRect[i].area() > (redCombined.width() * redCombined.height() * 0.001) && boundRect[i].area() < (avgArea * 10)) {
+                Imgproc.rectangle(redCombined, boundRect[i], new Scalar(250, 100, 200), 4);
+            }
+        }
+
         return redCombined;
     }
 
@@ -159,29 +162,29 @@ public class redPropRight extends OpenCvPipeline {
         }
     }
 
-    public int largestContour(Rect[] boundRect){
+    public int largestContour(Rect[] boundRect, Mat mat){
         int maxIndex = 0;
         for(int i = 0; i < boundRect.length; i++){
-            if(boundRect[i].height >= cropped.height() / 2 && boundRect[i].area() > boundRect[maxIndex].area()){
-                maxIndex = i;
+            cropped = new Mat(mat, boundRect[i]);
+            if (Core.mean(cropped).val[0] > 200) {
+                if(boundRect[i].area() > boundRect[maxIndex].area()){
+                    maxIndex = i;
+                }
             }
+            //telemetry.addData("maxIndex", maxIndex);
+            cropped.release();
         }
         return maxIndex;
     }
 
-    public void onLine(Rect[] boundRect){
+    public void onLine(Rect rect){
         Point rightLine = new Point(1120 / 2, 60);
         Point centerLine = new Point(460 / 2, 60);
 
-        for(Rect rect: boundRect){
-            if (rect.height < cropped.height() / 2) {
-                continue;
-            }
-            if(rect.contains(rightLine)){
-                position = PROPPOSITION.RIGHT;
-            } else if(rect.contains(centerLine)){
-                position = PROPPOSITION.CENTER;
-            }
+        if(rect.contains(rightLine)){
+            position = PROPPOSITION.RIGHT;
+        } else if(rect.contains(centerLine)){
+            position = PROPPOSITION.CENTER;
         }
     }
 }
