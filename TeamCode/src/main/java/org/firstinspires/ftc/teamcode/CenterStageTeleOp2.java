@@ -119,16 +119,16 @@ public class CenterStageTeleOp2 extends LinearOpMode {
                 drone.setPosition(0.5);
             }
 
-            if (gamepad1.dpad_up && !dpadUpPrev && hangPos < 2)
+            if (gamepad2.right_stick_button && !dpadUpPrev && hangPos < 2)
                 hangPos++;
-            else if (gamepad1.dpad_down && !dpadDownPrev && hangPos > 0)
+            else if (gamepad2.left_stick_button && !dpadDownPrev && hangPos > 0)
                 hangPos--;
 
             hangL.setPosition(leftHang[hangPos]);
             hangR.setPosition(rightHang[hangPos]);
 
-            dpadUpPrev = gamepad1.dpad_up;
-            dpadDownPrev = gamepad1.dpad_down;
+            dpadUpPrev = gamepad2.right_stick_button;
+            dpadDownPrev = gamepad2.left_stick_button;
             wasGamepadAPressed = gamepad1.a;
             slowLast = gamepad1.right_bumper;
             dpadLeftPrev = gamepad1.dpad_left;

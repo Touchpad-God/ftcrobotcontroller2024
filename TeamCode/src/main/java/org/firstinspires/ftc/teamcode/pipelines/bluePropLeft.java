@@ -25,6 +25,7 @@ public class bluePropLeft extends OpenCvPipeline {
         this.telemetry = telemetry;
     }
 
+    public static int CORE_MEAN_VAL = 180;
     Mat cropped;
     Mat hsv = new Mat();
     Size blur = new Size(3.0, 3.0);
@@ -34,7 +35,7 @@ public class bluePropLeft extends OpenCvPipeline {
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
 
-    public static int contourSize = 2500;
+    public static int contourSize = 700;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -47,7 +48,7 @@ public class bluePropLeft extends OpenCvPipeline {
 
         Size shape = input.size();
 
-        Rect roi = new Rect(0, (int) shape.height / 6, (int) shape.width, (int) shape.height * 3 / 10);
+        Rect roi = new Rect(0, (int) shape.height * 32 / 151, (int) shape.width, (int) shape.height * 3 / 50);
 
         cropped = new Mat(hsv, roi);
 
@@ -68,7 +69,7 @@ public class bluePropLeft extends OpenCvPipeline {
         Imgproc.medianBlur(blueCombined, blueCombined, 5);
         Imgproc.GaussianBlur(blueCombined, blueCombined, blur, 0);
 
-        Imgproc.rectangle(blueCombined, new Point(0, 0), new Point(blueCombined.width(), blueCombined.height()), new Scalar(0, 0, 0), 3);
+        Imgproc.rectangle(blueCombined, new Point(0, 0), new Point(blueCombined.width(), blueCombined.height()), new Scalar(0, 0, 0), 7);
 
         Imgproc.Canny(blueCombined, edges, 100, 300);
 
@@ -171,7 +172,7 @@ public class bluePropLeft extends OpenCvPipeline {
         int maxIndex = 0;
         for(int i = 0; i < boundRect.length; i++){
             cropped = new Mat(mat, boundRect[i]);
-            if (Core.mean(cropped).val[0] > 200) {
+            if (Core.mean(cropped).val[0] > CORE_MEAN_VAL) {
                 if(boundRect[i].area() > boundRect[maxIndex].area()){
                     maxIndex = i;
                 }

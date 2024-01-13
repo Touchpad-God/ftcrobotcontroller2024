@@ -78,7 +78,7 @@ public class redPropLeft extends OpenCvPipeline {
         hsv.release();
         red.release();
         red2.release();
-        redCombined.release();
+        //redCombined.release();
         edges.release();
         hierarchy.release();
         cropped.release();

@@ -21,7 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class CenterStageUpperAutoBlue2 extends OpMode {
 
     public static double SPIKE_LEFT_X = -36.5;
-    public static double SPIKE_LEFT_Y = 37;
+    public static double SPIKE_LEFT_Y = 34;
     public static double SPIKE_CENTER_X = -37.5;
     public static double SPIKE_CENTER_Y = 16;
     public static double SPIKE_RIGHT_X = -36.0;
@@ -48,7 +48,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double CENTER_CYCLE_STRAFE_DIST = 17;
     public static double CENTER_CYCLE_WAYPOINT_X = -10;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -56;
+    public static double CENTER_CYCLE_END_Y = -53;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = -12;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
@@ -83,7 +83,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public int whitePixelLocation = -12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
-    public static boolean parking = false;
+    public static boolean parking = true;
 
     //vision
     private OpenCvCamera camera;
@@ -130,19 +130,20 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(90))
-                .addDisplacementMarker(() -> {
-                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
-                })
+                .UNSTABLE_addDisplacementMarkerOffset(1, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP)
                 .setReversed(false)
                 .build();
 
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_CENTER_X, SPIKE_CENTER_Y, Math.toRadians(180)))
+                .addDisplacementMarker(() -> IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
                 .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_LEFT_X, SPIKE_LEFT_Y, Math.toRadians(90)))
+                .addDisplacementMarker(() -> IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
                 .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(90)))
+                .addDisplacementMarker(() -> IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
                 .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_X, BACKDROP_RIGHT_Y, Math.toRadians(270)))
                 .build();
 
@@ -301,7 +302,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 return;
             }
 
-        } else if (bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.RIGHT) { // right, opposite trajectories intended
+        } else if (bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.RIGHT || bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.NONE) { // right, opposite trajectories intended
 
             movementOffset = RIGHT_MOVEMENT_OFFSET;
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;

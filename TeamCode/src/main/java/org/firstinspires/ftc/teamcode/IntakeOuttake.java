@@ -245,7 +245,7 @@ public class IntakeOuttake {
                 break;
             case READY:
                 if (!outtakeRaised()) {
-                    break;
+                     break;
                 }
                 differentialLeft.setPosition(left0);
                 differentialRight.setPosition(right0);
@@ -327,7 +327,7 @@ public class IntakeOuttake {
                 clawLeft.setPosition(clawClosedLeft);
                 clawRight.setPosition(clawEngagedRight);
                 if (timer.finished()) {
-                    outtakeState = OuttakeState.POS1;
+                    outtakeState = OuttakeState.IDLE;
                     timer.markReady();
                 }
                 break;

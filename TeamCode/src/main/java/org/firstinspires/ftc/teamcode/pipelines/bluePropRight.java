@@ -25,6 +25,7 @@ public class bluePropRight extends OpenCvPipeline {
         this.telemetry = telemetry;
     }
 
+    public static int CORE_MEAN_VAL = 200;
     Mat cropped;
     //Mat blue2 = new Mat();
     Mat blueCombined = new Mat();
@@ -34,7 +35,7 @@ public class bluePropRight extends OpenCvPipeline {
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
 
-    public static int contourSize = 2500;
+    public static int contourSize = 700;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -48,7 +49,7 @@ public class bluePropRight extends OpenCvPipeline {
 
         Size shape = input.size();
 
-        Rect roi = new Rect(0, (int) shape.height / 6, (int) shape.width, (int) shape.height * 3 / 10);
+        Rect roi = new Rect(0, (int) shape.height * 39 / 151, (int) shape.width, (int) shape.height * 3 / 50);
 
         cropped = new Mat(hsv, roi);
 
@@ -168,7 +169,7 @@ public class bluePropRight extends OpenCvPipeline {
         int maxIndex = 0;
         for(int i = 0; i < boundRect.length; i++){
             cropped = new Mat(mat, boundRect[i]);
-            if (Core.mean(cropped).val[0] > 200) {
+            if (Core.mean(cropped).val[0] > CORE_MEAN_VAL) {
                 if(boundRect[i].area() > boundRect[maxIndex].area()){
                     maxIndex = i;
                 }
