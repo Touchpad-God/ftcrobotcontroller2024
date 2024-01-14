@@ -16,6 +16,12 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+
+/*
+* TODO:
+*  - make path that doesn't crash into auto in front
+* */
+
 @Config
 @Autonomous
 public class CenterStageLowerAutoRed2 extends OpMode {

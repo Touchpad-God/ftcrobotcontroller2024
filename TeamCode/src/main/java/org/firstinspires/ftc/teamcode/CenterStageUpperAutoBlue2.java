@@ -25,7 +25,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double SPIKE_CENTER_X = -37.5;
     public static double SPIKE_CENTER_Y = 16;
     public static double SPIKE_RIGHT_X = -36.0;
-    public static double SPIKE_RIGHT_Y = 14.5;
+    public static double SPIKE_RIGHT_Y = 13.5;
     public static double BACKDROP_LEFT_X = -42;
     public static double BACKDROP_LEFT_Y = 48;
     public static double BACKDROP_CENTER_X = -37;
