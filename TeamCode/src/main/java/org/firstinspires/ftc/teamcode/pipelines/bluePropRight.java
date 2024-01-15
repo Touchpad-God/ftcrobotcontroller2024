@@ -155,6 +155,9 @@ public class bluePropRight extends OpenCvPipeline {
             }
         }
 
+        Imgproc.circle(blueCombined, new Point(1460 * 0.5, 55), 3, new Scalar(255, 255, 255), 3);
+        Imgproc.circle(blueCombined, new Point(660 * 0.5, 55), 3, new Scalar(255, 255, 255), 3);
+
         return blueCombined;
     }
 
