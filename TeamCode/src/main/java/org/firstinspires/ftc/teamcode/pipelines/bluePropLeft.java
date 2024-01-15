@@ -181,8 +181,8 @@ public class bluePropLeft extends OpenCvPipeline {
     }
 
     public void onLine(Rect rect){
-        Point leftLine = new Point(320 * 0.5, 55);
-        Point centerLine = new Point(1030 * 0.5, 55);
+        Point leftLine = new Point(320 * 0.5, 40);
+        Point centerLine = new Point(1030 * 0.5, 40);
 
         if(rect.contains(leftLine)){
             position = PROPPOSITION.LEFT;
