@@ -34,7 +34,7 @@ public class redPropLeft extends OpenCvPipeline {
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
 
-    public static int contourSize = 2500;
+    public static int contourSize = 17000;
 
     public static double RATIO_START = 0.0 / 6.0;
     public static double RATIO_HEIGHT = 4.5 / 10.0;
@@ -144,13 +144,6 @@ public class redPropLeft extends OpenCvPipeline {
                 //Imgproc.circle(input, new Point(270 * RATIO_HEIGHT, 250 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
                 //Imgproc.circle(input, new Point(970 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
             }
-//            else if(position == PROPPOSITION.LEFT) {
-//                double aspectRatio = (double)largestContour.width/largestContour.height;
-//                //telemetry.addData("aspect Ratio", aspectRatio);
-//                if (aspectRatio > 0.90) {
-//                    position = PROPPOSITION.RIGHT;
-//                }
-//            }
         }
 
         telemetry.addData("Prop position", position);

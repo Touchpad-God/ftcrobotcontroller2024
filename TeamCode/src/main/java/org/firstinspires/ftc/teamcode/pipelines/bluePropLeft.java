@@ -37,8 +37,7 @@ public class bluePropLeft extends OpenCvPipeline {
     Mat blueCombined = new Mat();
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
-
-    public static int contourSize = 12000;
+    public static int contourSize = 17000;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
