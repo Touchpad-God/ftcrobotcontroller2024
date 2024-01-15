@@ -38,7 +38,7 @@ public class bluePropLeft extends OpenCvPipeline {
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
 
-    public static int contourSize = 700;
+    public static int contourSize = 12000;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -140,12 +140,6 @@ public class bluePropLeft extends OpenCvPipeline {
                 }
                 //Imgproc.circle(input, new Point(320 * RATIO_HEIGHT, 250 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
                 //Imgproc.circle(input, new Point(1030 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
-            } else if(position == PROPPOSITION.LEFT){
-                double aspectRatio = (double)largestContour.width/largestContour.height;
-                telemetry.addData("Aspect Ratio (width:height)", aspectRatio);
-                if(aspectRatio > 0.8){
-                    position = PROPPOSITION.RIGHT;
-                }
             }
         }
 
