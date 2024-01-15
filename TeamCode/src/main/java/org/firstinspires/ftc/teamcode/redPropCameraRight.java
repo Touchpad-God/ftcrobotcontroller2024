@@ -15,7 +15,7 @@ public class redPropCameraRight extends LinearOpMode {
 
     @Override
     public void runOpMode(){
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"));
 
         camera.setPipeline(new redPropRight(telemetry));
 

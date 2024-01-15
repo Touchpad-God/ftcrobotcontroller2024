@@ -36,8 +36,9 @@ public class redPropLeft extends OpenCvPipeline {
 
     public static int contourSize = 2500;
 
-    public static double RATIO_START = 1.0 / 6.0;
-    public static double RATIO_HEIGHT = 3.0 / 10.0;
+    public static double RATIO_START = 0.0 / 6.0;
+    public static double RATIO_HEIGHT = 4.0 / 10.0;
+    public static int CORE_MEAN_VAL = 70;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -120,8 +121,8 @@ public class redPropLeft extends OpenCvPipeline {
 
         avgArea /= total;
 
-        Imgproc.line(input, new Point(0, 380), new Point(235, 335), new Scalar(100, 100, 200), 5); //left line
-        Imgproc.line(input, new Point( 440, 335), new Point(1020, 335), new Scalar(100, 100, 200), 5); //center line
+        //Imgproc.line(input, new Point( 580 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), new Point(1360 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), new Scalar(100, 100, 200), 5); //center line
+        //Imgproc.line(input, new Point(390 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), new Point(200 * RATIO_HEIGHT, 385 * RATIO_HEIGHT), new Scalar(100, 100, 200), 5); //right line
 
         if(boundRect.length != 0){
             position = PROPPOSITION.NONE;
@@ -134,13 +135,15 @@ public class redPropLeft extends OpenCvPipeline {
                 int centerX = largestContour.x + largestContour.width/2;
                 int centerY = largestContour.y + largestContour.height/2;
 
-                //Imgproc.circle(input, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
+                Imgproc.circle(input, new Point(centerX, centerY), 2, new Scalar(200, 255, 200), 10);
 
                 if(largestContour.area() >= contourSize){
                     propPosition(centerX);
                 }else{
                     position = PROPPOSITION.RIGHT;
                 }
+                //Imgproc.circle(input, new Point(270 * RATIO_HEIGHT, 250 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
+                //Imgproc.circle(input, new Point(970 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
             }
         }
 
@@ -156,9 +159,9 @@ public class redPropLeft extends OpenCvPipeline {
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 0 && centerX <= 325 / 2){
+        if(centerX >= 120 * RATIO_HEIGHT && centerX <= 390 * RATIO_HEIGHT){
             position = PROPPOSITION.LEFT;
-        } else if(centerX >= 490 / 2 && centerX <= 1020 / 2){
+        } else if(centerX >= 580 * RATIO_HEIGHT && centerX <= 1360 * RATIO_HEIGHT){
             position = PROPPOSITION.CENTER;
         } else{
             position = PROPPOSITION.NONE;
@@ -169,20 +172,20 @@ public class redPropLeft extends OpenCvPipeline {
         int maxIndex = 0;
         for(int i = 0; i < boundRect.length; i++){
             cropped = new Mat(mat, boundRect[i]);
-            if (Core.mean(cropped).val[0] > 200) {
+            if (Core.mean(cropped).val[0] > CORE_MEAN_VAL) {
                 if(boundRect[i].area() > boundRect[maxIndex].area()){
                     maxIndex = i;
                 }
             }
-            //telemetry.addData("maxIndex", maxIndex);
+            //telemetry.addData("" + i, Core.mean(cropped).val[0]);
             cropped.release();
         }
         return maxIndex;
     }
 
     public void onLine(Rect rect){
-        Point leftLine = new Point(180 / 2, 60);
-        Point centerLine = new Point(730 / 2, 60);
+        Point leftLine = new Point(270 * RATIO_HEIGHT, 250 * RATIO_HEIGHT);
+        Point centerLine = new Point(970 * RATIO_HEIGHT, 120 * RATIO_HEIGHT);
 
         if(rect.contains(leftLine)){
             position = PROPPOSITION.LEFT;

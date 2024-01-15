@@ -25,7 +25,7 @@ public class bluePropRight extends OpenCvPipeline {
         this.telemetry = telemetry;
     }
 
-    public static int CORE_MEAN_VAL = 200;
+    public static int CORE_MEAN_VAL = 100;
     Mat cropped;
     //Mat blue2 = new Mat();
     Mat blueCombined = new Mat();
@@ -37,8 +37,8 @@ public class bluePropRight extends OpenCvPipeline {
 
     public static int contourSize = 700;
 
-    public static double RATIO_START = 32.0 / 151.0;
-    public static double RATIO_HEIGHT = 3.0 / 50.0;
+    public static double RATIO_START = 0.5 / 6.0;
+    public static double RATIO_HEIGHT = 4.0 / 10.0;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -58,17 +58,10 @@ public class bluePropRight extends OpenCvPipeline {
 
         Imgproc.resize(cropped, cropped, new Size(), 0.5, 0.5, Imgproc.INTER_AREA);
 
-        //Scalar lowerHSVblue = new Scalar(0, 55, 30);
-        Scalar lowHSVblue = new Scalar(100, 55, 30);
+        Scalar lowHSVblue = new Scalar(100, 55, 10);
         Scalar highHSVblue = new Scalar(130, 255, 255);
-        //Scalar higherHSVblue = new Scalar(160, 255, 255);
-        //TODO: Ask if we need high and low values for blue
 
-        //Core.inRange(cropped, lowerHSVblue, lowHSVblue, blue);
-        //Core.inRange(cropped, highHSVblue, higherHSVblue, blue2);
         Core.inRange(cropped, lowHSVblue, highHSVblue, blueCombined);
-
-        //Core.bitwise_or(blue, blue2, blueCombined);
 
         Imgproc.medianBlur(blueCombined, blueCombined, 5);
         Imgproc.GaussianBlur(blueCombined, blueCombined, blur, 0);
@@ -82,9 +75,7 @@ public class bluePropRight extends OpenCvPipeline {
 
         //releasing matrices
         hsv.release();
-        //blue.release();
-        //blue2.release();
-//        blueCombined.release();
+        //blueCombined.release();
         edges.release();
         hierarchy.release();
         cropped.release();
@@ -123,8 +114,8 @@ public class bluePropRight extends OpenCvPipeline {
 
         avgArea /= total;
 
-        Imgproc.line(input, new Point( (double) 160 / 2, (double) 325 / 2), new Point((double) 760 / 2, (double) 325 / 2), new Scalar(50, 50, 100), 2); //center line
-        Imgproc.line(input, new Point(505, 170), new Point(640, (double) 385 / 2), new Scalar(50, 50, 100), 2); //right line
+        //Imgproc.line(input, new Point( 300 * RATIO_HEIGHT, 110 * RATIO_HEIGHT), new Point(1050 * RATIO_HEIGHT, 110* RATIO_HEIGHT), new Scalar(100, 100, 200), 5); //center line
+        //Imgproc.line(input, new Point(1260 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), new Point(1500 * RATIO_HEIGHT, 385 * RATIO_HEIGHT), new Scalar(100, 100, 200), 5); //right line
 
         if(boundRect.length != 0){
             position = PROPPOSITION.NONE;
@@ -135,15 +126,17 @@ public class bluePropRight extends OpenCvPipeline {
                 Rect largestContour = boundRect[maxIndex];
 
                 int centerX = largestContour.x + largestContour.width/2;
-//                int centerY = largestContour.y + largestContour.height/2;
-//
-//                Imgproc.circle(input, new Point(centerX, centerY), 2, new Scalar(200, 255, 200));
+                int centerY = largestContour.y + largestContour.height/2;
+
+                Imgproc.circle(input, new Point(centerX, centerY), 2, new Scalar(200, 255, 200), 10);
 
                 if(largestContour.area() >= contourSize){
                     propPosition(centerX);
                 }else{
                     position = PROPPOSITION.LEFT;
                 }
+                //Imgproc.circle(input, new Point(660 * RATIO_HEIGHT, 65 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
+                //Imgproc.circle(input, new Point(1460 * RATIO_HEIGHT, 190 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
             }
         }
 
@@ -159,9 +152,9 @@ public class bluePropRight extends OpenCvPipeline {
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 80 && centerX <= 380){
+        if(centerX >= 300 * RATIO_HEIGHT && centerX <= 1050 * RATIO_HEIGHT){
             position = PROPPOSITION.CENTER;
-        } else if(centerX >= 505 && centerX <= 640){
+        } else if(centerX >= 1260 * RATIO_HEIGHT && centerX <= 1500 * RATIO_HEIGHT){
             position = PROPPOSITION.RIGHT;
         } else{
             position = PROPPOSITION.NONE;
@@ -177,16 +170,15 @@ public class bluePropRight extends OpenCvPipeline {
                     maxIndex = i;
                 }
             }
-            //telemetry.addData("maxIndex", maxIndex);
+            //telemetry.addData("" + i, Core.mean(cropped).val[0]);
             cropped.release();
         }
-
         return maxIndex;
     }
 
     public void onLine(Rect rect){
-        Point rightLine = new Point((double) 1120 /2, 180);
-        Point centerLine = new Point(230, (double) 325 /2);
+        Point rightLine = new Point(1460 * RATIO_HEIGHT, 190 * RATIO_HEIGHT);
+        Point centerLine = new Point(660 * RATIO_HEIGHT, 65 * RATIO_HEIGHT);
 
         if(rect.contains(rightLine)){
             position = PROPPOSITION.RIGHT;
