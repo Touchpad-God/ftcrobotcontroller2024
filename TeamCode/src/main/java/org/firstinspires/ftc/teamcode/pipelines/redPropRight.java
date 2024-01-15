@@ -143,13 +143,14 @@ public class redPropRight extends OpenCvPipeline {
                 }
                 //Imgproc.circle(input, new Point(560 * RATIO_HEIGHT, 65 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
                 //Imgproc.circle(input, new Point(1460 * RATIO_HEIGHT, 190 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
-            } else if(position == PROPPOSITION.RIGHT){
-                double aspectRatio = (double)largestContour.width/largestContour.height;
-                //telemetry.addData("aspect Ratio", aspectRatio);
-                if(aspectRatio > 0.97){
-                    position = PROPPOSITION.LEFT;
-                }
             }
+//            else if(position == PROPPOSITION.RIGHT){
+//                double aspectRatio = (double)largestContour.width/largestContour.height;
+//                //telemetry.addData("aspect Ratio", aspectRatio);
+//                if(aspectRatio > 0.97){
+//                    position = PROPPOSITION.LEFT;
+//                }
+//            }
         }
 
         telemetry.addData("Prop position", position);
@@ -164,9 +165,9 @@ public class redPropRight extends OpenCvPipeline {
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 270 * RATIO_HEIGHT && centerX <= 1000 * RATIO_HEIGHT){
+        if(centerX >= 270 * 0.5 && centerX <= 1000 * 0.5){
             position = PROPPOSITION.CENTER;
-        } else if(centerX >= 1260 * RATIO_HEIGHT && centerX <= 1500 * RATIO_HEIGHT){
+        } else if(centerX >= 1260 * 0.5 && centerX <= 1500 * 0.5){
             position = PROPPOSITION.RIGHT;
         } else{
             position = PROPPOSITION.NONE;
@@ -189,8 +190,8 @@ public class redPropRight extends OpenCvPipeline {
     }
 
     public void onLine(Rect rect){
-        Point rightLine = new Point(1460 * RATIO_HEIGHT, 190 * RATIO_HEIGHT);
-        Point centerLine = new Point(560 * RATIO_HEIGHT, 65 * RATIO_HEIGHT);
+        Point rightLine = new Point(1460 * 0.5, 55);
+        Point centerLine = new Point(560 * 0.5, 55);
 
         if(rect.contains(rightLine)){
             position = PROPPOSITION.RIGHT;
