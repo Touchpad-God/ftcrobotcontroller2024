@@ -146,7 +146,7 @@ public class redPropLeft extends OpenCvPipeline {
             } else if(position == PROPPOSITION.LEFT) {
                 double aspectRatio = (double)largestContour.width/largestContour.height;
                 //telemetry.addData("aspect Ratio", aspectRatio);
-                if (aspectRatio > 0.94) {
+                if (aspectRatio > 0.90) {
                     position = PROPPOSITION.RIGHT;
                 }
             }
