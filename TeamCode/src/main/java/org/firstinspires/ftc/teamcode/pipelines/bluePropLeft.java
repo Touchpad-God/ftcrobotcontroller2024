@@ -142,8 +142,8 @@ public class bluePropLeft extends OpenCvPipeline {
                 //Imgproc.circle(input, new Point(1030 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
             } else if(position == PROPPOSITION.LEFT){
                 double aspectRatio = (double)largestContour.width/largestContour.height;
-                //telemetry.addData("aspect Ratio", aspectRatio);
-                if(aspectRatio > 0.9){
+                telemetry.addData("Aspect Ratio (width:height)", aspectRatio);
+                if(aspectRatio > 0.8){
                     position = PROPPOSITION.RIGHT;
                 }
             }
