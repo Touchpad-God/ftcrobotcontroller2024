@@ -122,11 +122,10 @@ public class bluePropLeft extends OpenCvPipeline {
             position = PROPPOSITION.NONE;
             int maxIndex = largestContour(boundRect, blueCombined);
             onLine(boundRect[maxIndex]);
+            Rect largestContour = boundRect[maxIndex];
 
             if(position == PROPPOSITION.NONE){
                 //telemetry.addData("fallback", maxIndex);
-                Rect largestContour = boundRect[maxIndex];
-
                 int centerX = largestContour.x + largestContour.width/2;
                 int centerY = largestContour.y + largestContour.height/2;
 
@@ -141,6 +140,12 @@ public class bluePropLeft extends OpenCvPipeline {
                 }
                 //Imgproc.circle(input, new Point(320 * RATIO_HEIGHT, 250 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
                 //Imgproc.circle(input, new Point(1030 * RATIO_HEIGHT, 120 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
+            } else if(position == PROPPOSITION.LEFT){
+                double aspectRatio = (double)largestContour.width/largestContour.height;
+                //telemetry.addData("aspect Ratio", aspectRatio);
+                if(aspectRatio > 0.97){
+                    position = PROPPOSITION.RIGHT;
+                }
             }
         }
 

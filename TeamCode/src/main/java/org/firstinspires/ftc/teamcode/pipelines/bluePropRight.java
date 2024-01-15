@@ -25,7 +25,7 @@ public class bluePropRight extends OpenCvPipeline {
         this.telemetry = telemetry;
     }
 
-    public static int CORE_MEAN_VAL = 100;
+    public static int CORE_MEAN_VAL = 50;
     Mat cropped;
     //Mat blue2 = new Mat();
     Mat blueCombined = new Mat();
@@ -37,7 +37,7 @@ public class bluePropRight extends OpenCvPipeline {
 
     public static int contourSize = 700;
 
-    public static double RATIO_START = 0.5 / 6.0;
+    public static double RATIO_START = 0.0 / 6.0;
     public static double RATIO_HEIGHT = 4.0 / 10.0;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
@@ -121,10 +121,10 @@ public class bluePropRight extends OpenCvPipeline {
             position = PROPPOSITION.NONE;
             int maxIndex = largestContour(boundRect, blueCombined);
             onLine(boundRect[maxIndex]);
+            Rect largestContour = boundRect[maxIndex];
+            //Imgproc.rectangle(input, boundRect[maxIndex], new Scalar(250, 100, 200), 2);
 
             if(position == PROPPOSITION.NONE){
-                Rect largestContour = boundRect[maxIndex];
-
                 int centerX = largestContour.x + largestContour.width/2;
                 int centerY = largestContour.y + largestContour.height/2;
 
@@ -137,6 +137,12 @@ public class bluePropRight extends OpenCvPipeline {
                 }
                 //Imgproc.circle(input, new Point(660 * RATIO_HEIGHT, 65 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
                 //Imgproc.circle(input, new Point(1460 * RATIO_HEIGHT, 190 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
+            } else if(position == PROPPOSITION.RIGHT){
+                double aspectRatio = (double)largestContour.width/largestContour.height;
+                //telemetry.addData("aspect Ratio", aspectRatio);
+                if(aspectRatio > 0.97){
+                    position = PROPPOSITION.LEFT;
+                }
             }
         }
 

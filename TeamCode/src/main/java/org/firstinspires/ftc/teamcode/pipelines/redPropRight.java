@@ -128,10 +128,9 @@ public class redPropRight extends OpenCvPipeline {
             position = PROPPOSITION.NONE;
             int maxIndex = largestContour(boundRect, redCombined);
             onLine(boundRect[maxIndex]);
+            Rect largestContour = boundRect[maxIndex];
 
             if(position == PROPPOSITION.NONE){
-                Rect largestContour = boundRect[maxIndex];
-
                 int centerX = largestContour.x + largestContour.width/2;
                 int centerY = largestContour.y + largestContour.height/2;
 
@@ -144,6 +143,12 @@ public class redPropRight extends OpenCvPipeline {
                 }
                 //Imgproc.circle(input, new Point(560 * RATIO_HEIGHT, 65 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
                 //Imgproc.circle(input, new Point(1460 * RATIO_HEIGHT, 190 * RATIO_HEIGHT), 2, new Scalar(255, 255, 255), 10);
+            } else if(position == PROPPOSITION.RIGHT){
+                double aspectRatio = (double)largestContour.width/largestContour.height;
+                //telemetry.addData("aspect Ratio", aspectRatio);
+                if(aspectRatio > 0.97){
+                    position = PROPPOSITION.LEFT;
+                }
             }
         }
 
