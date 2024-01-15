@@ -156,9 +156,9 @@ public class bluePropLeft extends OpenCvPipeline {
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 120 * RATIO_HEIGHT && centerX <= 390 * RATIO_HEIGHT){
+        if(centerX >= 120 * 0.5 && centerX <= 390 * 0.5){
             position = PROPPOSITION.LEFT;
-        } else if(centerX >= 650 * RATIO_HEIGHT && centerX <= 1380 * RATIO_HEIGHT){
+        } else if(centerX >= 650 * 0.5 && centerX <= 1380 * 0.5){
             position = PROPPOSITION.CENTER;
         } else{
             position = PROPPOSITION.NONE;
@@ -181,8 +181,8 @@ public class bluePropLeft extends OpenCvPipeline {
     }
 
     public void onLine(Rect rect){
-        Point leftLine = new Point(320 * RATIO_HEIGHT, 250 * RATIO_HEIGHT);
-        Point centerLine = new Point(1030 * RATIO_HEIGHT, 120 * RATIO_HEIGHT);
+        Point leftLine = new Point(320 * 0.5, 55);
+        Point centerLine = new Point(1030 * 0.5, 55);
 
         if(rect.contains(leftLine)){
             position = PROPPOSITION.LEFT;
