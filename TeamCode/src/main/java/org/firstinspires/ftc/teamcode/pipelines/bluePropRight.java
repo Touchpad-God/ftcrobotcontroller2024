@@ -37,6 +37,9 @@ public class bluePropRight extends OpenCvPipeline {
 
     public static int contourSize = 700;
 
+    public static double RATIO_START = 32.0 / 151.0;
+    public static double RATIO_HEIGHT = 3.0 / 50.0;
+
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
 
@@ -49,7 +52,7 @@ public class bluePropRight extends OpenCvPipeline {
 
         Size shape = input.size();
 
-        Rect roi = new Rect(0, (int) shape.height * 39 / 151, (int) shape.width, (int) shape.height * 3 / 50);
+        Rect roi = new Rect(0, (int) (shape.height * RATIO_START), (int) shape.width, (int) (shape.height * RATIO_HEIGHT));
 
         cropped = new Mat(hsv, roi);
 

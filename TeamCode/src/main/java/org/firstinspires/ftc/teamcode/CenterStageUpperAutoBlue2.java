@@ -103,7 +103,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         //vision
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"));
         bluePropPipeline = new bluePropLeft(telemetry);
         camera.setPipeline(bluePropPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {

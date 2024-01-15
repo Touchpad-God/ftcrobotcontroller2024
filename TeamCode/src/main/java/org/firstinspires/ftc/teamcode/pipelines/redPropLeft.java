@@ -36,6 +36,9 @@ public class redPropLeft extends OpenCvPipeline {
 
     public static int contourSize = 2500;
 
+    public static double RATIO_START = 1.0 / 6.0;
+    public static double RATIO_HEIGHT = 3.0 / 10.0;
+
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
 
@@ -48,7 +51,7 @@ public class redPropLeft extends OpenCvPipeline {
 
         Size shape = input.size();
 
-        Rect roi = new Rect(0, (int) shape.height / 6, (int) shape.width, (int) shape.height * 3 / 10);
+        Rect roi = new Rect(0, (int) (shape.height * RATIO_START), (int) shape.width, (int) (shape.height * RATIO_HEIGHT));
 
         cropped = new Mat(hsv, roi);
 

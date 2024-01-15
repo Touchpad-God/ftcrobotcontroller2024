@@ -181,7 +181,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .build();
 
         //vision
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"));
         redPropPipeline = new redPropRight(telemetry);
         camera.setPipeline(redPropPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {

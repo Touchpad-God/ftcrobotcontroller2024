@@ -26,6 +26,10 @@ public class bluePropLeft extends OpenCvPipeline {
     }
 
     public static int CORE_MEAN_VAL = 180;
+
+    public static double RATIO_START = 32.0 / 151.0;
+    public static double RATIO_HEIGHT = 3.0 / 50.0;
+
     Mat cropped;
     Mat hsv = new Mat();
     Size blur = new Size(3.0, 3.0);
@@ -48,7 +52,7 @@ public class bluePropLeft extends OpenCvPipeline {
 
         Size shape = input.size();
 
-        Rect roi = new Rect(0, (int) shape.height * 32 / 151, (int) shape.width, (int) shape.height * 3 / 50);
+        Rect roi = new Rect(0, (int) (shape.height * RATIO_START), (int) shape.width, (int) (shape.height * RATIO_HEIGHT));
 
         cropped = new Mat(hsv, roi);
 

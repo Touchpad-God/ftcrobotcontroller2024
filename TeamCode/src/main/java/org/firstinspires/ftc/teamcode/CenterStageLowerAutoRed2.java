@@ -183,7 +183,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         //vision
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"));
 
         redPropPipeline = new redPropLeft(telemetry);
         camera.setPipeline(redPropPipeline);
