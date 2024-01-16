@@ -25,7 +25,7 @@ public class bluePropLeft extends OpenCvPipeline {
         this.telemetry = telemetry;
     }
 
-    public static int CORE_MEAN_VAL = 70;
+    public static int CORE_MEAN_VAL = 50;
 
     public static double RATIO_START = 0.0 / 6.0;
     public static double RATIO_HEIGHT = 4.0 / 35.0;

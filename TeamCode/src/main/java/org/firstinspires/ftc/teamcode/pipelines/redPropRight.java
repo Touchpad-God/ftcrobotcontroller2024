@@ -38,7 +38,7 @@ public class redPropRight extends OpenCvPipeline {
 
     public static double RATIO_START = 0.5 / 6.0;
     public static double RATIO_HEIGHT = 4.0 / 35.0;
-    public static int CORE_MEAN_VAL = 100;
+    public static int CORE_MEAN_VAL = 50;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;
@@ -158,9 +158,9 @@ public class redPropRight extends OpenCvPipeline {
     }
 
     public void propPosition(int centerX){
-        if(centerX >= 270 * 0.5 && centerX <= 1000 * 0.5){
+        if(centerX >= 0 && centerX <= 800 * 0.5){
             position = PROPPOSITION.CENTER;
-        } else if(centerX >= 1260 * 0.5 && centerX <= 1500 * 0.5){
+        } else if(centerX >= 850 * 0.5 && centerX <= 1280 * 0.5){
             position = PROPPOSITION.RIGHT;
         } else{
             position = PROPPOSITION.NONE;
@@ -183,8 +183,8 @@ public class redPropRight extends OpenCvPipeline {
     }
 
     public void onLine(Rect rect){
-        Point rightLine = new Point(1240 * 0.5, 40);
-        Point centerLine = new Point(560 * 0.5, 40);
+        Point rightLine = new Point(1240 * 0.5, 15);
+        Point centerLine = new Point(560 * 0.5, 15);
 
         if(rect.contains(rightLine)){
             position = PROPPOSITION.RIGHT;
