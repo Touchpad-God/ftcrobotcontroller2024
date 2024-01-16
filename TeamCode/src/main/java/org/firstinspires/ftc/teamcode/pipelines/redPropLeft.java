@@ -34,10 +34,10 @@ public class redPropLeft extends OpenCvPipeline {
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
 
-    public static int contourSize = 17000;
+    public static int contourSize = 4800;
 
     public static double RATIO_START = 0.0 / 6.0;
-    public static double RATIO_HEIGHT = 4.5 / 10.0;
+    public static double RATIO_HEIGHT = 4.0 / 35.0;
     public static int CORE_MEAN_VAL = 70;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}

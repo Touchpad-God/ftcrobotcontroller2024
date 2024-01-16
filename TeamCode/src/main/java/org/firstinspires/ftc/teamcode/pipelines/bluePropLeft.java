@@ -28,7 +28,7 @@ public class bluePropLeft extends OpenCvPipeline {
     public static int CORE_MEAN_VAL = 70;
 
     public static double RATIO_START = 0.0 / 6.0;
-    public static double RATIO_HEIGHT = 4.0 / 10.0;
+    public static double RATIO_HEIGHT = 4.0 / 35.0;
 
     Mat cropped;
     Mat hsv = new Mat();
@@ -37,7 +37,7 @@ public class bluePropLeft extends OpenCvPipeline {
     Mat blueCombined = new Mat();
     Mat edges = new Mat();
     Mat hierarchy = new Mat();
-    public static int contourSize = 17000;
+    public static int contourSize = 4800;
 
     public enum PROPPOSITION {LEFT, CENTER, RIGHT, NONE}
     public PROPPOSITION position = PROPPOSITION.NONE;

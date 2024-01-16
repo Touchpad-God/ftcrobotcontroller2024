@@ -135,15 +135,24 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 .build();
 
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_CENTER_X, SPIKE_CENTER_Y, Math.toRadians(0)))
-                .addDisplacementMarker(() -> IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                .addDisplacementMarker(() -> {
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
+                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
+                })
                 .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_LEFT_X, SPIKE_LEFT_Y, Math.toRadians(270)))
-                .addDisplacementMarker(() -> IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                .addDisplacementMarker(() -> {
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
+                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
+                })
                 .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(270)))
-                .addDisplacementMarker(() -> IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1)
+                .addDisplacementMarker(() -> {
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
+                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
+                })
                 .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_X, BACKDROP_RIGHT_Y, Math.toRadians(270)))
                 .build();
 
