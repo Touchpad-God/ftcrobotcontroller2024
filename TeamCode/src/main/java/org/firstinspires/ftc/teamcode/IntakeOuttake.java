@@ -40,6 +40,8 @@ public class IntakeOuttake {
     double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     public static double intakePower = 1.0;
     public static double transferPower = 1.0;
+    public static double autoEjectPower = 0.45;
+
     public String pixel1 = "";
     public String pixel2 = "";
     public int beambreakDetections = 0;
@@ -202,8 +204,8 @@ public class IntakeOuttake {
                 intakeServo.setPosition(intakePositions[4]);
                 break;
             case AUTOEJECTING:
-                intakeIntake.setPower(-0.3);
-                intakeTransfer.setPower(-0.3);
+                intakeIntake.setPower(-autoEjectPower);
+                intakeTransfer.setPower(-autoEjectPower);
                 intakeServo.setPosition(intakePositions[4]);
                 break;
         }

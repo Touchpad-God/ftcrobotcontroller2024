@@ -16,22 +16,24 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+// TODO: Test this auto.
+
 @Config
 @Autonomous
 public class CenterStageUpperAutoBlue2 extends OpMode {
 
-    public static double SPIKE_LEFT_X = -36.5;
-    public static double SPIKE_LEFT_Y = 32;
-    public static double SPIKE_CENTER_X = -35.5;
-    public static double SPIKE_CENTER_Y = 16;
-    public static double SPIKE_RIGHT_X = -36.0;
-    public static double SPIKE_RIGHT_Y = 11.5;
-    public static double BACKDROP_LEFT_X = -42;
-    public static double BACKDROP_LEFT_Y = 48;
-    public static double BACKDROP_CENTER_X = -37;
-    public static double BACKDROP_CENTER_Y = 48;
-    public static double BACKDROP_RIGHT_X = -30;
-    public static double BACKDROP_RIGHT_Y = 48.5;
+    public static double SPIKE_LEFT_X = -36;
+    public static double SPIKE_LEFT_Y = 34;
+    public static double SPIKE_CENTER_X = -24;
+    public static double SPIKE_CENTER_Y = 34;
+    public static double SPIKE_RIGHT_X = -40.0;
+    public static double SPIKE_RIGHT_Y = 12;
+    public static double BACKDROP_LEFT_X = -40;
+    public static double BACKDROP_LEFT_Y = 50;
+    public static double BACKDROP_CENTER_X = -34;
+    public static double BACKDROP_CENTER_Y = 50;
+    public static double BACKDROP_RIGHT_X = -28;
+    public static double BACKDROP_RIGHT_Y = 50;
 
     public static double CENTER_MOVEMENT_OFFSET = 1.0;
     public static double LEFT_MOVEMENT_OFFSET = 1.0;
@@ -148,7 +150,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 })
                 .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)))
                 .build();
-        driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(270)))
+        driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(45)))
                 .addDisplacementMarker(() -> {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
                     IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
@@ -274,7 +276,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
 
             traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(SPIKE_LEFT_X, SPIKE_LEFT_Y, 270));
+                    .lineToSplineHeading(new Pose2d(SPIKE_LEFT_X, SPIKE_LEFT_Y, -90));
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
@@ -329,7 +331,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
 
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, 270))
+                    .lineToSplineHeading(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, 45))
                     .build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;

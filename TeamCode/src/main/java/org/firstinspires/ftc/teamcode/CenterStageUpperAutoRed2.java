@@ -20,18 +20,18 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class CenterStageUpperAutoRed2 extends OpMode {
 
-    public static double SPIKE_LEFT_X = 38.0;
+    public static double SPIKE_LEFT_X = 40.0;
     public static double SPIKE_LEFT_Y = 12;
     public static double SPIKE_CENTER_X = 24;
-    public static double SPIKE_CENTER_Y = 27;
+    public static double SPIKE_CENTER_Y = 34;
     public static double SPIKE_RIGHT_X = 36;
-    public static double SPIKE_RIGHT_Y = 30;
-    public static double BACKDROP_LEFT_X = 32;
+    public static double SPIKE_RIGHT_Y = 34;
+    public static double BACKDROP_LEFT_X = 28;
     public static double BACKDROP_LEFT_Y = 50.5;
-    public static double BACKDROP_CENTER_X = 36;
-    public static double BACKDROP_CENTER_Y = 49;
-    public static double BACKDROP_RIGHT_X = 44;
-    public static double BACKDROP_RIGHT_Y = 48;
+    public static double BACKDROP_CENTER_X = 34;
+    public static double BACKDROP_CENTER_Y = 51;
+    public static double BACKDROP_RIGHT_X = 40;
+    public static double BACKDROP_RIGHT_Y = 50;
 
     public static double CENTER_MOVEMENT_OFFSET = 2.0;
     public static double LEFT_MOVEMENT_OFFSET = 0.0;
@@ -291,7 +291,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT) { //right
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, 270));
+                    .lineToSplineHeading(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, 180));
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
