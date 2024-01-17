@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.drive.ThreadedIMU;
 
+@Config
 @TeleOp
 public class CenterStageTeleOp2 extends LinearOpMode {
     protected DcMotor motorLf;
@@ -40,8 +42,10 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
     int hangPos = 0;
 
-    public static double[] leftHang = {0.122, 0.3789, 0.7065};
-    public static double[] rightHang = {0.7686, 0.7686, 0.1972};
+    public static double droneLaunchPos = 0.4589;
+
+    public double[] leftHang = {0.122, droneLaunchPos, 0.7065};
+    public double[] rightHang = {0.7686, 0.7686, 0.1972};
 
     double x, y, rot;
     @Override

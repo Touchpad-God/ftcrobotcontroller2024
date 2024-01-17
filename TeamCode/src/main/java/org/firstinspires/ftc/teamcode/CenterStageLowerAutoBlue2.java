@@ -231,7 +231,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             backdropX = 36;
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(START_VISION_CENTER_X, START_VISION_CENTER_Y)).build());
 
-            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
             t.start(200);
             while(!t.finished()){}
             t.markReady();
@@ -294,7 +294,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
             drive.followTrajectorySequence(traj.build());
 
-            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
             t.start(200);
             while(!t.finished()){}
             t.markReady();
@@ -344,7 +344,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineTo(new Vector2d(LEFT_PATH_X, LEFT_PATH_Y)).turn(Math.toRadians(-90)).build());
 
-            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
             t.start(200);
             while(!t.finished()){}
             t.markReady();

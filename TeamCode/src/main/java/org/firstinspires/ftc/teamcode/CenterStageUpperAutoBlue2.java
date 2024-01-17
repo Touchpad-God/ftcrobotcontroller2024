@@ -223,7 +223,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
             movementOffset = CENTER_MOVEMENT_OFFSET;
 
-            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
             t.start(200);
             while(!t.finished()){}
             t.markReady();
@@ -277,7 +277,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                     .lineToSplineHeading(new Pose2d(SPIKE_LEFT_X, SPIKE_LEFT_Y, 270));
             drive.followTrajectorySequence(traj.build());
 
-            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
             t.start(200);
             while(!t.finished()){}
             t.markReady();
@@ -332,7 +332,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                     .lineToSplineHeading(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, 270))
                     .build());
 
-            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
             t.start(200);
             while(!t.finished()){}
             t.markReady();
