@@ -43,7 +43,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double START_VISION_LEFT_X_SPLINE1 = 59;
     public static double START_VISION_LEFT_Y_SPLINE1 = -30;
     public static double START_VISION_LEFT_X_SPLINE2 = 59;
-    public static double START_VISION_LEFT_Y_SPLINE2 = 12;
+    public static double START_VISION_LEFT_Y_SPLINE2 = 36;
     public static double START_VISION_LEFT_X_SPLINE3 = 27;
     public static double START_VISION_LEFT_Y_SPLINE3 = 47;
 
@@ -53,7 +53,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double START_VISION_RIGHT_X_SPLINE1 = 59;
     public static double START_VISION_RIGHT_Y_SPLINE1 = -36;
     public static double START_VISION_RIGHT_X_SPLINE2 = 59;
-    public static double START_VISION_RIGHT_Y_SPLINE2 = 0;
+    public static double START_VISION_RIGHT_Y_SPLINE2 = 36;
     public static double START_VISION_RIGHT_X_SPLINE3 = 42;
     public static double START_VISION_RIGHT_Y_SPLINE3 = 45;
 
@@ -65,7 +65,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double START_VISION_CENTER_X_SPLINE2 = 59;
     public static double START_VISION_CENTER_Y_SPLINE2 = -36;
     public static double START_VISION_CENTER_X_SPLINE3 = 59;
-    public static double START_VISION_CENTER_Y_SPLINE3 = 0;
+    public static double START_VISION_CENTER_Y_SPLINE3 = 36;
     public static double START_VISION_CENTER_X_SPLINE4 = 34;
     public static double START_VISION_CENTER_Y_SPLINE4 = 48;
 
@@ -114,36 +114,40 @@ public class CenterStageLowerAutoRed2 extends OpMode {
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(START_VISION_CENTER_X, START_VISION_CENTER_Y, Math.toRadians(180)))
 //                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
 //                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
+                .addTemporalMarker(0.7, 0.0, () -> {
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
+                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
+                })
                 .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE1, START_VISION_CENTER_Y_SPLINE1), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_SPLINE2, START_VISION_CENTER_Y_SPLINE2, Math.toRadians(-90)), Math.toRadians(90))
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(90))
-                .UNSTABLE_addDisplacementMarkerOffset(1, () -> {
-                    IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
-                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
-                })
-                .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE4, START_VISION_CENTER_Y_SPLINE4), Math.toRadians(180)).build();
+                .lineToSplineHeading(new Pose2d(36, 36, Math.toRadians(270)))
+                .lineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE4, START_VISION_CENTER_Y_SPLINE4)).build();
 
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(START_VISION_RIGHT_X, START_VISION_RIGHT_Y, Math.toRadians(90)))
 //                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
 //                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
-                .lineTo(new Vector2d(START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1))
-                .lineToConstantHeading(new Vector2d(START_VISION_RIGHT_X_SPLINE2, START_VISION_RIGHT_Y_SPLINE2))
-                .UNSTABLE_addDisplacementMarkerOffset(1, () -> {
+                .addTemporalMarker(0.7, 0.0, () -> {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
                     IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
                 })
+                .lineTo(new Vector2d(START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1))
+                .lineToConstantHeading(new Vector2d(START_VISION_RIGHT_X_SPLINE2, START_VISION_RIGHT_Y_SPLINE2))
+                .lineToSplineHeading(new Pose2d(36, 36, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(START_VISION_RIGHT_X_SPLINE3, START_VISION_RIGHT_Y_SPLINE3), Math.toRadians(180)).build();
 
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(START_VISION_LEFT_X, START_VISION_LEFT_Y, Math.toRadians(180)))
+//
 //                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
 //                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
-                .lineToSplineHeading(new Pose2d(START_VISION_LEFT_X_SPLINE1, START_VISION_LEFT_Y_SPLINE1, Math.toRadians(270)))
-                .lineToConstantHeading(new Vector2d(START_VISION_LEFT_X_SPLINE2, START_VISION_LEFT_Y_SPLINE2))
-                .UNSTABLE_addDisplacementMarkerOffset(1, () -> {
+                .addTemporalMarker(0.7, 0.0, () -> {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
                     IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
                 })
+                .lineToSplineHeading(new Pose2d(START_VISION_LEFT_X_SPLINE1, START_VISION_LEFT_Y_SPLINE1, Math.toRadians(270)))
+                .lineToConstantHeading(new Vector2d(START_VISION_LEFT_X_SPLINE2, START_VISION_LEFT_Y_SPLINE2))
+                .lineToSplineHeading(new Pose2d(36, 36, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(START_VISION_LEFT_X_SPLINE3, START_VISION_LEFT_Y_SPLINE3), Math.toRadians(180)).build();
 
         driveToAudienceRight = drive.trajectorySequenceBuilder(new Pose2d(START_AUDIENCE_LEFT_X, START_AUDIENCE_LEFT_Y, Math.toRadians(270)))
@@ -229,7 +233,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
         if (redPropPipeline.position == redPropLeft.PROPPOSITION.CENTER) { // center
             backdropX = 36;
 
-            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
 
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineTo(new Vector2d(START_VISION_CENTER_X, START_VISION_CENTER_Y)).build());
 
@@ -238,6 +242,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
             while(!t.finished()){}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
@@ -276,7 +281,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
         } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.RIGHT) { // right
 
-            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
 
             backdropX = 42;
 
@@ -291,6 +296,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
             while(!t.finished()){}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
@@ -326,7 +332,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
         } else if (redPropPipeline.position == redPropLeft.PROPPOSITION.LEFT) { // left
 
-            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
+//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
 
             backdropX = 30;
 
@@ -340,6 +346,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
             while(!t.finished()){}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //

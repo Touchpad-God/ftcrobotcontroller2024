@@ -120,24 +120,24 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .build();
 
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_CENTER_X, SPIKE_CENTER_Y, Math.toRadians(180)))
-                .addDisplacementMarker(() -> {
-                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.IDLE;
+                .UNSTABLE_addDisplacementMarkerOffset(5, () -> {
+//                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.IDLE;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
 //                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
                 })
                 .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(180)))
-                .addDisplacementMarker(() -> {
-                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.IDLE;
+                .UNSTABLE_addDisplacementMarkerOffset(5, () -> {
+//                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.IDLE;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
 //                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
                 })
                 .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_X, BACKDROP_RIGHT_Y, Math.toRadians(270)))
                 .build();
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_LEFT_X, SPIKE_LEFT_Y, Math.toRadians(225)))
-                .addDisplacementMarker(() -> {
-                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.IDLE;
+                .UNSTABLE_addDisplacementMarkerOffset(5, () -> {
+//                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.IDLE;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
 //                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
                 })
@@ -238,10 +238,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineToSplineHeading(new Pose2d(SPIKE_CENTER_X, SPIKE_CENTER_Y, Math.toRadians(270))).build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
-//            t.start(100);
-//            while(!t.finished()) {}
-//            t.markReady();
-//            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            t.start(500);
+            while(!t.finished()) {}
+            t.markReady();
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
 
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //
@@ -295,10 +295,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
-//            t.start(100);
-//            while(!t.finished()) {}
-//            t.markReady();
-//            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            t.start(500);
+            while(!t.finished()) {}
+            t.markReady();
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //
 //            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
@@ -349,10 +349,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineToSplineHeading(new Pose2d(new Vector2d(SPIKE_LEFT_X, SPIKE_LEFT_Y), Math.toRadians(225))).build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
-//            t.start(100);
-//            while(!t.finished()) {}
-//            t.markReady();
-//            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            t.start(500);
+            while(!t.finished()) {}
+            t.markReady();
+            IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
 
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //
