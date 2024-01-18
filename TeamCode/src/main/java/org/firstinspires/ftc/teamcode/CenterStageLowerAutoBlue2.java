@@ -33,7 +33,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     Timer t = new Timer();
     int movementOffset;
 
-    public static double PARK = 48;
+    public static double PARK = 36;
     public static double LEFT_PATH_X = -36;
     public static double LEFT_PATH_Y = -36;
     public static double LEFT_PATH_STRAFE = 23;
@@ -45,7 +45,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_LEFT_Y_SPLINE1 = -39;
     public static double START_VISION_LEFT_X_SPLINE2 = -59;
     public static double START_VISION_LEFT_Y_SPLINE2 = 36;
-    public static double START_VISION_LEFT_X_SPLINE3 = -41;
+    public static double START_VISION_LEFT_X_SPLINE3 = -45;
     public static double START_VISION_LEFT_Y_SPLINE3 = 47;
 
     TrajectorySequence driveToBackdropFromVisionRight;
@@ -67,7 +67,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_CENTER_Y_SPLINE2 = -36;
     public static double START_VISION_CENTER_X_SPLINE3 = -59;
     public static double START_VISION_CENTER_Y_SPLINE3 = 36;
-    public static double START_VISION_CENTER_X_SPLINE4 = -36;
+    public static double START_VISION_CENTER_X_SPLINE4 = -40;
     public static double START_VISION_CENTER_Y_SPLINE4 = 48;
 
     TrajectorySequence driveToBackdropReturn;
@@ -145,7 +145,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                     IntakeOuttake.outtakeTicks = 210;
                     IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
                 })
-                .lineToSplineHeading(new Pose2d(-START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1, Math.toRadians(-90)))
+                .lineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1, Math.toRadians(-90)))
                 .lineToConstantHeading(new Vector2d(START_VISION_RIGHT_X_SPLINE2, START_VISION_RIGHT_Y_SPLINE2))
                 .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(START_VISION_RIGHT_X_SPLINE3, START_VISION_RIGHT_Y_SPLINE3), Math.toRadians(0)).build();

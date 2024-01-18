@@ -99,7 +99,7 @@ public class TrajectorySequenceRunner {
         DriveSignal driveSignal = null;
 
         TelemetryPacket packet = new TelemetryPacket();
-        Canvas fieldOverlay = packet.fieldOverlay();
+        Canvas fieldOverlay = packet.fieldOverlay().setRotation(-Math.toRadians(90));;
 
         SequenceSegment currentSegment = null;
 
