@@ -36,8 +36,8 @@ public class IntakeOuttake {
     double intakePos3 = 0.4844;
     double intakePos4 = 0.5250;
     double intakePos5 = 0.5550;
-    int locationPixel = 0;
-    double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
+    public int locationPixel = 0;
+    public double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};
     public static double intakePower = 1.0;
     public static double transferPower = 1.0;
     public static double autoEjectPower = 0.45;
