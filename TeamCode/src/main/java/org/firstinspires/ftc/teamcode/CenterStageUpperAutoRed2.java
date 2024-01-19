@@ -22,10 +22,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
     public static double SPIKE_LEFT_X = 40.0;
     public static double SPIKE_LEFT_Y = 14.0;
-    public static double SPIKE_CENTER_X = 24;
+    public static double SPIKE_CENTER_X = 26;
     public static double SPIKE_CENTER_Y = 32.5;
-    public static double SPIKE_RIGHT_X = 36;
-    public static double SPIKE_RIGHT_Y = 34;
+    public static double SPIKE_RIGHT_X = 45;
+    public static double SPIKE_RIGHT_Y = 24;
     public static double BACKDROP_LEFT_X = 28;
     public static double BACKDROP_LEFT_Y = 50.5;
     public static double BACKDROP_CENTER_X = 34;
@@ -125,7 +125,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.ON;
 //                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.POS1;
                 })
-                .lineTo(new Vector2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y))
+                .lineToConstantHeading(new Vector2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y))
                 .build();
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(180)))
                 .UNSTABLE_addDisplacementMarkerOffset(5, () -> {
@@ -300,7 +300,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT) { //right
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .lineToSplineHeading(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, 180));
+                    .lineToSplineHeading(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(180)));
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
