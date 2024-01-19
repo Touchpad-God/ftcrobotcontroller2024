@@ -89,7 +89,7 @@ public class IntakeOuttake {
     // state machine initialization
     public enum IntakeState {INTAKING, AUTOINTAKING, AUTOBEAMNOCOLOR, AUTOBOTHCOLOR, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING, AUTOEJECTING}
     public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
-    public enum TransferState {IDLE, MOTORS, ON, OUT, RETRACT}
+    public enum TransferState {IDLE, MOTORS, ON, HIGHER, OUT, RETRACT}
     public static volatile IntakeState intakeState = IntakeState.IDLE;
     public static volatile OuttakeState outtakeState = OuttakeState.IDLE;
     public static volatile TransferState transferState = TransferState.IDLE;
@@ -156,7 +156,7 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTOINTAKING:
-                outtakeTicks = 13;
+                outtakeTicks = 10;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
@@ -234,6 +234,12 @@ public class IntakeOuttake {
             case ON:
                 outtakeTicks = 150;
                 if (outtakeMotor1.getCurrentPosition() < -145 && outtakeMotor2.getCurrentPosition() > 145) {
+                    transferState = TransferState.OUT;
+                }
+                break;
+            case HIGHER:
+                outtakeTicks = 250;
+                if (outtakeMotor1.getCurrentPosition() < -240 && outtakeMotor2.getCurrentPosition() > 240) {
                     transferState = TransferState.OUT;
                 }
                 break;

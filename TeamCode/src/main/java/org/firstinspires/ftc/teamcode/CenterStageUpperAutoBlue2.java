@@ -27,7 +27,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double SPIKE_CENTER_X = -23;
     public static double SPIKE_CENTER_Y = 30;
     public static double SPIKE_RIGHT_X = -40.0;
-    public static double SPIKE_RIGHT_Y = 14.0;
+    public static double SPIKE_RIGHT_Y = 13.0;
     public static double BACKDROP_LEFT_X = -42;
     public static double BACKDROP_LEFT_Y = 49;
     public static double BACKDROP_CENTER_X = -36;
@@ -42,19 +42,19 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double LEFT_CYCLE_STRAFE_DIST = 12;
     public static double LEFT_CYCLE_WAYPOINT_X = -10;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
-    public static double LEFT_CYCLE_END_Y = -51.0;
+    public static double LEFT_CYCLE_END_Y = -54.0;
     public static double RIGHT_CYCLE_STRAFE_DIST = 20;
     public static double RIGHT_CYCLE_WAYPOINT_X = -10;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
-    public static double RIGHT_CYCLE_END_Y = -52.5;
+    public static double RIGHT_CYCLE_END_Y = -54.0;
     public static double CENTER_CYCLE_STRAFE_DIST = 17;
     public static double CENTER_CYCLE_WAYPOINT_X = -10;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -53;
+    public static double CENTER_CYCLE_END_Y = -54.5;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = -12;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
-    public static double RETURN_CYCLE_END_Y = -52.5;
+    public static double RETURN_CYCLE_END_Y = -52.0;
 
     public static double TO_BD_WAYPOINT_Y = 24;
     public static double TO_BD_END_X = -36;
@@ -85,7 +85,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public int whitePixelLocation = -12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
-    public static boolean parking = true;
+    public static boolean parking = false;
 
     //vision
     private OpenCvCamera camera;
@@ -120,13 +120,11 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 telemetry.addData("Camera Status: ", "Couldn't open camera");
             }});
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
-                .addTemporalMarker(0.01, () -> {
-                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
-                    IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
-                })
-                .addTemporalMarker(0.5, 0.0, () -> {
-                    IntakeOuttake.outtakeTicks = 300;
-                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
+                .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS)
+                .addTemporalMarker(0.1, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
+                .addTemporalMarker(0.6, 0.0, () -> {
+                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
@@ -348,6 +346,8 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
             }
 
         } else if (bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.RIGHT || bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.NONE) { // right, opposite trajectories intended
+
+            intakeOuttake.intakeServo.setPosition(intakeOuttake.intakePos4);
 
             movementOffset = RIGHT_MOVEMENT_OFFSET;
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
