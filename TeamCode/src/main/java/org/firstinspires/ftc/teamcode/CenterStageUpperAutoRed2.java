@@ -20,14 +20,14 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 public class CenterStageUpperAutoRed2 extends OpMode {
 
-    public static double SPIKE_LEFT_X = 36.5;
-    public static double SPIKE_LEFT_Y = 13.0;
+    public static double SPIKE_LEFT_X = 38.5;
+    public static double SPIKE_LEFT_Y = 13.5;
     public static double SPIKE_CENTER_X = 26;
     public static double SPIKE_CENTER_Y = 32.5;
     public static double SPIKE_RIGHT_X = 45;
-    public static double SPIKE_RIGHT_Y = 24;
+    public static double SPIKE_RIGHT_Y = 23.5;
     public static double BACKDROP_LEFT_X = 28;
-    public static double BACKDROP_LEFT_Y = 50.5;
+    public static double BACKDROP_LEFT_Y = 51;
     public static double BACKDROP_CENTER_X = 34;
     public static double BACKDROP_CENTER_Y = 51;
     public static double BACKDROP_RIGHT_X = 40;
@@ -50,7 +50,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
     public static double CENTER_CYCLE_END_Y = -51.0;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
-    public static double RETURN_CYCLE_WAYPOINT_X = 12;
+    public static double RETURN_CYCLE_WAYPOINT_X = 8;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
     public static double RETURN_CYCLE_END_Y = -49.5;
 
@@ -84,7 +84,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
     public static boolean parking = false;
 
-    public int whitePixelLocation = 10; // change when necessary to 24 or 36 to avoid conflicting with other alliance
+    public int whitePixelLocation = 8; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
     //vision
@@ -231,7 +231,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineToSplineHeading(new Pose2d(SPIKE_CENTER_X, SPIKE_CENTER_Y, Math.toRadians(270))).build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
-            t.start(500);
+            t.start(200);
             while(!t.finished()) {}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
@@ -297,7 +297,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             drive.followTrajectorySequence(traj.build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
-            t.start(500);
+            t.start(200);
             while(!t.finished()) {}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
@@ -362,7 +362,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     .build());
 
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOEJECTING;
-            t.start(500);
+            t.start(200);
             while(!t.finished()) {}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
@@ -423,7 +423,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         }
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(cycleEnd)
-                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);
         if (intakeOuttake.locationPixel == 4) {
@@ -458,7 +458,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         drive.followTrajectorySequence(driveToAudienceCycle);
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(driveToAudienceCycle.end())
-                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 8.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(5.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build());
         t.start(500);
         while (!t.finished()) {}

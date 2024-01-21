@@ -35,24 +35,24 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double PARK = 36;
     public static double LEFT_PATH_X = -36;
     public static double LEFT_PATH_Y = -39;
-    public static double LEFT_PATH_STRAFE = 23;
+    public static double LEFT_PATH_STRAFE = 22;
 
     TrajectorySequence driveToBackdropFromVisionLeft;
-    public static double START_VISION_LEFT_X = 45.5;
+    public static double START_VISION_LEFT_X = 44.5;
     public static double START_VISION_LEFT_Y = -47;
-    public static double START_VISION_LEFT_X_SPLINE1 = 59;
+    public static double START_VISION_LEFT_X_SPLINE1 = 58;
     public static double START_VISION_LEFT_Y_SPLINE1 = -30;
-    public static double START_VISION_LEFT_X_SPLINE2 = 59;
+    public static double START_VISION_LEFT_X_SPLINE2 = 58;
     public static double START_VISION_LEFT_Y_SPLINE2 = 36;
-    public static double START_VISION_LEFT_X_SPLINE3 = 27;
+    public static double START_VISION_LEFT_X_SPLINE3 = 25;
     public static double START_VISION_LEFT_Y_SPLINE3 = 47;
 
     TrajectorySequence driveToBackdropFromVisionRight;
     public static double START_VISION_RIGHT_X = 37.5;
-    public static double START_VISION_RIGHT_Y = -35;
-    public static double START_VISION_RIGHT_X_SPLINE1 = 59;
+    public static double START_VISION_RIGHT_Y = -38;
+    public static double START_VISION_RIGHT_X_SPLINE1 = 58;
     public static double START_VISION_RIGHT_Y_SPLINE1 = -36;
-    public static double START_VISION_RIGHT_X_SPLINE2 = 59;
+    public static double START_VISION_RIGHT_X_SPLINE2 = 58;
     public static double START_VISION_RIGHT_Y_SPLINE2 = 36;
     public static double START_VISION_RIGHT_X_SPLINE3 = 38;
     public static double START_VISION_RIGHT_Y_SPLINE3 = 48;
@@ -62,9 +62,9 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double START_VISION_CENTER_Y = -36;
     public static double START_VISION_CENTER_X_SPLINE1 = 44;
     public static double START_VISION_CENTER_Y_SPLINE1 = -42;
-    public static double START_VISION_CENTER_X_SPLINE2 = 59;
+    public static double START_VISION_CENTER_X_SPLINE2 = 58;
     public static double START_VISION_CENTER_Y_SPLINE2 = -36;
-    public static double START_VISION_CENTER_X_SPLINE3 = 59;
+    public static double START_VISION_CENTER_X_SPLINE3 = 58;
     public static double START_VISION_CENTER_Y_SPLINE3 = 36;
     public static double START_VISION_CENTER_X_SPLINE4 = 32.5;
     public static double START_VISION_CENTER_Y_SPLINE4 = 48;
@@ -114,7 +114,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(START_VISION_CENTER_X, START_VISION_CENTER_Y, Math.toRadians(180)))
 //                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
 //                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
-                .addTemporalMarker(0.5, 0.0, () -> {
+                .addTemporalMarker(0.8, 0.0, () -> {
                     IntakeOuttake.outtakeTicks = 210;
                     IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
                 })
@@ -128,7 +128,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(START_VISION_RIGHT_X, START_VISION_RIGHT_Y, Math.toRadians(115)))
 //                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
 //                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
-                .addTemporalMarker(0.5, 0.0, () -> {
+                .addTemporalMarker(0.8, 0.0, () -> {
                     IntakeOuttake.outtakeTicks = 210;
                     IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
                 })
@@ -143,7 +143,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 //
 //                .addTemporalMarker(0.7, 0.0, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
 //                .addDisplacementMarker(pathLength -> pathLength * 0.7, () -> IntakeOuttake.transferState = IntakeOuttake.TransferState.ON)
-                .addTemporalMarker(0.5, 0.0, () -> {
+                .addTemporalMarker(0.8, 0.0, () -> {
                     IntakeOuttake.outtakeTicks = 210;
                     IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
                 })
@@ -280,7 +280,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARK).build());
+//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARK).build());
                 return;
             }
 
@@ -330,7 +330,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(36).build());
+//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(36).build());
                 return;
             }
 
@@ -394,7 +394,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARK).build());
+//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARK).build());
                 return;
             }
 

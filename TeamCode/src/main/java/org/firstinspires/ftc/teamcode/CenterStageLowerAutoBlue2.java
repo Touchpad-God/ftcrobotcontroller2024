@@ -35,15 +35,15 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
     public static double PARK = 36;
     public static double LEFT_PATH_X = -36;
-    public static double LEFT_PATH_Y = -36;
-    public static double LEFT_PATH_STRAFE = 23;
+    public static double LEFT_PATH_Y = -35.5;
+    public static double LEFT_PATH_STRAFE = 22;
 
     TrajectorySequence driveToBackdropFromVisionLeft;
     public static double START_VISION_LEFT_X = -59;
     public static double START_VISION_LEFT_Y = -36;
-    public static double START_VISION_LEFT_X_SPLINE1 = -59;
+    public static double START_VISION_LEFT_X_SPLINE1 = -57;
     public static double START_VISION_LEFT_Y_SPLINE1 = -39;
-    public static double START_VISION_LEFT_X_SPLINE2 = -59;
+    public static double START_VISION_LEFT_X_SPLINE2 = -56;
     public static double START_VISION_LEFT_Y_SPLINE2 = 36;
     public static double START_VISION_LEFT_X_SPLINE3 = -45;
     public static double START_VISION_LEFT_Y_SPLINE3 = 47;
@@ -51,9 +51,9 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     TrajectorySequence driveToBackdropFromVisionRight;
     public static double START_VISION_RIGHT_X = -45.5;
     public static double START_VISION_RIGHT_Y = -47;
-    public static double START_VISION_RIGHT_X_SPLINE1 = -59;
+    public static double START_VISION_RIGHT_X_SPLINE1 = -58;
     public static double START_VISION_RIGHT_Y_SPLINE1 = -30;
-    public static double START_VISION_RIGHT_X_SPLINE2 = -59;
+    public static double START_VISION_RIGHT_X_SPLINE2 = -55;
     public static double START_VISION_RIGHT_Y_SPLINE2 = 36;
     public static double START_VISION_RIGHT_X_SPLINE3 = -30;
     public static double START_VISION_RIGHT_Y_SPLINE3 = 46;
@@ -63,9 +63,9 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_CENTER_Y = -36;
     public static double START_VISION_CENTER_X_SPLINE1 = -44;
     public static double START_VISION_CENTER_Y_SPLINE1 = -42;
-    public static double START_VISION_CENTER_X_SPLINE2 = -59;
+    public static double START_VISION_CENTER_X_SPLINE2 = -58;
     public static double START_VISION_CENTER_Y_SPLINE2 = -36;
-    public static double START_VISION_CENTER_X_SPLINE3 = -59;
+    public static double START_VISION_CENTER_X_SPLINE3 = -56;
     public static double START_VISION_CENTER_Y_SPLINE3 = 36;
     public static double START_VISION_CENTER_X_SPLINE4 = -40;
     public static double START_VISION_CENTER_Y_SPLINE4 = 48;
@@ -117,21 +117,19 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
         intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
 
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(START_VISION_CENTER_X, START_VISION_CENTER_Y, Math.toRadians(0)))
-                .addTemporalMarker(0.5, 0.0, () -> {
-                    IntakeOuttake.outtakeTicks = 210;
-                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
+                .addTemporalMarker(0.8, 0.0, () -> {
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
                 .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE1, START_VISION_CENTER_Y_SPLINE1), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_SPLINE2, START_VISION_CENTER_Y_SPLINE2, Math.toRadians(-90)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_SPLINE2, START_VISION_CENTER_Y_SPLINE2, Math.toRadians(-90)), Math.toRadians(0))
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(90))
                 .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
                 .lineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE4, START_VISION_CENTER_Y_SPLINE4)).build();
 
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(LEFT_PATH_X, LEFT_PATH_Y, Math.toRadians(65)))
-                .addTemporalMarker(0.5, 0.0, () -> {
-                    IntakeOuttake.outtakeTicks = 210;
-                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
+                .addTemporalMarker(0.8, 0.0, () -> {
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
                 .setReversed(true)
                 .splineToSplineHeading(new Pose2d(new Vector2d(START_VISION_LEFT_X_SPLINE1, START_VISION_LEFT_Y_SPLINE1), Math.toRadians(-90)), Math.toRadians(90))
@@ -141,9 +139,8 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 .splineToConstantHeading(new Vector2d(START_VISION_LEFT_X_SPLINE3, START_VISION_LEFT_Y_SPLINE3), Math.toRadians(0)).build();
 
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(START_VISION_RIGHT_X, START_VISION_RIGHT_Y, Math.toRadians(0)))
-                .addTemporalMarker(0.5, 0.0, () -> {
-                    IntakeOuttake.outtakeTicks = 210;
-                    IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
+                .addTemporalMarker(0.8, 0.0, () -> {
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
                 .lineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1, Math.toRadians(-90)))
                 .lineToConstantHeading(new Vector2d(START_VISION_RIGHT_X_SPLINE2, START_VISION_RIGHT_Y_SPLINE2))
@@ -243,6 +240,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             while(!t.finished()){}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //
@@ -286,7 +284,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(PARK).build());
+//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(PARK).build());
                 return;
             }
 
@@ -304,6 +302,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             while(!t.finished()){}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
@@ -336,7 +335,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(36).build());
+//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(36).build());
                 return;
             }
 
@@ -352,6 +351,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
             while(!t.finished()){}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+            IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
 //            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
 //            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS1) {
@@ -386,7 +386,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(36).build());
+//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(36).build());
                 return;
             }
 

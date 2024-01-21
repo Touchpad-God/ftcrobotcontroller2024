@@ -25,32 +25,32 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double SPIKE_LEFT_X = -45;
     public static double SPIKE_LEFT_Y = 24;
     public static double SPIKE_CENTER_X = -23;
-    public static double SPIKE_CENTER_Y = 30;
-    public static double SPIKE_RIGHT_X = -40.0;
-    public static double SPIKE_RIGHT_Y = 13.0;
+    public static double SPIKE_CENTER_Y = 28;
+    public static double SPIKE_RIGHT_X = -34.5;
+    public static double SPIKE_RIGHT_Y = 13;
     public static double BACKDROP_LEFT_X = -42;
-    public static double BACKDROP_LEFT_Y = 49;
+    public static double BACKDROP_LEFT_Y = 48;
     public static double BACKDROP_CENTER_X = -36;
-    public static double BACKDROP_CENTER_Y = 49;
+    public static double BACKDROP_CENTER_Y = 48;
     public static double BACKDROP_RIGHT_X = -31.5;
-    public static double BACKDROP_RIGHT_Y = 49;
+    public static double BACKDROP_RIGHT_Y = 48;
 
     public static double CENTER_MOVEMENT_OFFSET = 1.0;
     public static double LEFT_MOVEMENT_OFFSET = 1.0;
     public static double RIGHT_MOVEMENT_OFFSET = 0.0;
 
     public static double LEFT_CYCLE_STRAFE_DIST = 12;
-    public static double LEFT_CYCLE_WAYPOINT_X = -10;
+    public static double LEFT_CYCLE_WAYPOINT_X = -8;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
-    public static double LEFT_CYCLE_END_Y = -54.0;
+    public static double LEFT_CYCLE_END_Y = -53;
     public static double RIGHT_CYCLE_STRAFE_DIST = 20;
-    public static double RIGHT_CYCLE_WAYPOINT_X = -10;
+    public static double RIGHT_CYCLE_WAYPOINT_X = -8;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
-    public static double RIGHT_CYCLE_END_Y = -54.0;
+    public static double RIGHT_CYCLE_END_Y = -53;
     public static double CENTER_CYCLE_STRAFE_DIST = 17;
-    public static double CENTER_CYCLE_WAYPOINT_X = -10;
+    public static double CENTER_CYCLE_WAYPOINT_X = -8;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -54.5;
+    public static double CENTER_CYCLE_END_Y = -53;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = -12;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
@@ -85,7 +85,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public int whitePixelLocation = -12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
-    public static boolean parking = false;
+    public static boolean parking = true;
 
     //vision
     private OpenCvCamera camera;
