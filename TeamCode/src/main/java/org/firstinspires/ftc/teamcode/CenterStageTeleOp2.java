@@ -42,7 +42,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
     int hangPos = 0;
 
-    public static double droneLaunchPos = 0.5200;
+    public static double droneLaunchPos = 0.4800;
 
     public double[] leftHang = {0.122, droneLaunchPos, 0.7065};
     public double[] rightHang = {0.7686, 0.7686, 0.1972};
