@@ -50,6 +50,7 @@ public class apriltagBackdrop extends OpenCvPipeline {
 
         //list of april tags
         tagpositions = new ArrayList<>();
+        List<Integer> tagIDs = new ArrayList<>();
 
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
         ArrayList<org.openftc.apriltag.AprilTagDetection> detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
@@ -70,6 +71,8 @@ public class apriltagBackdrop extends OpenCvPipeline {
                 tagpositions.add(TAGPOSITION.RIGHT);
             }
 
+            tagIDs.add(detection.id);
+
             //releasing matrices
             pose.rvec.release();
             pose.tvec.release();
@@ -77,12 +80,14 @@ public class apriltagBackdrop extends OpenCvPipeline {
 
         telemetry.addLine(String.format("%s April Tags Detected", tagpositions.size()));
 
-        for(TAGPOSITION t: tagpositions){
-            telemetry.addData("Detected tag at", t);
+        for(int i = 0; i < tagpositions.size(); i++){
+            telemetry.addData("Detected tag at", tagpositions.get(i));
+            telemetry.addLine(String.format("April Tag ID %s", tagIDs.get(i)));
         }
         telemetry.update();
 
         //Should release the camera matrix
+        //cameraMatrix.release();
 
         return input;
     }
