@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.pipelines.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.pipelines.apriltagBackdrop;
 import org.firstinspires.ftc.teamcode.pipelines.redPropRight;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
@@ -44,7 +46,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double RIGHT_CYCLE_STRAFE_DIST = 17;
     public static double RIGHT_CYCLE_WAYPOINT_X = 13;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
-    public static double RIGHT_CYCLE_END_Y = -51.0;
+    public static double RIGHT_CYCLE_END_Y = -49.0;
     public static double CENTER_CYCLE_STRAFE_DIST = 16;
     public static double CENTER_CYCLE_WAYPOINT_X = 12;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
@@ -55,8 +57,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double RETURN_CYCLE_END_Y = -49.5;
 
     public static double TO_BD_WAYPOINT_Y = 24;
-    public static double TO_BD_END_X = 29;
-    public static double TO_BD_END_Y = 49.5;
+    public static double TO_BD_END_X = 10;
+    public static double TO_BD_END_Y = 26;
 
     public static double PARKING_DIST = 36;
 
@@ -74,6 +76,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     TrajectorySequence driveToAudienceCycle;
     static IntakeOuttakeAuto intakeOuttake;
     redPropRight redPropPipeline;
+    apriltagBackdrop apriltagBackdrop;
     Timer t = new Timer();
     double movementOffset = 0;
 
@@ -88,7 +91,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public int backdropX = 0;
 
     //vision
-    private OpenCvCamera camera;
+    private OpenCvCamera propCamera;
+    private OpenCvCamera aprilTagCamera;
 
     Thread.UncaughtExceptionHandler h = (th, ex) -> {throw new RuntimeException("Uncaught", ex);};
     @Override
@@ -112,9 +116,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
-                .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)), Math.toRadians(90))
                 .setReversed(false)
                 .build();
 
@@ -186,16 +189,34 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .build();
 
         //vision
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"));
+        propCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"));
         redPropPipeline = new redPropRight(telemetry);
-        camera.setPipeline(redPropPipeline);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+        propCamera.setPipeline(redPropPipeline);
+        propCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
                 telemetry.addData("Camera Status: ", "Camera opened");
                 telemetry.update();
 
-                camera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
+                propCamera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Camera Status: ", "Couldn't open camera");
+                telemetry.update();
+            }});
+
+        aprilTagCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        aprilTagCamera.setPipeline(new AprilTagDetectionPipeline(telemetry));
+
+        aprilTagCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                telemetry.addData("Camera Status: ", "Camera opened");
+                telemetry.update();
+
+                propCamera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override
@@ -209,11 +230,18 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public void stop() {
         intakeOuttake.stop();
         drive.imu.stop();
+        aprilTagCamera.closeCameraDeviceAsync(() -> {
+            telemetry.addData("Camera Status", "Camera closed");
+            telemetry.update();
+
+        });
     }
 
     @Override
     public void start() {
-        camera.closeCameraDeviceAsync(() -> {
+
+//        intakeOuttake.initAprilTag(hardwareMap);
+        propCamera.closeCameraDeviceAsync(() -> {
             telemetry.addData("Camera Status", "Camera closed");
             telemetry.update();
 
@@ -226,7 +254,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         Pose2d cycleEnd = driveToBackdropReturn.end();
 
         if (redPropPipeline.position == redPropRight.PROPPOSITION.CENTER) {
-//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
 
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).lineToSplineHeading(new Pose2d(SPIKE_CENTER_X, SPIKE_CENTER_Y, Math.toRadians(270))).build());
 
@@ -235,26 +262,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             while(!t.finished()) {}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
-
-//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
-//
-//            t.start(400);
-//            while(!t.finished()) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            t.markReady();
-//
-//            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
 
             drive.followTrajectorySequence(driveToBackdropFromVisionCenter);
 
@@ -269,18 +276,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
 
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
             }
 
             movementOffset = CENTER_MOVEMENT_OFFSET;
-//            IntakeOuttake.outtakeTicks = intakingOffset;
 
             if (!parking)  {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(24).build());
                 drive.followTrajectorySequence(driveToAudienceCenter);
                 cycleEnd = driveToAudienceCenter.end();
             }
@@ -291,7 +291,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
 
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.RIGHT) { //right
-//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
             traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                     .lineToSplineHeading(new Pose2d(SPIKE_RIGHT_X, SPIKE_RIGHT_Y, Math.toRadians(180)));
             drive.followTrajectorySequence(traj.build());
@@ -301,25 +300,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             while(!t.finished()) {}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
-//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
-//
-//            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//
-//            t.start(300);
-//            while(!t.finished()) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            t.markReady();
 
             drive.followTrajectorySequence(driveToBackdropFromVisionRight);
 
@@ -334,18 +314,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
 
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
             }
 
             movementOffset = RIGHT_MOVEMENT_OFFSET;
-//            IntakeOuttake.outtakeTicks = intakingOffset;
 
             if (!parking) {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(30).build());
                 drive.followTrajectorySequence(driveToAudienceRight);
                 cycleEnd = driveToAudienceRight.end();
             }
@@ -355,7 +328,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             }
 
         } else if (redPropPipeline.position == redPropRight.PROPPOSITION.LEFT) { // left
-//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTORAISED;
 
             drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate())
                     .splineTo(new Vector2d(SPIKE_LEFT_X, SPIKE_LEFT_Y), Math.toRadians(245))
@@ -366,26 +338,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             while(!t.finished()) {}
             t.markReady();
             IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
-
-//            IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.AUTODROP;
-//
-//            while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.POS4 && IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//
-//            t.start(300);
-//            while(!t.finished()) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            t.markReady();
 
             drive.followTrajectorySequence(driveToBackdropFromVisionLeft);
 
@@ -400,18 +352,12 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
 
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-//                try {
-//                    Thread.sleep(100);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
             }
 
             movementOffset = LEFT_MOVEMENT_OFFSET;
-//            IntakeOuttake.outtakeTicks = intakingOffset;
 
             if (!parking)  {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(19).build());
+                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(19).build());
                 drive.followTrajectorySequence(driveToAudienceLeft);
                 cycleEnd = driveToAudienceLeft.end();
             }
@@ -423,7 +369,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         }
 
         drive.followTrajectorySequence(drive.trajectorySequenceBuilder(cycleEnd)
-                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build());
         t.start(500);
         if (intakeOuttake.locationPixel == 4) {
@@ -435,36 +381,17 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         drive.followTrajectorySequence(driveToBackdropReturn);
 
-        while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+        while (!(intakeOuttake.detections == 3)) {
+            Thread.yield();
         }
 
-        IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
-
-        while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-//        IntakeOuttake.outtakeTicks = intakingOffset;
-
-        //drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(24).build());
-        drive.followTrajectorySequence(driveToAudienceCycle);
-
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(driveToAudienceCycle.end())
-                .forward(5.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 2.5)
-                .build());
-        t.start(500);
+        t.start(200);
         while (!t.finished()) {}
         t.markReady();
 
-        drive.followTrajectorySequence(driveToBackdropReturn);
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)))
+                .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
+                .build());
 
         while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
             try {
@@ -474,9 +401,43 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             }
         }
 
+        IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
+
+        while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        drive.followTrajectorySequence(driveToAudienceCycle);
+
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(driveToAudienceCycle.end())
+                .forward(5.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .build());
+//        t.start(500);
+//        while (!t.finished()) {}
+//        t.markReady();
+
+        drive.followTrajectorySequence(driveToBackdropReturn);
+
+        while (!(apriltagBackdrop.getSize() == 2)) {
+            Thread.yield();
+//            apriltagBackdrop.processFrame();
+        }
+
+        t.start(200);
+        while (!t.finished()) {}
+        t.markReady();
+
+        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)))
+                .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
+                .build());
+
         while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -485,7 +446,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
         while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
