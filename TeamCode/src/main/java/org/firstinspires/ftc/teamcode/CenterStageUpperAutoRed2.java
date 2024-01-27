@@ -453,12 +453,13 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         drive.getPoseEstimate();
         if (stopped) {
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .setReversed(false)
+                    .setReversed(true)
                     .addDisplacementMarker(() -> {
                         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                         IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                     })
                     .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(270))
+                    .setReversed(false)
                     .build());
         }
 
@@ -506,12 +507,13 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         if (stopped) {
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .setReversed(false)
+                    .setReversed(true)
                     .addDisplacementMarker(() -> {
                         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                         IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                     })
                     .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(270))
+                    .setReversed(false)
                     .build());
         }
 
