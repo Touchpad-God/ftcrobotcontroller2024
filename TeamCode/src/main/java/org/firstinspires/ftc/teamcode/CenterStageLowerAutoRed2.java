@@ -317,7 +317,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
             else {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARK).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(60, 48)).back(12).build());
                 return;
             }
 
@@ -367,7 +367,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
             else {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(36).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(60, 48)).back(12).build());
                 return;
             }
 
@@ -431,7 +431,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
             else {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeLeft(PARK).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(60, 48)).back(12).build());
                 return;
             }
 

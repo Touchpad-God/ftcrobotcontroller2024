@@ -325,7 +325,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 cycleEnd = driveToAudienceCenter.end();
             }
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-12, 48)).back(12).build());
                 return;
             }
 
@@ -389,7 +389,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 drive.followTrajectorySequence(driveToAudienceLeft);
             }
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-12, 48)).back(12).build());
                 return;
             }
 
@@ -455,7 +455,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 drive.followTrajectorySequence(driveToAudienceRight);
             }
             else {
-                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(48).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-12, 48)).back(12).build());
                 return;
             }
 
