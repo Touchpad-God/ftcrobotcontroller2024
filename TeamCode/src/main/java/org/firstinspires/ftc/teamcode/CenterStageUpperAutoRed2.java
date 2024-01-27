@@ -147,7 +147,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                         telemetry.update();
                     }
                 })
-                .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(270))
+                .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(90))
                 .setReversed(false)
                 .build();
 
