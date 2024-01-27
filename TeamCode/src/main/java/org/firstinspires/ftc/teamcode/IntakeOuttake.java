@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 public class IntakeOuttake {
@@ -101,6 +102,8 @@ public class IntakeOuttake {
 
     public final Timer timer = new Timer();
 
+    public SampleMecanumDrive drive;
+
     public IntakeOuttake(HardwareMap hardwareMap) {
         intakeIntake = hardwareMap.get(DcMotor.class, "intake");
         intakeTransfer = hardwareMap.get(DcMotor.class, "transfer");
@@ -108,6 +111,46 @@ public class IntakeOuttake {
         color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
         color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
         beam = new BeamBreak(hardwareMap);
+
+        intakeIntake.setDirection(DcMotor.Direction.REVERSE);
+        intakeServo.setPosition(intakeStowed);
+
+        // outtake
+        outtakeMotor1 = hardwareMap.get(DcMotor.class, "liftR");
+        outtakeMotor2 = hardwareMap.get(DcMotor.class, "liftL");
+        clawLeft = hardwareMap.get(Servo.class, "clawL");
+        clawRight = hardwareMap.get(Servo.class, "clawR");
+        differentialLeft = hardwareMap.get(Servo.class, "armL");
+        differentialRight = hardwareMap.get(Servo.class, "armR");
+        horizontalSlideServo = hardwareMap.get(Servo.class, "horizontal");
+
+        outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intakeIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeTransfer.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        clawLeft.setPosition(clawClosedLeft);
+        clawRight.setPosition(clawClosedRight);
+        differentialLeft.setPosition(leftStowed);
+        differentialRight.setPosition(rightStowed);
+        horizontalSlideServo.setPosition(horizontalClosed);
+
+        timer.markReady();
+
+        Thread beamThread = new Thread(beam);
+        beamThread.start();
+    }
+
+    public IntakeOuttake(HardwareMap hardwareMap, SampleMecanumDrive drive) {
+        intakeIntake = hardwareMap.get(DcMotor.class, "intake");
+        intakeTransfer = hardwareMap.get(DcMotor.class, "transfer");
+        intakeServo = hardwareMap.get(Servo.class, "intakeLift");
+        color1 = hardwareMap.get(RevColorSensorV3.class, "color1");
+        color2 = hardwareMap.get(RevColorSensorV3.class, "color2");
+        beam = new BeamBreak(hardwareMap);
+
+        this.drive = drive;
 
         intakeIntake.setDirection(DcMotor.Direction.REVERSE);
         intakeServo.setPosition(intakeStowed);
@@ -178,6 +221,7 @@ public class IntakeOuttake {
                 break;
             case AUTOBOTHCOLOR:
                 intakeState = IntakeState.STOP;
+                drive.breakFollowing();
                 break;
             case BEAMNOCOLOR:
                 if (!pixel1.equals("") && !pixel2.equals("")) {

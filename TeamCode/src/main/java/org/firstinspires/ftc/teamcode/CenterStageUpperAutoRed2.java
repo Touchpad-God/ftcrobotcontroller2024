@@ -118,7 +118,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         drive = new SampleMecanumDrive(hardwareMap);
         butterflyLeft.setPosition(0.3022);
         butterflyRight.setPosition(0.62);
-        intakeOuttake = new IntakeOuttakeAuto(hardwareMap);
+        intakeOuttake = new IntakeOuttakeAuto(hardwareMap, drive);
 
         inOutThread = new Thread(intakeOuttake);
         inOutThread.setUncaughtExceptionHandler(h);
