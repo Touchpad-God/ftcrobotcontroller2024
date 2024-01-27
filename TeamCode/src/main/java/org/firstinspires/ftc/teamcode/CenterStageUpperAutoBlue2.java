@@ -55,7 +55,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double RIGHT_CYCLE_WAYPOINT_X = -8;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
     public static double RIGHT_CYCLE_END_Y = -53;
-    public static double CENTER_CYCLE_STRAFE_DIST = 17;
+    public static double CENTER_CYCLE_STRAFE_DIST = 16;
     public static double CENTER_CYCLE_WAYPOINT_X = -8;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
     public static double CENTER_CYCLE_END_Y = -53;
@@ -64,9 +64,9 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
     public static double RETURN_CYCLE_END_Y = -52.0;
 
-    public static double TO_BD_WAYPOINT_Y = 30;
-    public static double TO_BD_END_X = -36;
-    public static double TO_BD_END_Y = 49.5;
+    public static double TO_BD_WAYPOINT_Y = 0;
+    public static double TO_BD_END_X = -16;
+    public static double TO_BD_END_Y = 30;
 
     protected Servo butterflyLeft;
     protected Servo butterflyRight;
@@ -118,13 +118,13 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS)
                 .addTemporalMarker(0.1, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
-                .addTemporalMarker(0.6, 0.0, () -> {
+                .addTemporalMarker(0.8, 0.0, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(-12, 12), Math.toRadians(90))
-                .splineToSplineHeading(new Pose2d(-16, TO_BD_WAYPOINT_Y, Math.toRadians(-57)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
+                .splineTo(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(122))
                 .UNSTABLE_addDisplacementMarkerOffset(1, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
@@ -135,7 +135,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                         telemetry.update();
                     }
                 })
-                .splineToSplineHeading(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(-90)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(90))
                 .setReversed(false)
                 .build();
 
@@ -470,6 +470,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 //        t.markReady();
 
         drive.followTrajectorySequence(driveToBackdropReturn);
+        drive.setMotorPowers(0, 0, 0, 0);
 
         while (stopped && aprilTag.getDetections().size() < 2) {
 //            apriltagBackdrop.processFrame();
@@ -485,7 +486,9 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                         IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                     })
+                    .setReversed(true)
                     .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(270))
+                    .setReversed(false)
                     .build());
         }
 
@@ -521,6 +524,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 //        t.markReady();
 
         drive.followTrajectorySequence(driveToBackdropReturn);
+        drive.setMotorPowers(0, 0, 0, 0);
 
         while (stopped && aprilTag.getDetections().size() < 2) {
 //            apriltagBackdrop.processFrame();
@@ -536,7 +540,9 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                         IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                     })
+                    .setReversed(true)
                     .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(270))
+                    .setReversed(false)
                     .build());
         }
 
