@@ -101,6 +101,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //    Thread apriltagThread;
 
     public static boolean parking = false;
+    public boolean stopped = false;
 
     public int whitePixelLocation = 8; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
@@ -133,6 +134,13 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
                 .splineToSplineHeading(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)), Math.toRadians(90))
+                .UNSTABLE_addDisplacementMarkerOffset(1, () -> {
+                    if (aprilTag.getDetections().size() < 2) {
+                        drive.breakFollowing();
+                        stopped = true;
+                    }
+                })
+                .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
                 .setReversed(false)
                 .build();
 
@@ -414,6 +422,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         t.markReady();
 
         drive.followTrajectorySequence(driveToBackdropReturn);
+        drive.setMotorPowers(0, 0, 0, 0);
 
         while (aprilTag.getDetections().size() < 2) {
             Thread.yield();
@@ -427,9 +436,13 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         while (!t.finished()) {}
         t.markReady();
 
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)))
-                .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
-                .build());
+        if (stopped) {
+            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)))
+                    .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
+                    .build());
+        }
+
+        stopped = false;
 
         while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
             try {
@@ -461,6 +474,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
 
         drive.followTrajectorySequence(driveToBackdropReturn);
+        drive.setMotorPowers(0, 0, 0, 0);
 
         while (aprilTag.getDetections().size() < 2) {
             Thread.yield();
@@ -471,9 +485,13 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         while (!t.finished()) {}
         t.markReady();
 
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)))
-                .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
-                .build());
+        if (stopped) {
+            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)))
+                    .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
+                    .build());
+        }
+
+        stopped = false;
 
         while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
             try {
