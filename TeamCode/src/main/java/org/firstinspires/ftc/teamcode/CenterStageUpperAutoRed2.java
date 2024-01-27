@@ -133,6 +133,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
+                .setReversed(true)
                 .splineToSplineHeading(new Pose2d(TO_BD_END_X, TO_BD_END_Y, Math.toRadians(241)), Math.toRadians(90))
                 .UNSTABLE_addDisplacementMarkerOffset(1, () -> {
                     if (aprilTag.getDetections().size() < 2) {
@@ -140,8 +141,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                         stopped = true;
                     }
                 })
-                .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
                 .setReversed(false)
+                .splineToSplineHeading(new Pose2d(BACKDROP_LEFT_X, BACKDROP_LEFT_Y, Math.toRadians(270)), Math.toRadians(270))
                 .build();
 
         driveToBackdropFromVisionCenter = drive.trajectorySequenceBuilder(new Pose2d(SPIKE_CENTER_X, SPIKE_CENTER_Y, Math.toRadians(270)))
