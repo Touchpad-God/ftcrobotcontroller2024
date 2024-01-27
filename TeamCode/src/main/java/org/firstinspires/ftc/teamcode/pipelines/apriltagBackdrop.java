@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;
@@ -40,7 +39,7 @@ public class apriltagBackdrop extends OpenCvPipeline {
     public volatile List<TAGPOSITION> tagpositions = new ArrayList<>();
     public volatile List<Integer> tagIDs = new ArrayList<>();
 
-    public apriltagBackdrop(Telemetry telemetry){
+    public apriltagBackdrop(Telemetry telemetry) {
         this.telemetry = telemetry;
         constructMatrix();
     }
