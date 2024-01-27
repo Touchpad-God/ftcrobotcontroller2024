@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.pipelines.ThreadedApriltag;
 import org.firstinspires.ftc.teamcode.pipelines.apriltagBackdrop;
 import org.firstinspires.ftc.teamcode.pipelines.redPropRight;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -85,6 +86,9 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     Thread inOutThread;
     SampleMecanumDrive drive;
 
+    ThreadedApriltag apriltag;
+    Thread apriltagThread;
+
     public static boolean parking = false;
 
     public int whitePixelLocation = 8; // change when necessary to 24 or 36 to avoid conflicting with other alliance
@@ -92,7 +96,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
     //vision
     private OpenCvCamera propCamera;
-    private OpenCvCamera aprilTagCamera;
+//    private OpenCvCamera aprilTagCamera;
 
     Thread.UncaughtExceptionHandler h = (th, ex) -> {throw new RuntimeException("Uncaught", ex);};
     @Override
@@ -207,34 +211,34 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 telemetry.update();
             }});
 
-        aprilTagCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        aprilTagCamera.setPipeline(new AprilTagDetectionPipeline(telemetry));
+//        aprilTagCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+//        aprilTagCamera.setPipeline(new AprilTagDetectionPipeline(telemetry));
+//
+//        aprilTagCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+//            @Override
+//            public void onOpened() {
+//                telemetry.addData("Camera Status: ", "Camera opened");
+//                telemetry.update();
+//
+//                propCamera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
+//            }
+//
+//            @Override
+//            public void onError(int errorCode) {
+//                telemetry.addData("Camera Status: ", "Couldn't open camera");
+//                telemetry.update();
+//            }});
 
-        aprilTagCamera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                telemetry.addData("Camera Status: ", "Camera opened");
-                telemetry.update();
+        apriltag = new ThreadedApriltag(hardwareMap);
+        apriltagThread = new Thread(apriltag);
 
-                propCamera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
-            }
-
-            @Override
-            public void onError(int errorCode) {
-                telemetry.addData("Camera Status: ", "Couldn't open camera");
-                telemetry.update();
-            }});
     }
 
     @Override
     public void stop() {
         intakeOuttake.stop();
         drive.imu.stop();
-        aprilTagCamera.closeCameraDeviceAsync(() -> {
-            telemetry.addData("Camera Status", "Camera closed");
-            telemetry.update();
-
-        });
+        apriltag.stop();
     }
 
     @Override
@@ -379,9 +383,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         }
         t.markReady();
 
+        apriltagThread.start();
+
         drive.followTrajectorySequence(driveToBackdropReturn);
 
-        while (!(intakeOuttake.detections == 3)) {
+        while (!(apriltag.getCurrentDetections().size() == 3)) {
             Thread.yield();
         }
 
@@ -420,9 +426,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //        while (!t.finished()) {}
 //        t.markReady();
 
+
+
         drive.followTrajectorySequence(driveToBackdropReturn);
 
-        while (!(apriltagBackdrop.getSize() == 2)) {
+        while (!(apriltag.getCurrentDetections().size() == 3)) {
             Thread.yield();
 //            apriltagBackdrop.processFrame();
         }
