@@ -177,6 +177,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, LEFT_CYCLE_END_Y), Math.toRadians(270))
+                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceRight = drive.trajectorySequenceBuilder(driveToBackdropFromVisionRight.end())
@@ -188,6 +189,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, RIGHT_CYCLE_END_Y), Math.toRadians(270))
+                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceCenter = drive.trajectorySequenceBuilder(driveToBackdropFromVisionCenter.end())
@@ -199,6 +201,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineTo(new Vector2d(whitePixelLocation, CENTER_CYCLE_END_Y), Math.toRadians(270))
+                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceCycle = drive.trajectorySequenceBuilder(driveToBackdropReturn.end())
@@ -210,6 +213,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineTo(new Vector2d(whitePixelLocation, RETURN_CYCLE_END_Y), Math.toRadians(270))
+                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         //vision
@@ -411,9 +415,9 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         }
 
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(cycleEnd)
-                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
-                .build());
+//        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(cycleEnd)
+//                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+//                .build());
         t.start(500);
         if (intakeOuttake.locationPixel == 4) {
             intakeOuttake.locationPixel--;
@@ -465,9 +469,9 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         drive.followTrajectorySequence(driveToAudienceCycle);
 
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(driveToAudienceCycle.end())
-                .forward(5.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
-                .build());
+//        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(driveToAudienceCycle.end())
+//                .forward(5.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+//                .build());
 //        t.start(500);
 //        while (!t.finished()) {}
 //        t.markReady();
