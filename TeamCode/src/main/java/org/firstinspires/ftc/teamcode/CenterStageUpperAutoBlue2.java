@@ -12,11 +12,13 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.bluePropLeft;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-// TODO: Test this auto.
+// TODO: Update this auto to use a second movement for the apriltag stuff.
 
 @Config
 @Autonomous
@@ -87,6 +89,8 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
     public static boolean parking = true;
 
+    AprilTagProcessor aprilTag;
+    VisionPortal visionPortal;
     //vision
     private OpenCvCamera camera;
 
@@ -204,6 +208,15 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineTo(new Vector2d(whitePixelLocation, RETURN_CYCLE_END_Y), Math.toRadians(270))
+                .build();
+
+        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag.setDecimation(1);
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTag)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .build();
 
     }
@@ -423,6 +436,14 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
         drive.followTrajectorySequence(driveToBackdropReturn);
 
+        while (aprilTag.getDetections().size() < 2) {
+            Thread.yield();
+            telemetry.addData("FPS", visionPortal.getFps());
+//            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
+//            telemetry.addData("Loops", apriltag.loops);
+            telemetry.update();
+        }
+
         IntakeOuttake.outtakeTicks = 300;
         IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
 
@@ -453,6 +474,14 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
         t.markReady();
 
         drive.followTrajectorySequence(driveToBackdropReturn);
+
+        while (aprilTag.getDetections().size() < 2) {
+            Thread.yield();
+            telemetry.addData("FPS", visionPortal.getFps());
+//            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
+//            telemetry.addData("Loops", apriltag.loops);
+            telemetry.update();
+        }
 
         while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.RAISEDWAITING) {
             try {
