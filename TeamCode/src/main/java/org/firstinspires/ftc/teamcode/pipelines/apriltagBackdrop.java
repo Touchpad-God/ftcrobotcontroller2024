@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;
@@ -24,6 +23,7 @@ public class apriltagBackdrop extends OpenCvPipeline {
 
     //April Tag Detection Camera
     private long nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 3, 3);
+    public volatile ArrayList<org.openftc.apriltag.AprilTagDetection> detections;
     private Mat grey = new Mat();
     private Mat cameraMatrix;
     double fx = 1430;
@@ -36,27 +36,28 @@ public class apriltagBackdrop extends OpenCvPipeline {
 
     //positions
     public enum TAGPOSITION {LEFT, CENTER, RIGHT}
-    List<TAGPOSITION> tagpositions;
+    public volatile List<TAGPOSITION> tagpositions = new ArrayList<>();
+    public volatile List<Integer> tagIDs = new ArrayList<>();
 
-    public apriltagBackdrop(Telemetry telemetry){
+    public apriltagBackdrop(Telemetry telemetry) {
         this.telemetry = telemetry;
         constructMatrix();
     }
 
     @Override
     public Mat processFrame(Mat input){
-        telemetry.addLine("apriltagBackdrop pipeline selected");
+//        telemetry.addLine("apriltagBackdrop pipeline selected");
         telemetry.update();
 
-        //list of april tags
-        tagpositions = new ArrayList<>();
-        List<Integer> tagIDs = new ArrayList<>();
 
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
-        ArrayList<org.openftc.apriltag.AprilTagDetection> detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
+        detections = AprilTagDetectorJNI.runAprilTagDetectorSimple(nativeApriltagPtr, grey, tagsize, fx, fy, cx, cy);
+
+        //list of april tags
+        tagpositions.clear();
+        tagIDs.clear();
 
         //releasing matrices
-        grey.release();
 
         //drawing the centers for the april tags
         for(org.openftc.apriltag.AprilTagDetection detection: detections){
@@ -78,18 +79,18 @@ public class apriltagBackdrop extends OpenCvPipeline {
             pose.tvec.release();
         }
 
-        telemetry.addLine(String.format("%s April Tags Detected", tagpositions.size()));
-
-        for(int i = 0; i < tagpositions.size(); i++){
-            telemetry.addData("Detected tag at", tagpositions.get(i));
-            telemetry.addLine(String.format("April Tag ID %s", tagIDs.get(i)));
-        }
-        telemetry.update();
+//        telemetry.addLine(String.format("%s April Tags Detected", detections.size()));
+//
+//        for(int i = 0; i < tagpositions.size(); i++){
+//            telemetry.addData("Detected tag at", tagpositions.get(i));
+//            telemetry.addLine(String.format("April Tag ID %s", tagIDs.get(i)));
+//        }
+//        telemetry.update();
 
         //Should release the camera matrix
         //cameraMatrix.release();
 
-        return input;
+        return grey;
     }
 
     public void drawAxisMarker(Mat buf, double length, int thickness, Mat rvec, Mat tvec, Mat cameraMatrix) {
@@ -156,6 +157,10 @@ public class apriltagBackdrop extends OpenCvPipeline {
         R.release();
 
         return pose;
+    }
+
+    public int getSize() {
+        return tagpositions.size();
     }
 
     public class Pose

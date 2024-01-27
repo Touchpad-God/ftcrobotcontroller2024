@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.pipelines.apriltagBackdrop;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -11,13 +14,23 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @TeleOp
 public class BackdropAprilTag extends LinearOpMode{
+    public apriltagBackdrop apriltagBackdrop;
+    public IMU imu;
     private OpenCvCamera camera;
 
     @Override
     public void runOpMode(){
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        imu = hardwareMap.get(IMU.class, "imu 2");
+        imu.initialize(new IMU.Parameters(
+                new RevHubOrientationOnRobot(
+                        RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                        RevHubOrientationOnRobot.UsbFacingDirection.RIGHT
+                )
+        ));
 
-        camera.setPipeline(new apriltagBackdrop(telemetry));
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        apriltagBackdrop = new apriltagBackdrop(telemetry);
+        camera.setPipeline(apriltagBackdrop);
 
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
@@ -37,7 +50,17 @@ public class BackdropAprilTag extends LinearOpMode{
         waitForStart();
 
         while(opModeIsActive()){
-            sleep(50);
+            telemetry.addData("Orientation Degrees", Double.toString(
+                    imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)));
+            telemetry.addLine(String.format("%s April Tags Detected", apriltagBackdrop.getSize()));
+
+            if (apriltagBackdrop.tagpositions.size() > 0) {
+                for (int i = 0; i < apriltagBackdrop.tagpositions.size(); i++) {
+                    telemetry.addData("Detected tag at", apriltagBackdrop.tagpositions.get(i));
+                    telemetry.addLine(String.format("April Tag ID %s", apriltagBackdrop.tagIDs.get(i)));
+                }
+            }
+            telemetry.update();
         }
     }
 }

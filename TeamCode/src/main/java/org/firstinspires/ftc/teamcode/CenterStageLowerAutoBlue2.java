@@ -1,22 +1,28 @@
 package org.firstinspires.ftc.teamcode;
 
+import static android.os.SystemClock.sleep;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.bluePropRight;
-import org.firstinspires.ftc.teamcode.pipelines.redPropRight;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+
+import java.util.concurrent.TimeUnit;
 
 // TODO: Tune this damned thing
 
@@ -45,8 +51,8 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_LEFT_Y_SPLINE1 = -39;
     public static double START_VISION_LEFT_X_SPLINE2 = -56;
     public static double START_VISION_LEFT_Y_SPLINE2 = 36;
-    public static double START_VISION_LEFT_X_SPLINE3 = -45;
-    public static double START_VISION_LEFT_Y_SPLINE3 = 47;
+    public static double START_VISION_LEFT_X_END = -45;
+    public static double START_VISION_LEFT_Y_END = 47;
 
     TrajectorySequence driveToBackdropFromVisionRight;
     public static double START_VISION_RIGHT_X = -45.5;
@@ -55,8 +61,8 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_RIGHT_Y_SPLINE1 = -30;
     public static double START_VISION_RIGHT_X_SPLINE2 = -55;
     public static double START_VISION_RIGHT_Y_SPLINE2 = 36;
-    public static double START_VISION_RIGHT_X_SPLINE3 = -30;
-    public static double START_VISION_RIGHT_Y_SPLINE3 = 46;
+    public static double START_VISION_RIGHT_X_END = -30;
+    public static double START_VISION_RIGHT_Y_END = 46;
 
     TrajectorySequence driveToBackdropFromVisionCenter;
     public static double START_VISION_CENTER_X = -37;
@@ -65,16 +71,16 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_CENTER_Y_SPLINE1 = -42;
     public static double START_VISION_CENTER_X_SPLINE2 = -58;
     public static double START_VISION_CENTER_Y_SPLINE2 = -36;
-    public static double START_VISION_CENTER_X_SPLINE3 = -56;
-    public static double START_VISION_CENTER_Y_SPLINE3 = 36;
-    public static double START_VISION_CENTER_X_SPLINE4 = -40;
-    public static double START_VISION_CENTER_Y_SPLINE4 = 48;
+    public static double START_VISION_CENTER_X_SPLINE3 = -48;
+    public static double START_VISION_CENTER_Y_SPLINE3 = 27;
+    public static double START_VISION_CENTER_X_END = -40;
+    public static double START_VISION_CENTER_Y_END = 48;
 
     TrajectorySequence driveToBackdropReturn;
     public static double START_RETURN_Y = -56;
     public static double START_RETURN_Y_SPLINE1 = 12;
-    public static double START_RETURN_X_SPLINE2 = -34;
-    public static double START_RETURN_Y_SPLINE2 = 48;
+    public static double START_RETURN_X_SPLINE2 = -16;
+    public static double START_RETURN_Y_SPLINE2 = 30;
 
     TrajectorySequence driveToAudienceLeft;
     public static double START_AUDIENCE_LEFT_X = -41;
@@ -97,6 +103,10 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     Thread inOutThread;
     SampleMecanumDrive drive;
 
+    AprilTagProcessor aprilTag;
+    VisionPortal visionPortal;
+
+    public boolean stopped = false;
     public static boolean parking = true;
 
     public int whitePixelLocation = 12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
@@ -120,39 +130,74 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 .addTemporalMarker(0.8, 0.0, () -> {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
-                .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE1, START_VISION_CENTER_Y_SPLINE1), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_SPLINE2, START_VISION_CENTER_Y_SPLINE2, Math.toRadians(-90)), Math.toRadians(0))
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(90))
-                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
-                .lineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE4, START_VISION_CENTER_Y_SPLINE4)).build();
+                .lineToSplineHeading(new Pose2d(-58, -40, Math.toRadians(-90)))
+//                .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE1, START_VISION_CENTER_Y_SPLINE1), Math.toRadians(0))
+//                .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_SPLINE2, START_VISION_CENTER_Y_SPLINE2, Math.toRadians(-90)), Math.toRadians(0))
+                .lineToSplineHeading(new Pose2d(-58, 3, Math.toRadians(-90)))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(75))
+//                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
+                .UNSTABLE_addDisplacementMarkerOffset(0.1, () -> {
+                    visionPortal.saveNextFrameRaw("asdf");
+                    aprilTag.getDetections();
+                    if (aprilTag.getDetections().size() < 2) {
+                        drive.breakFollowing();
+                        stopped = true;
+                        telemetry.addData("stopped", true);
+                        telemetry.update();
+                    }
+                })
+                .lineToSplineHeading(new Pose2d(START_VISION_CENTER_X_END, START_VISION_CENTER_Y_END, Math.toRadians(-90))).build();
 
         driveToBackdropFromVisionLeft = drive.trajectorySequenceBuilder(new Pose2d(LEFT_PATH_X, LEFT_PATH_Y, Math.toRadians(65)))
                 .addTemporalMarker(0.8, 0.0, () -> {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
                 .setReversed(true)
-                .splineToSplineHeading(new Pose2d(new Vector2d(START_VISION_LEFT_X_SPLINE1, START_VISION_LEFT_Y_SPLINE1), Math.toRadians(-90)), Math.toRadians(90))
-                .setReversed(false)
-                .lineToConstantHeading(new Vector2d(START_VISION_LEFT_X_SPLINE2, START_VISION_LEFT_Y_SPLINE2))
-                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
-                .splineToConstantHeading(new Vector2d(START_VISION_LEFT_X_SPLINE3, START_VISION_LEFT_Y_SPLINE3), Math.toRadians(0)).build();
+                .lineToSplineHeading(new Pose2d(START_VISION_LEFT_X_SPLINE1, START_VISION_LEFT_Y_SPLINE1, Math.toRadians(-90)))
+                .lineToSplineHeading(new Pose2d(START_VISION_LEFT_X_SPLINE1-1, 3, Math.toRadians(-90)))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(75))
+//                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
+                .UNSTABLE_addDisplacementMarkerOffset(0.1, () -> {
+                    visionPortal.saveNextFrameRaw("asdf");
+                    aprilTag.getDetections();
+                    if (aprilTag.getDetections().size() < 2) {
+                        drive.breakFollowing();
+                        stopped = true;
+                        telemetry.addData("stopped", true);
+                        telemetry.update();
+                    }
+                })
+                .lineToSplineHeading(new Pose2d(START_VISION_LEFT_X_END, START_VISION_LEFT_Y_END, Math.toRadians(-90))).build();
 
         driveToBackdropFromVisionRight = drive.trajectorySequenceBuilder(new Pose2d(START_VISION_RIGHT_X, START_VISION_RIGHT_Y, Math.toRadians(0)))
                 .addTemporalMarker(0.8, 0.0, () -> {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                 })
+                .setReversed(true)
                 .lineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1, Math.toRadians(-90)))
-                .lineToConstantHeading(new Vector2d(START_VISION_RIGHT_X_SPLINE2, START_VISION_RIGHT_Y_SPLINE2))
-                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
-                .splineToConstantHeading(new Vector2d(START_VISION_RIGHT_X_SPLINE3, START_VISION_RIGHT_Y_SPLINE3), Math.toRadians(0)).build();
+                .lineToSplineHeading(new Pose2d(-58, 3, Math.toRadians(-90)))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(75))
+//                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
+                .UNSTABLE_addDisplacementMarkerOffset(0.1, () -> {
+                    visionPortal.saveNextFrameRaw("asdf");
+                    aprilTag.getDetections();
+                    if (aprilTag.getDetections().size() < 2) {
+                        drive.breakFollowing();
+                        stopped = true;
+                        telemetry.addData("stopped", true);
+                        telemetry.update();
+                    }
+                })
+                .lineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_END, START_VISION_RIGHT_Y_END, Math.toRadians(-90))).build();
 
         driveToAudienceRight = drive.trajectorySequenceBuilder(new Pose2d(START_AUDIENCE_RIGHT_X, START_AUDIENCE_RIGHT_Y, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(THROUGH_TRUSS_LEFT_X, THROUGH_TRUSS_LEFT_Y1), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(THROUGH_TRUSS_LEFT_X, THROUGH_TRUSS_LEFT_Y2), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(WHITE_PIXEL_X, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(WHITE_PIXEL_X, -53), Math.toRadians(270))
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING).build();
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .forward(5, (v, pose2d, pose2d1, pose2d2) -> 2.5, (v, pose2d, pose2d1, pose2d2) -> 2.5).build();
 
         driveToAudienceLeft = drive.trajectorySequenceBuilder(new Pose2d(START_AUDIENCE_LEFT_X, START_AUDIENCE_LEFT_Y, Math.toRadians(270)))
                 .splineToConstantHeading(new Vector2d(THROUGH_TRUSS_LEFT_X, THROUGH_TRUSS_LEFT_Y1), Math.toRadians(270))
@@ -160,6 +205,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 .addSpatialMarker(new Vector2d(WHITE_PIXEL_X, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(WHITE_PIXEL_X, -53), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .forward(5, (v, pose2d, pose2d1, pose2d2) -> 2.5, (v, pose2d, pose2d1, pose2d2) -> 2.5)
                 .build();
 
         driveToAudienceCenter = drive.trajectorySequenceBuilder(new Pose2d(START_AUDIENCE_CENTER_X, START_AUDIENCE_CENTER_Y, Math.toRadians(270)))
@@ -167,7 +213,8 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 .splineToConstantHeading(new Vector2d(THROUGH_TRUSS_LEFT_X, THROUGH_TRUSS_LEFT_Y2), Math.toRadians(270))
                 .addSpatialMarker(new Vector2d(WHITE_PIXEL_X, -10), () -> intakeOuttake.locationPixel = 4)
                 .splineToConstantHeading(new Vector2d(WHITE_PIXEL_X, WHITE_PIXEL_Y), Math.toRadians(270))
-                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING).build();
+                .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .forward(5, (v, pose2d, pose2d1, pose2d2) -> 2.5, (v, pose2d, pose2d1, pose2d2) -> 2.5).build();
 
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(WHITE_PIXEL_X, START_RETURN_Y, Math.toRadians(270)))
                 .setReversed(true)
@@ -177,7 +224,19 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
                 })
-                .splineToConstantHeading(new Vector2d(START_RETURN_X_SPLINE2, START_RETURN_Y_SPLINE2), Math.toRadians(90)).build();
+                .splineToConstantHeading(new Vector2d(START_RETURN_X_SPLINE2, START_RETURN_Y_SPLINE2), Math.toRadians(231))
+                .UNSTABLE_addDisplacementMarkerOffset(0.1, () -> {
+                    visionPortal.saveNextFrameRaw("asdf");
+                    aprilTag.getDetections();
+                    if (aprilTag.getDetections().size() < 2) {
+                        drive.breakFollowing();
+                        stopped = true;
+                        telemetry.addData("stopped", true);
+                        telemetry.update();
+                    }
+                })
+                .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_END, START_VISION_CENTER_Y_END, Math.toRadians(270)), Math.toRadians(270))
+                .build();
 
         Thread inOutThread = new Thread(intakeOuttake);
         inOutThread.setUncaughtExceptionHandler(h);
@@ -204,12 +263,34 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 telemetry.addData("Camera Status: ", "Couldn't open camera");
                 telemetry.update();
             }});
+
+        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag.setDecimation(1);
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTag)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .build();
+        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            sleep(20);
+        }
+        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+        exposureControl.setMode(ExposureControl.Mode.Manual);
+        sleep(50);
+        exposureControl.setExposure( 3L , TimeUnit.MILLISECONDS);
+        sleep(20);
+        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+        gainControl.setGain(250);
+        sleep(20);
+        visionPortal.stopLiveView();
     }
 
     @Override
     public void stop() {
         intakeOuttake.stop();
         drive.imu.stop();
+        visionPortal.close();
     }
 
     @Override
@@ -220,11 +301,11 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
         });
 
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            Thread.sleep(10000);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
         drive.setPoseEstimate(new Pose2d(-61.5, -39, Math.toRadians(0))); // TODO: Update all the headings
 
@@ -272,6 +353,24 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 //            }
 
             drive.followTrajectorySequence(driveToBackdropFromVisionCenter);
+            drive.setMotorPowers(0, 0, 0, 0);
+
+            while (stopped && aprilTag.getDetections().size() < 2) {
+                telemetry.addData("FPS", visionPortal.getFps());
+                telemetry.addData("Detections", aprilTag.getDetections());
+//            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
+//            telemetry.addData("Loops", apriltag.loops);
+                telemetry.update();
+            }
+
+            if (stopped) {
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER)
+                        .lineToSplineHeading(new Pose2d(START_VISION_CENTER_X_END, START_VISION_CENTER_Y_END, Math.toRadians(-90)))
+                        .build());
+            }
+
+            stopped = false;
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
@@ -284,7 +383,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceCenter);
             else {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(PARK).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-60, 48)).back(12).build());
                 return;
             }
 
@@ -323,6 +422,24 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 //            }
 
             drive.followTrajectorySequence(driveToBackdropFromVisionRight);
+            drive.setMotorPowers(0, 0, 0, 0);
+
+            while (stopped && aprilTag.getDetections().size() < 2) {
+                telemetry.addData("FPS", visionPortal.getFps());
+                telemetry.addData("Detections", aprilTag.getDetections());
+//            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
+//            telemetry.addData("Loops", apriltag.loops);
+                telemetry.update();
+            }
+
+            if (stopped) {
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER)
+                        .lineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_END, START_VISION_RIGHT_Y_END, Math.toRadians(-90)))
+                        .build());
+            }
+
+            stopped = false;
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
@@ -335,7 +452,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceRight);
             else {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(36).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-60, 46)).back(12).build());
                 return;
             }
 
@@ -374,6 +491,24 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 //            drive.followTrajectory(drive.trajectoryBuilder(new Pose2d(LEFT_PATH_X, LEFT_PATH_Y, Math.toRadians(270))).strafeRight(LEFT_PATH_STRAFE).build());
 
             drive.followTrajectorySequence(driveToBackdropFromVisionLeft);
+            drive.setMotorPowers(0, 0, 0, 0);
+
+            while (stopped && aprilTag.getDetections().size() < 2) {
+                telemetry.addData("FPS", visionPortal.getFps());
+                telemetry.addData("Detections", aprilTag.getDetections());
+//            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
+//            telemetry.addData("Loops", apriltag.loops);
+                telemetry.update();
+            }
+
+            if (stopped) {
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER)
+                        .lineToSplineHeading(new Pose2d(START_VISION_LEFT_X_END, START_VISION_LEFT_Y_END, Math.toRadians(-90)))
+                        .build());
+            }
+
+            stopped = false;
 
             IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.DROPPED;
             while(IntakeOuttake.outtakeState != IntakeOuttake.OuttakeState.IDLE) {
@@ -386,19 +521,36 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
             if (!parking) drive.followTrajectorySequence(driveToAudienceLeft);
             else {
-//                drive.followTrajectory(drive.trajectoryBuilder(drive.getPoseEstimate()).strafeRight(36).build());
+                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-60, 48)).back(12).build());
                 return;
             }
 
         }
 
-
-
-        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(WHITE_PIXEL_X, WHITE_PIXEL_Y, Math.toRadians(270)))
-                .forward(5, (v, pose2d, pose2d1, pose2d2) -> 2.5, (v, pose2d, pose2d1, pose2d2) -> 2.5)
-                .build());
+//        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(new Pose2d(WHITE_PIXEL_X, WHITE_PIXEL_Y, Math.toRadians(270)))
+//                .forward(5, (v, pose2d, pose2d1, pose2d2) -> 2.5, (v, pose2d, pose2d1, pose2d2) -> 2.5)
+//                .build());
 
         drive.followTrajectorySequence(driveToBackdropReturn);
+
+        while (stopped && aprilTag.getDetections().size() < 2) {
+            telemetry.addData("FPS", visionPortal.getFps());
+            telemetry.addData("Detections", aprilTag.getDetections());
+//            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
+//            telemetry.addData("Loops", apriltag.loops);
+            telemetry.update();
+        }
+
+        t.start(200);
+        while (!t.finished()) {}
+        t.markReady();
+
+        if (stopped) {
+            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .setReversed(false)
+                    .splineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_END, START_VISION_RIGHT_Y_END, Math.toRadians(270)), Math.toRadians(270))
+                    .build());
+        }
 
         IntakeOuttake.outtakeTicks = 300;
         IntakeOuttake.outtakeState = IntakeOuttake.OuttakeState.READY;
