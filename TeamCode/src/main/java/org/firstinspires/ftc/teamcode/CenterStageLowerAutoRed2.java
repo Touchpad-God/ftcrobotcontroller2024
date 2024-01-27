@@ -226,7 +226,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(aprilTag)
-                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .build();
         while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
             sleep(20);
