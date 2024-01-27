@@ -11,26 +11,33 @@ import java.util.List;
 
 public class ThreadedApriltag implements Runnable {
 
-    private volatile boolean run = true;
+    private volatile boolean run;
     private AprilTagProcessor aprilTag;
+    public volatile long loops = 0;
+
     VisionPortal visionPortal;
 
     volatile List<AprilTagDetection> currentDetections;
 
     public ThreadedApriltag(HardwareMap hardwareMap) {
+
+        run = true;
+
         aprilTag = new AprilTagProcessor.Builder().build();
         aprilTag.setDecimation(1);
 
-        visionPortal =  new VisionPortal.Builder()
+        visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(aprilTag)
                 .build();
+
     }
 
     @Override
     public void run() {
         while (run) {
             currentDetections = aprilTag.getDetections();
+            loops++;
         }
     }
 

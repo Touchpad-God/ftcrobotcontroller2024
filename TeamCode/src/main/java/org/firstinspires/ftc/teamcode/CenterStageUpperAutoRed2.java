@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.pipelines.apriltagBackdrop;
 import org.firstinspires.ftc.teamcode.pipelines.redPropRight;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -86,8 +88,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     Thread inOutThread;
     SampleMecanumDrive drive;
 
-    ThreadedApriltag apriltag;
-    Thread apriltagThread;
+    AprilTagProcessor aprilTag;
+    VisionPortal visionPortal;
+
+//    ThreadedApriltag apriltag;
+//    Thread apriltagThread;
 
     public static boolean parking = false;
 
@@ -229,8 +234,17 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //                telemetry.update();
 //            }});
 
-        apriltag = new ThreadedApriltag(hardwareMap);
-        apriltagThread = new Thread(apriltag);
+//        apriltag = new ThreadedApriltag(hardwareMap);
+//        apriltagThread = new Thread(apriltag);
+
+        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag.setDecimation(1);
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTag)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .build();
 
     }
 
@@ -238,7 +252,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public void stop() {
         intakeOuttake.stop();
         drive.imu.stop();
-        apriltag.stop();
+//        apriltag.stop();
     }
 
     @Override
@@ -383,12 +397,14 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         }
         t.markReady();
 
-        apriltagThread.start();
-
         drive.followTrajectorySequence(driveToBackdropReturn);
 
-        while (!(apriltag.getCurrentDetections().size() == 3)) {
+        while (aprilTag.getDetections().size() < 2) {
             Thread.yield();
+            telemetry.addData("FPS", visionPortal.getFps());
+//            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
+//            telemetry.addData("Loops", apriltag.loops);
+            telemetry.update();
         }
 
         t.start(200);
@@ -430,7 +446,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         drive.followTrajectorySequence(driveToBackdropReturn);
 
-        while (!(apriltag.getCurrentDetections().size() == 3)) {
+        while (aprilTag.getDetections().size() < 2) {
             Thread.yield();
 //            apriltagBackdrop.processFrame();
         }
