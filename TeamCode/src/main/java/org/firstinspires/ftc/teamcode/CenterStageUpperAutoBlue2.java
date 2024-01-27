@@ -232,7 +232,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
         ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         exposureControl.setMode(ExposureControl.Mode.Manual);
         sleep(50);
-        exposureControl.setExposure( 6L , TimeUnit.MILLISECONDS);
+        exposureControl.setExposure( 3L , TimeUnit.MILLISECONDS);
         sleep(20);
         GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
         gainControl.setGain(250);

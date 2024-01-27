@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static android.os.SystemClock.sleep;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -8,13 +10,19 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.pipelines.redPropLeft;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+
+import java.util.concurrent.TimeUnit;
 
 
 /*
@@ -92,6 +100,9 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double THROUGH_TRUSS_LEFT_Y2 = 12;
     public int WHITE_PIXEL_X = 12; // change when necessary to 24 or 36 to avoid conflicting with alliance partner
     public static double WHITE_PIXEL_Y = -53;
+
+    AprilTagProcessor aprilTag;
+    VisionPortal visionPortal;
 
     public int backdropX = 0;
 
@@ -208,6 +219,27 @@ public class CenterStageLowerAutoRed2 extends OpMode {
                 telemetry.addData("Camera Status: ", "Couldn't open camera");
                 telemetry.update();
             }});
+
+        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag.setDecimation(1);
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTag)
+                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
+                .build();
+        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            sleep(20);
+        }
+        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+        exposureControl.setMode(ExposureControl.Mode.Manual);
+        sleep(50);
+        exposureControl.setExposure( 3L , TimeUnit.MILLISECONDS);
+        sleep(20);
+        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+        gainControl.setGain(250);
+        sleep(20);
+        visionPortal.stopLiveView();
 
     }
 

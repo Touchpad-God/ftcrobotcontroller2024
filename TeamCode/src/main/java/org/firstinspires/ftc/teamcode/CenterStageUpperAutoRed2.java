@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static android.os.SystemClock.sleep;
 
+import android.util.Size;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -134,9 +136,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 })
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
-                .splineTo(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(57))
+                .splineTo(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(51))
                 .UNSTABLE_addDisplacementMarkerOffset(0.1, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
+                    aprilTag.getDetections();
                     if (aprilTag.getDetections().size() < 2) {
                         drive.breakFollowing();
                         stopped = true;
@@ -265,7 +268,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessor(aprilTag)
-                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .setAutoStopLiveView(true)
                 .build();
         while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
             sleep(20);
@@ -273,12 +277,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         exposureControl.setMode(ExposureControl.Mode.Manual);
         sleep(50);
-        exposureControl.setExposure( 6L , TimeUnit.MILLISECONDS);
+        exposureControl.setExposure( 3L , TimeUnit.MILLISECONDS);
         sleep(20);
         GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
         gainControl.setGain(250);
         sleep(20);
-        visionPortal.stopLiveView();
 
     }
 
@@ -447,8 +450,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         while (!t.finished()) {}
         t.markReady();
 
+        drive.getPoseEstimate();
         if (stopped) {
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .setReversed(false)
                     .addDisplacementMarker(() -> {
                         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                         IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
@@ -501,6 +506,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         if (stopped) {
             drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                    .setReversed(false)
                     .addDisplacementMarker(() -> {
                         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                         IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
