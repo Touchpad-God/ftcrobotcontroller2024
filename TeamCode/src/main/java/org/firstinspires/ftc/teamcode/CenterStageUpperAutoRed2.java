@@ -251,7 +251,9 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .addProcessor(aprilTag)
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .build();
-
+        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            sleep(20);
+        }
         ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
         exposureControl.setMode(ExposureControl.Mode.Manual);
         sleep(50);
