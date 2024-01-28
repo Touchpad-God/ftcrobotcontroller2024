@@ -187,7 +187,7 @@ public class IntakeOuttake {
             case IDLE:
                 break;
             case INTAKING:
-                outtakeTicks = 13;
+                outtakeTicks = 10;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);

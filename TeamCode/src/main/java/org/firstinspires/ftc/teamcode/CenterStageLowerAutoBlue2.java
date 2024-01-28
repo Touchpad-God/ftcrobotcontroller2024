@@ -40,7 +40,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     int movementOffset;
 
     public static double PARK = 36;
-    public static double LEFT_PATH_X = -36;
+    public static double LEFT_PATH_X = -33;
     public static double LEFT_PATH_Y = -35.5;
     public static double LEFT_PATH_STRAFE = 22;
 
@@ -51,7 +51,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_LEFT_Y_SPLINE1 = -39;
     public static double START_VISION_LEFT_X_SPLINE2 = -56;
     public static double START_VISION_LEFT_Y_SPLINE2 = 36;
-    public static double START_VISION_LEFT_X_END = -45;
+    public static double START_VISION_LEFT_X_END = -42;
     public static double START_VISION_LEFT_Y_END = 47;
 
     TrajectorySequence driveToBackdropFromVisionRight;
@@ -61,7 +61,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_RIGHT_Y_SPLINE1 = -30;
     public static double START_VISION_RIGHT_X_SPLINE2 = -55;
     public static double START_VISION_RIGHT_Y_SPLINE2 = 36;
-    public static double START_VISION_RIGHT_X_END = -30;
+    public static double START_VISION_RIGHT_X_END = -33;
     public static double START_VISION_RIGHT_Y_END = 46;
 
     TrajectorySequence driveToBackdropFromVisionCenter;
@@ -73,7 +73,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_CENTER_Y_SPLINE2 = -36;
     public static double START_VISION_CENTER_X_SPLINE3 = -48;
     public static double START_VISION_CENTER_Y_SPLINE3 = 27;
-    public static double START_VISION_CENTER_X_END = -40;
+    public static double START_VISION_CENTER_X_END = -36;
     public static double START_VISION_CENTER_Y_END = 48;
 
     TrajectorySequence driveToBackdropReturn;
@@ -288,6 +288,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 
     @Override
     public void stop() {
+        poseStorage.currentPose = drive.getPoseEstimate();
         intakeOuttake.stop();
         drive.imu.stop();
         visionPortal.close();
@@ -307,7 +308,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 //            throw new RuntimeException(e);
 //        }
 
-        drive.setPoseEstimate(new Pose2d(-61.5, -39, Math.toRadians(0))); // TODO: Update all the headings
+        drive.setPoseEstimate(new Pose2d(-61.5, -39, Math.toRadians(0)));
 
         if (bluePropPipeline.position == bluePropRight.PROPPOSITION.CENTER) { // center
 

@@ -63,7 +63,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
     public static double CENTER_CYCLE_END_Y = -49.0;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
-    public static double RETURN_CYCLE_WAYPOINT_X = 8;
+    public static double RETURN_CYCLE_WAYPOINT_X = 10;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
     public static double RETURN_CYCLE_END_Y = -49.5;
 
@@ -147,7 +147,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                         telemetry.update();
                     }
                 })
-                .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(90))
+                .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)))
                 .setReversed(false)
                 .build();
 
@@ -195,7 +195,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, RIGHT_CYCLE_END_Y), Math.toRadians(270))
-                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 9.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceCenter = drive.trajectorySequenceBuilder(driveToBackdropFromVisionCenter.end())
@@ -207,7 +207,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineTo(new Vector2d(whitePixelLocation, CENTER_CYCLE_END_Y), Math.toRadians(270))
-                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 9.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceCycle = drive.trajectorySequenceBuilder(driveToBackdropReturn.end())
@@ -218,8 +218,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
-                .splineTo(new Vector2d(whitePixelLocation, RETURN_CYCLE_END_Y), Math.toRadians(270))
-                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 9.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .splineTo(new Vector2d(whitePixelLocation - 2, RETURN_CYCLE_END_Y), Math.toRadians(270))
+                .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         //vision
@@ -287,6 +287,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
     @Override
     public void stop() {
+        poseStorage.currentPose = drive.getPoseEstimate();
         intakeOuttake.stop();
         drive.imu.stop();
         visionPortal.close();
@@ -511,7 +512,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                         IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER;
                     })
-                    .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(270))
+                    .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)))
                     .setReversed(false)
                     .build());
         }
