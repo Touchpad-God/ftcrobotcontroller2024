@@ -93,7 +93,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public int whitePixelLocation = -10; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
-    public static boolean parking = false;
+    public static boolean parking = true;
     public boolean stopped = false;
 
     AprilTagProcessor aprilTag;

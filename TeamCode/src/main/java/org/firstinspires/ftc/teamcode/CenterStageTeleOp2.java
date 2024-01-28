@@ -26,7 +26,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double mecanumPosR = 0.62;
     double headingOffset = Math.PI;
 
-    final double INITIALOFFSET = poseStorage.currentPose.getHeading();
+    final double INITIALOFFSET = 0.0;
 
     boolean tankMode = false;
     boolean wasGamepadAPressed = false;
@@ -84,7 +84,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             y = Math.pow(-gamepad1.left_stick_y, 3);
             rot = Math.pow(gamepad1.right_stick_x, 3);
             double currHeading = imu.getYaw();
-            double theta = -(currHeading - headingOffset - INITIALOFFSET);
+            double theta = -(currHeading - headingOffset + INITIALOFFSET);
             double rotX = x * Math.cos(theta) - y * Math.sin(theta);
             double rotY = (x * Math.sin(theta) + y * Math.cos(theta)) * (slowMode ? 1.3 : 1);
 

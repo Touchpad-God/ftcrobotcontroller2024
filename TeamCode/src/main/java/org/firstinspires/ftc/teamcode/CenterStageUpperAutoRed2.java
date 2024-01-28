@@ -57,11 +57,11 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double RIGHT_CYCLE_STRAFE_DIST = 17;
     public static double RIGHT_CYCLE_WAYPOINT_X = 13;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
-    public static double RIGHT_CYCLE_END_Y = -49.0;
+    public static double RIGHT_CYCLE_END_Y = -50.5;
     public static double CENTER_CYCLE_STRAFE_DIST = 13;
     public static double CENTER_CYCLE_WAYPOINT_X = 12;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -49.0;
+    public static double CENTER_CYCLE_END_Y = -50.0;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = 10;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
@@ -102,7 +102,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //    ThreadedApriltag apriltag;
 //    Thread apriltagThread;
 
-    public static boolean parking = false;
+    public static boolean parking = true;
     public boolean stopped = false;
 
     public int whitePixelLocation = 11; // change when necessary to 24 or 36 to avoid conflicting with other alliance
@@ -218,7 +218,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
-                .splineTo(new Vector2d(whitePixelLocation - 2, RETURN_CYCLE_END_Y), Math.toRadians(270))
+                .splineTo(new Vector2d(whitePixelLocation - 3, RETURN_CYCLE_END_Y), Math.toRadians(270))
                 .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
