@@ -24,8 +24,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.concurrent.TimeUnit;
 
-// TODO: Update this auto to use a second movement for the apriltag stuff.
-
 @Config
 @Autonomous
 public class CenterStageUpperAutoBlue2 extends OpMode {

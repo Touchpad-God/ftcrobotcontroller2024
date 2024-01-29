@@ -76,6 +76,9 @@ public class IntakeOuttake {
     public static double highP = 0.05;
     public static double highI = 0.00000;
     public static double highD = 0.0012;
+    public static double startP = 0.025;
+    public static double startI = 0.00025;
+    public static double startD = 0.00043;
     public static double downP = 0.015;
     public static double downI = 0.00015;
     public static double downD = 0.0003;
@@ -452,7 +455,11 @@ public class IntakeOuttake {
             outtakeprevError = error;
         }
         double outtakekP, outtakekI, outtakekD;
-        if (outtakeMotor2.getCurrentPosition() < 15 || outtakeMotor2.getCurrentPosition() > 450) {
+        if (outtakeMotor2.getCurrentPosition() < 10) {
+            outtakekP = startP;
+            outtakekI = startI;
+            outtakekD = startD;
+        } else if (outtakeMotor2.getCurrentPosition() < 15 || outtakeMotor2.getCurrentPosition() > 450) {
             outtakekP = downP;
             outtakekI = downI;
             outtakekD = downD;
