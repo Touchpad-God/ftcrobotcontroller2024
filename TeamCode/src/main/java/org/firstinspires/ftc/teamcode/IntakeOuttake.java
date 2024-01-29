@@ -76,9 +76,9 @@ public class IntakeOuttake {
     public static double highP = 0.05;
     public static double highI = 0.00000;
     public static double highD = 0.0012;
-    public static double startP = 0.025;
+    public static double startP = 0.035;
     public static double startI = 0.00025;
-    public static double startD = 0.00043;
+    public static double startD = 0.0;
     public static double downP = 0.015;
     public static double downI = 0.00015;
     public static double downD = 0.0003;
@@ -190,7 +190,7 @@ public class IntakeOuttake {
             case IDLE:
                 break;
             case INTAKING:
-                outtakeTicks = 10;
+                outtakeTicks = 12;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
@@ -202,7 +202,7 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTOINTAKING:
-                outtakeTicks = 10;
+                outtakeTicks = 12;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
