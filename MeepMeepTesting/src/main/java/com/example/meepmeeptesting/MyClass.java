@@ -20,7 +20,7 @@ public class MyClass {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(47.5, -47, Math.toRadians(0)))
+                        drive.trajectorySequenceBuilder(new Pose2d(50, 23, Math.toRadians(120)))
                                 .lineToSplineHeading(new Pose2d(59, -30, Math.toRadians(-90)))
                                 .lineToConstantHeading(new Vector2d(59, 12))
                                 .splineToConstantHeading(new Vector2d(42, 47), Math.toRadians(180))

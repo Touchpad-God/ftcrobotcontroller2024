@@ -287,8 +287,8 @@ public class IntakeOuttake {
             case HIGHER:
                 clawLeft.setPosition(clawEngagedLeft);
                 clawRight.setPosition(clawEngagedRight);
-                outtakeTicks = 250;
-                if (outtakeMotor1.getCurrentPosition() < -240 && outtakeMotor2.getCurrentPosition() > 240) {
+                outtakeTicks = 210;
+                if (outtakeMotor1.getCurrentPosition() < -200 && outtakeMotor2.getCurrentPosition() > 200) {
                     transferState = TransferState.OUT;
                 }
                 break;
