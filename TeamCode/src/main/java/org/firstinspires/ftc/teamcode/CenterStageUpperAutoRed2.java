@@ -36,7 +36,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double SPIKE_LEFT_X = 38.5;
     public static double SPIKE_LEFT_Y = 13.5;
     public static double SPIKE_CENTER_X = 26;
-    public static double SPIKE_CENTER_Y = 32.5;
+    public static double SPIKE_CENTER_Y = 30.5;
     public static double SPIKE_RIGHT_X = 45;
     public static double SPIKE_RIGHT_Y = 23.5;
     public static double BACKDROP_LEFT_X = 28;
@@ -53,15 +53,15 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double LEFT_CYCLE_STRAFE_DIST = 10;
     public static double LEFT_CYCLE_WAYPOINT_X = 12;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
-    public static double LEFT_CYCLE_END_Y = -51.0;
+    public static double LEFT_CYCLE_END_Y = -50.0;
     public static double RIGHT_CYCLE_STRAFE_DIST = 17;
     public static double RIGHT_CYCLE_WAYPOINT_X = 13;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
-    public static double RIGHT_CYCLE_END_Y = -50.5;
+    public static double RIGHT_CYCLE_END_Y = -49.5;
     public static double CENTER_CYCLE_STRAFE_DIST = 13;
     public static double CENTER_CYCLE_WAYPOINT_X = 12;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -50.0;
+    public static double CENTER_CYCLE_END_Y = -49.0;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = 10;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
@@ -102,7 +102,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //    ThreadedApriltag apriltag;
 //    Thread apriltagThread;
 
-    public static boolean parking = true;
+    public static boolean parking = false;
     public boolean stopped = false;
 
     public int whitePixelLocation = 11; // change when necessary to 24 or 36 to avoid conflicting with other alliance
@@ -183,7 +183,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, LEFT_CYCLE_END_Y), Math.toRadians(270))
-                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 9.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceRight = drive.trajectorySequenceBuilder(driveToBackdropFromVisionRight.end())

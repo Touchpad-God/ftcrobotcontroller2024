@@ -24,7 +24,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
-    double headingOffset = -poseStorage.currentPose.getHeading();
+    double headingOffset = poseStorage.currentPose.getHeading();
 
     final double INITIALOFFSET = 0.0;
 
@@ -86,7 +86,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             double currHeading = imu.getYaw();
             double theta = -(currHeading - headingOffset + INITIALOFFSET);
             double rotX = x * Math.cos(theta) - y * Math.sin(theta);
-            double rotY = (x * Math.sin(theta) + y * Math.cos(theta)) * (slowMode ? 1.3 : 1);
+            double rotY = (x * Math.sin(theta) + y * Math.cos(theta)) * (slowMode ? 1.7 : 1);
 
             if (gamepad1.a && !wasGamepadAPressed) {
                 tankMode = !tankMode;
