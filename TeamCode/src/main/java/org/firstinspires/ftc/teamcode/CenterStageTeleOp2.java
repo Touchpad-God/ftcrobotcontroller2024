@@ -42,7 +42,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
     int hangPos = 0;
 
-    public static double droneLaunchPos = 0.4800;
+    public static double droneLaunchPos = 0.52;
 
     public double[] leftHang = {0.122, droneLaunchPos, 0.7065};
     public double[] rightHang = {0.7686, 0.7686, 0.1972};
@@ -80,13 +80,14 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
         while (opModeIsActive()) {
             telemetry.addData("Outtake ticks", intakeOuttake.outtakeTicks);
+            telemetry.addData("Heading offset", headingOffset);
             x = Math.pow(gamepad1.left_stick_x, 3);
             y = Math.pow(-gamepad1.left_stick_y, 3);
             rot = Math.pow(gamepad1.right_stick_x, 3);
             double currHeading = imu.getYaw();
             double theta = -(currHeading - headingOffset + INITIALOFFSET);
             double rotX = x * Math.cos(theta) - y * Math.sin(theta);
-            double rotY = (x * Math.sin(theta) + y * Math.cos(theta)) * (slowMode ? 1.7 : 1);
+            double rotY = (x * Math.sin(theta) + y * Math.cos(theta)) * (slowMode ? 1/slow : 1);
 
             if (gamepad1.a && !wasGamepadAPressed) {
                 tankMode = !tankMode;

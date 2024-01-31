@@ -427,6 +427,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(cycleEnd)
 //                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
 //                .build());
+        t.markReady();
         t.start(500);
         if (intakeOuttake.locationPixel == 4) {
             intakeOuttake.locationPixel--;
