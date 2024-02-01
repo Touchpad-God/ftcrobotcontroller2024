@@ -70,9 +70,6 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
                 transfer(currTime);
                 sensors();
                 runTo(outtakeTicks, currTime);
-                if (aprilInit) {
-                    detections = aprilTag.getDetections().size();
-                }
             } catch (Exception e) {
                 RobotLog.ee("TEAMCODE", e, e.toString());
             }

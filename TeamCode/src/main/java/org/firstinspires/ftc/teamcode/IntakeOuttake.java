@@ -93,7 +93,7 @@ public class IntakeOuttake {
     // state machine initialization
     public enum IntakeState {INTAKING, AUTOINTAKING, AUTOBEAMNOCOLOR, AUTOBOTHCOLOR, BEAMNOCOLOR, BOTHCOLOR, IDLE, STOP, EJECTING, AUTOEJECTING}
     public enum OuttakeState {READY, RAISEDWAITING, RETRACT, RETURN, DOWN, POS0, POS1, POS2, POS3, POS4, DROPPED, IDLE, AUTORAISED, AUTODROP}
-    public enum TransferState {IDLE, MOTORS, ON, HIGHER, OUT, RETRACT}
+    public enum TransferState {IDLE, MOTORS, ON, HIGHER, EVENHIGHER, OUT, RETRACT}
     public static volatile IntakeState intakeState = IntakeState.IDLE;
     public static volatile OuttakeState outtakeState = OuttakeState.IDLE;
     public static volatile TransferState transferState = TransferState.IDLE;
@@ -190,7 +190,7 @@ public class IntakeOuttake {
             case IDLE:
                 break;
             case INTAKING:
-                outtakeTicks = 12;
+                outtakeTicks = 10;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
@@ -202,7 +202,7 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTOINTAKING:
-                outtakeTicks = 12;
+                outtakeTicks = 10;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
@@ -288,6 +288,14 @@ public class IntakeOuttake {
                 clawLeft.setPosition(clawEngagedLeft);
                 clawRight.setPosition(clawEngagedRight);
                 outtakeTicks = 210;
+                if (outtakeMotor1.getCurrentPosition() < -200 && outtakeMotor2.getCurrentPosition() > 200) {
+                    transferState = TransferState.OUT;
+                }
+                break;
+            case EVENHIGHER:
+                clawLeft.setPosition(clawEngagedLeft);
+                clawRight.setPosition(clawEngagedRight);
+                outtakeTicks = 230;
                 if (outtakeMotor1.getCurrentPosition() < -200 && outtakeMotor2.getCurrentPosition() > 200) {
                     transferState = TransferState.OUT;
                 }
@@ -404,6 +412,7 @@ public class IntakeOuttake {
     public void sensors() {
         pixel1 = "";
         pixel2 = "";
+
         int color1green = color1.green();
         int color1blue = color1.blue();
         int color1red = color1.red();
