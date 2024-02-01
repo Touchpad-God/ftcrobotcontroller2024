@@ -24,7 +24,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
-    double headingOffset = poseStorage.currentPose.getHeading();
+    double headingOffset = poseStorage.currentPose.getHeading() + Math.PI/2;
 
     final double INITIALOFFSET = 0.0;
 
