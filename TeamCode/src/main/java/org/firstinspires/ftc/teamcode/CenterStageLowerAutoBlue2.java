@@ -51,7 +51,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_LEFT_Y_SPLINE1 = -39;
     public static double START_VISION_LEFT_X_SPLINE2 = -56;
     public static double START_VISION_LEFT_Y_SPLINE2 = 36;
-    public static double START_VISION_LEFT_X_END = -42;
+    public static double START_VISION_LEFT_X_END = -40;
     public static double START_VISION_LEFT_Y_END = 47;
 
     TrajectorySequence driveToBackdropFromVisionRight;
@@ -61,7 +61,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_RIGHT_Y_SPLINE1 = -30;
     public static double START_VISION_RIGHT_X_SPLINE2 = -55;
     public static double START_VISION_RIGHT_Y_SPLINE2 = 36;
-    public static double START_VISION_RIGHT_X_END = -33;
+    public static double START_VISION_RIGHT_X_END = -31;
     public static double START_VISION_RIGHT_Y_END = 46;
 
     TrajectorySequence driveToBackdropFromVisionCenter;
@@ -71,9 +71,9 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     public static double START_VISION_CENTER_Y_SPLINE1 = -42;
     public static double START_VISION_CENTER_X_SPLINE2 = -58;
     public static double START_VISION_CENTER_Y_SPLINE2 = -36;
-    public static double START_VISION_CENTER_X_SPLINE3 = -50;
-    public static double START_VISION_CENTER_Y_SPLINE3 = 23;
-    public static double START_VISION_CENTER_X_END = -37.4;
+    public static double START_VISION_CENTER_X_SPLINE3 = -55;
+    public static double START_VISION_CENTER_Y_SPLINE3 = 18;
+    public static double START_VISION_CENTER_X_END = -35.4;
     public static double START_VISION_CENTER_Y_END = 48;
 
     TrajectorySequence driveToBackdropReturn;
@@ -107,7 +107,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
     VisionPortal visionPortal;
 
     public boolean stopped = false;
-    public static boolean parking = false;
+    public static boolean parking = true;
 
     public int whitePixelLocation = 12; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
@@ -135,7 +135,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
 //                .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE1, START_VISION_CENTER_Y_SPLINE1), Math.toRadians(0))
 //                .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_SPLINE2, START_VISION_CENTER_Y_SPLINE2, Math.toRadians(-90)), Math.toRadians(0))
                 .lineToSplineHeading(new Pose2d(-58, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(60))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(70))
 //                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
@@ -156,7 +156,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 .setReversed(true)
                 .lineToSplineHeading(new Pose2d(START_VISION_LEFT_X_SPLINE1-1, START_VISION_LEFT_Y_SPLINE1-6, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(START_VISION_LEFT_X_SPLINE1-1, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(60))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(70))
 //                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
@@ -178,7 +178,7 @@ public class CenterStageLowerAutoBlue2 extends OpMode {
                 .setReversed(true)
                 .lineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(-58, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(60))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(70))
 //                .lineToSplineHeading(new Pose2d(-36, 36, Math.toRadians(270)))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");

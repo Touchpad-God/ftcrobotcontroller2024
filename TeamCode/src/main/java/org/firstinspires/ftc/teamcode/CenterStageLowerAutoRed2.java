@@ -52,7 +52,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double START_VISION_LEFT_Y_SPLINE1 = -30;
     public static double START_VISION_LEFT_X_SPLINE2 = 58;
     public static double START_VISION_LEFT_Y_SPLINE2 = 36;
-    public static double START_VISION_LEFT_X_END = 29;
+    public static double START_VISION_LEFT_X_END = 27;
     public static double START_VISION_LEFT_Y_END = 48;
 
     TrajectorySequence driveToBackdropFromVisionRight;
@@ -62,7 +62,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double START_VISION_RIGHT_Y_SPLINE1 = -36;
     public static double START_VISION_RIGHT_X_SPLINE2 = 58;
     public static double START_VISION_RIGHT_Y_SPLINE2 = 36;
-    public static double START_VISION_RIGHT_X_END = 37.5;
+    public static double START_VISION_RIGHT_X_END = 35.5;
     public static double START_VISION_RIGHT_Y_END = 48;
 
     TrajectorySequence driveToBackdropFromVisionCenter;
@@ -72,9 +72,9 @@ public class CenterStageLowerAutoRed2 extends OpMode {
     public static double START_VISION_CENTER_Y_SPLINE1 = -42;
     public static double START_VISION_CENTER_X_SPLINE2 = 58;
     public static double START_VISION_CENTER_Y_SPLINE2 = -36;
-    public static double START_VISION_CENTER_X_SPLINE3 = 50;
-    public static double START_VISION_CENTER_Y_SPLINE3 = 23;
-    public static double START_VISION_CENTER_X_END = 33.5;
+    public static double START_VISION_CENTER_X_SPLINE3 = 55;
+    public static double START_VISION_CENTER_Y_SPLINE3 = 18;
+    public static double START_VISION_CENTER_X_END = 31.5;
     public static double START_VISION_CENTER_Y_END = 48;
 
     TrajectorySequence driveToBackdropReturn;
@@ -134,7 +134,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 //                .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE1, START_VISION_CENTER_Y_SPLINE1), Math.toRadians(0))
                 .lineToSplineHeading(new Pose2d(START_VISION_CENTER_X_SPLINE2, START_VISION_CENTER_Y_SPLINE2-4, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(58, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(120))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(110))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
@@ -160,7 +160,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
                 .setReversed(true)
                 .lineToSplineHeading(new Pose2d(new Vector2d(START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1-4), Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(58, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(120))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(110))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
@@ -190,7 +190,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 //                .lineToConstantHeading(new Vector2d(START_VISION_LEFT_X_SPLINE2, START_VISION_LEFT_Y_SPLINE2))
 //                .lineToSplineHeading(new Pose2d(36, 36, Math.toRadians(270)))
                 .lineToSplineHeading(new Pose2d(58, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(120))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(110))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
@@ -361,8 +361,9 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (stopped) {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .setReversed(true)
                         .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER)
-                        .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_END, START_VISION_CENTER_Y_END, Math.toRadians(-90)), Math.toRadians(-90))
+                        .splineToSplineHeading(new Pose2d(START_VISION_CENTER_X_END, START_VISION_CENTER_Y_END, Math.toRadians(-90)), Math.toRadians(90))
                         .build());
             }
 
@@ -429,8 +430,9 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (stopped) {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .setReversed(true)
                         .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER)
-                        .splineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_END, START_VISION_RIGHT_Y_END, Math.toRadians(-90)), Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(START_VISION_RIGHT_X_END, START_VISION_RIGHT_Y_END, Math.toRadians(-90)), Math.toRadians(180))
                         .build());
             }
 
@@ -510,8 +512,9 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
             if (stopped) {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+                        .setReversed(true)
                         .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.HIGHER)
-                        .splineToSplineHeading(new Pose2d(START_VISION_LEFT_X_END, START_VISION_LEFT_Y_END, Math.toRadians(-90)), Math.toRadians(-90))
+                        .splineToSplineHeading(new Pose2d(START_VISION_LEFT_X_END, START_VISION_LEFT_Y_END, Math.toRadians(-90)), Math.toRadians(90))
                         .build());
             }
 
