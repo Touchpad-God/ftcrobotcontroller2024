@@ -295,8 +295,8 @@ public class IntakeOuttake {
             case EVENHIGHER:
                 clawLeft.setPosition(clawEngagedLeft);
                 clawRight.setPosition(clawEngagedRight);
-                outtakeTicks = 230;
-                if (outtakeMotor1.getCurrentPosition() < -200 && outtakeMotor2.getCurrentPosition() > 200) {
+                outtakeTicks = 300;
+                if (outtakeMotor1.getCurrentPosition() < -120 && outtakeMotor2.getCurrentPosition() > 120) {
                     transferState = TransferState.OUT;
                 }
                 break;
@@ -422,7 +422,7 @@ public class IntakeOuttake {
         float[] HSVValues = new float[3];
         float[] HSVValues2 = new float[3];
         Color.RGBToHSV(color1red, color1green, color1blue, HSVValues);
-        if (color1.getDistance(DistanceUnit.CM) < 0.65 && HSVValues[2] > 5.0) {
+        if (color1.getDistance(DistanceUnit.CM) < 0.65 && HSVValues[2] > 4.0) {
             if (HSVValues[1] < 0.59) {
                 pixel1 = "white";
             } else if (HSVValues[0] > 120 && HSVValues[0] < 140) {
@@ -434,7 +434,7 @@ public class IntakeOuttake {
             }
         }
         Color.RGBToHSV(color2red, color2green, color2blue, HSVValues2);
-        if (color2.getDistance(DistanceUnit.CM) < 0.65 && HSVValues2[2] > 5.0) {
+        if (color2.getDistance(DistanceUnit.CM) < 0.65 && HSVValues2[2] > 4.0) {
             if (HSVValues2[1] < 0.47) {
                 pixel2 = "white";
             } else if (HSVValues2[0] > 120 && HSVValues2[0] < 140) {

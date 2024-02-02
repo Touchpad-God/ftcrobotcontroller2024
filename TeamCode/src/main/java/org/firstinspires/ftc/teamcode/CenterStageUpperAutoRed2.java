@@ -35,8 +35,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
     public static double SPIKE_LEFT_X = 38.5;
     public static double SPIKE_LEFT_Y = 13.5;
-    public static double SPIKE_CENTER_X = 26;
-    public static double SPIKE_CENTER_Y = 30.5;
+    public static double SPIKE_CENTER_X = 24;
+    public static double SPIKE_CENTER_Y = 28.5;
     public static double SPIKE_RIGHT_X = 45;
     public static double SPIKE_RIGHT_Y = 23.5;
     public static double BACKDROP_LEFT_X = 28;
@@ -51,17 +51,17 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double RIGHT_MOVEMENT_OFFSET = 0.0;
 
     public static double LEFT_CYCLE_STRAFE_DIST = 10;
-    public static double LEFT_CYCLE_WAYPOINT_X = 11;
+    public static double LEFT_CYCLE_WAYPOINT_X = 12;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
     public static double LEFT_CYCLE_END_Y = -50.0;
-    public static double RIGHT_CYCLE_STRAFE_DIST = 17;
+    public static double RIGHT_CYCLE_STRAFE_DIST = 16;
     public static double RIGHT_CYCLE_WAYPOINT_X = 11;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
-    public static double RIGHT_CYCLE_END_Y = -51.5;
+    public static double RIGHT_CYCLE_END_Y = -51.0;
     public static double CENTER_CYCLE_STRAFE_DIST = 13;
     public static double CENTER_CYCLE_WAYPOINT_X = 11;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -49.0;
+    public static double CENTER_CYCLE_END_Y = -50.5;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = 11;
     public static double RETURN_CYCLE_WAYPOINT_Y = 12;
@@ -99,9 +99,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     AprilTagProcessor aprilTag;
     VisionPortal visionPortal;
 
-//    ThreadedApriltag apriltag;
-//    Thread apriltagThread;
-
     public static boolean parking = false;
     public boolean stopped = false;
 
@@ -128,8 +125,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
 
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
-                .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS)
-                .addTemporalMarker(0.1, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
+                .addDisplacementMarker(() -> {
+                    IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
+                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
+                })
                 .addTemporalMarker(0.7, 0.0, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.EVENHIGHER;
@@ -137,7 +136,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
                 .splineTo(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(53))
-                .UNSTABLE_addDisplacementMarkerOffset(0.1, () -> {
+                .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
                     if (aprilTag.getDetections().size() < 2) {
@@ -177,7 +176,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         driveToAudienceLeft = drive.trajectorySequenceBuilder(driveToBackdropFromVisionLeft.end())
                 .strafeTo(driveToBackdropFromVisionLeft.end().vec().minus(new Vector2d(LEFT_CYCLE_STRAFE_DIST, 3)))
                 .splineToConstantHeading(new Vector2d(LEFT_CYCLE_WAYPOINT_X, LEFT_CYCLE_WAYPOINT_Y), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 3)
                 .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
@@ -189,7 +188,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         driveToAudienceRight = drive.trajectorySequenceBuilder(driveToBackdropFromVisionRight.end())
                 .strafeTo(driveToBackdropFromVisionRight.end().vec().minus(new Vector2d(RIGHT_CYCLE_STRAFE_DIST, 3)))
                 .splineToConstantHeading(new Vector2d(RIGHT_CYCLE_WAYPOINT_X, RIGHT_CYCLE_WAYPOINT_Y), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 3)
                 .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
@@ -201,7 +200,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         driveToAudienceCenter = drive.trajectorySequenceBuilder(driveToBackdropFromVisionCenter.end())
                 .strafeTo(driveToBackdropFromVisionCenter.end().vec().minus(new Vector2d(CENTER_CYCLE_STRAFE_DIST, 3)))
                 .splineToConstantHeading(new Vector2d(CENTER_CYCLE_WAYPOINT_X, CENTER_CYCLE_WAYPOINT_Y), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 3)
                 .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
@@ -221,6 +220,27 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                 .splineTo(new Vector2d(whitePixelLocation - 3, RETURN_CYCLE_END_Y), Math.toRadians(270))
                 .forward(6.0 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
+
+        aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag.setDecimation(1);
+
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessor(aprilTag)
+                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
+                .enableLiveView(false)
+                .build();
+        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            sleep(20);
+        }
+        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+        exposureControl.setMode(ExposureControl.Mode.Manual);
+        sleep(50);
+        exposureControl.setExposure( 4L , TimeUnit.MILLISECONDS);
+        sleep(20);
+        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+        gainControl.setGain(250);
+        sleep(20);
 
         //vision
         propCamera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 2"));
@@ -261,27 +281,6 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
 //        apriltag = new ThreadedApriltag(hardwareMap);
 //        apriltagThread = new Thread(apriltag);
-
-        aprilTag = new AprilTagProcessor.Builder().build();
-        aprilTag.setDecimation(1);
-
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .addProcessor(aprilTag)
-                .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
-                .setAutoStopLiveView(true)
-                .build();
-        while (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            sleep(20);
-        }
-        ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-        exposureControl.setMode(ExposureControl.Mode.Manual);
-        sleep(50);
-        exposureControl.setExposure( 3L , TimeUnit.MILLISECONDS);
-        sleep(20);
-        GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-        gainControl.setGain(250);
-        sleep(20);
 
     }
 
@@ -427,11 +426,16 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(cycleEnd)
 //                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
 //                .build());
+        drive.setMotorPowers(0, 0, 0, 0);
         t.markReady();
+        t.start(500);
         if (intakeOuttake.locationPixel == 4) {
             intakeOuttake.locationPixel--;
         }
-        IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+        while (!t.finished()) {
+        }
+        t.markReady();
+        IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
         drive.followTrajectorySequence(driveToBackdropReturn);
         drive.setMotorPowers(0, 0, 0, 0);
 
@@ -489,8 +493,15 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //        while (!t.finished()) {}
 //        t.markReady();
 
-
-
+        drive.setMotorPowers(0, 0, 0, 0);
+        t.markReady();
+        t.start(500);
+        if (intakeOuttake.locationPixel == 4) {
+            intakeOuttake.locationPixel--;
+        }
+        while (!t.finished()) {
+        }
+        t.markReady();
         drive.followTrajectorySequence(driveToBackdropReturn);
         drive.setMotorPowers(0, 0, 0, 0);
 

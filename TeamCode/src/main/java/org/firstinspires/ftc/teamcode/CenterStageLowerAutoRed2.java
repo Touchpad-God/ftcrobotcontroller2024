@@ -134,7 +134,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 //                .splineToConstantHeading(new Vector2d(START_VISION_CENTER_X_SPLINE1, START_VISION_CENTER_Y_SPLINE1), Math.toRadians(0))
                 .lineToSplineHeading(new Pose2d(START_VISION_CENTER_X_SPLINE2, START_VISION_CENTER_Y_SPLINE2-4, Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(58, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(110))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(120))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
@@ -160,7 +160,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
                 .setReversed(true)
                 .lineToSplineHeading(new Pose2d(new Vector2d(START_VISION_RIGHT_X_SPLINE1, START_VISION_RIGHT_Y_SPLINE1-4), Math.toRadians(-90)))
                 .lineToSplineHeading(new Pose2d(58, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(110))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(120))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
@@ -190,7 +190,7 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 //                .lineToConstantHeading(new Vector2d(START_VISION_LEFT_X_SPLINE2, START_VISION_LEFT_Y_SPLINE2))
 //                .lineToSplineHeading(new Pose2d(36, 36, Math.toRadians(270)))
                 .lineToSplineHeading(new Pose2d(58, 3, Math.toRadians(-90)))
-                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(110))
+                .splineTo(new Vector2d(START_VISION_CENTER_X_SPLINE3, START_VISION_CENTER_Y_SPLINE3), Math.toRadians(120))
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
@@ -305,6 +305,8 @@ public class CenterStageLowerAutoRed2 extends OpMode {
 
         });
         drive.setPoseEstimate(new Pose2d(61.5, -39, Math.toRadians(180)));
+
+        sleep(10000L);
 
 //        try {
 //            Thread.sleep(10000);

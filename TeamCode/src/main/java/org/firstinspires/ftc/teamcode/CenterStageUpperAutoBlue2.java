@@ -166,7 +166,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 //.splineToConstantHeading(new Vector2d(-10, 24), Math.toRadians(270))
                 .strafeTo(driveToBackdropFromVisionLeft.end().vec().minus(new Vector2d(-LEFT_CYCLE_STRAFE_DIST, 3)))
                 .splineToConstantHeading(new Vector2d(LEFT_CYCLE_WAYPOINT_X, LEFT_CYCLE_WAYPOINT_Y), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 3)
                 .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
@@ -180,7 +180,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 //.splineToConstantHeading(new Vector2d(-10, 24), Math.toRadians(270))
                 .strafeTo(driveToBackdropFromVisionRight.end().vec().minus(new Vector2d(-RIGHT_CYCLE_STRAFE_DIST, 3)))
                 .splineToConstantHeading(new Vector2d(RIGHT_CYCLE_WAYPOINT_X, RIGHT_CYCLE_WAYPOINT_Y), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 3)
                 .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
@@ -194,7 +194,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 //.splineToConstantHeading(new Vector2d(-10, 24), Math.toRadians(270))
                 .strafeTo(driveToBackdropFromVisionCenter.end().vec().minus(new Vector2d(-CENTER_CYCLE_STRAFE_DIST, 3)))
                 .splineToConstantHeading(new Vector2d(CENTER_CYCLE_WAYPOINT_X, CENTER_CYCLE_WAYPOINT_Y), Math.toRadians(270))
-                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 4)
+                .addSpatialMarker(new Vector2d(whitePixelLocation, -10), () -> intakeOuttake.locationPixel = 3)
                 .UNSTABLE_addDisplacementMarkerOffset(24, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
