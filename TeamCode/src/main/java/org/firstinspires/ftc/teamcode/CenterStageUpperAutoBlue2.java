@@ -471,11 +471,6 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 //        }
 //        t.markReady();
         t.markReady();
-        t.start(500);
-        while (!t.finished()) {
-
-        }
-        t.markReady();
 
         drive.followTrajectorySequence(driveToBackdropReturn);
         drive.setMotorPowers(0, 0, 0, 0);

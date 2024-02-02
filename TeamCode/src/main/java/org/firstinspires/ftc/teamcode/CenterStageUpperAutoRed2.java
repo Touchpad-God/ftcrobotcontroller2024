@@ -428,13 +428,9 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //                .build());
         drive.setMotorPowers(0, 0, 0, 0);
         t.markReady();
-        t.start(500);
         if (intakeOuttake.locationPixel == 4) {
             intakeOuttake.locationPixel--;
         }
-        while (!t.finished()) {
-        }
-        t.markReady();
         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
         drive.followTrajectorySequence(driveToBackdropReturn);
         drive.setMotorPowers(0, 0, 0, 0);
@@ -495,13 +491,9 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         drive.setMotorPowers(0, 0, 0, 0);
         t.markReady();
-        t.start(500);
         if (intakeOuttake.locationPixel == 4) {
             intakeOuttake.locationPixel--;
         }
-        while (!t.finished()) {
-        }
-        t.markReady();
         drive.followTrajectorySequence(driveToBackdropReturn);
         drive.setMotorPowers(0, 0, 0, 0);
 
