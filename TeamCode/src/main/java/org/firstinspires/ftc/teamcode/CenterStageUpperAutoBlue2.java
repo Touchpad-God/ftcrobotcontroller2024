@@ -129,11 +129,11 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                         telemetry.update();
                     }
                 })
-                .UNSTABLE_addDisplacementMarkerOffset(0.2, () -> {
+                .UNSTABLE_addDisplacementMarkerOffset(0.0, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.EVENHIGHER;
                 })
-                .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(BACKDROP_RIGHT_X - 2, BACKDROP_RIGHT_Y, Math.toRadians(270)), Math.toRadians(90))
                 .setReversed(false)
                 .build();
 
