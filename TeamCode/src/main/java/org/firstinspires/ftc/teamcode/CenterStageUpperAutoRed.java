@@ -25,6 +25,7 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
     protected Servo butterflyRight;
     public static final int IMU_DIFF = -90;
     TrajectorySequenceBuilder traj;
+    TrajectorySequence driveToAudienceAlt;
     TrajectorySequence driveToBackdropFromVisionLeft;
     TrajectorySequence driveToBackdropFromVisionRight;
     TrajectorySequence driveToBackdropFromVisionCenter;
@@ -139,6 +140,19 @@ public class CenterStageUpperAutoRed extends LinearOpMode{
                 .addSpatialMarker(new Vector2d(whitePixelLocation, -30), () -> IntakeOuttake.outtakeTicks = 30)
                 .splineTo(new Vector2d(whitePixelLocation, -48.5), Math.toRadians(270))
                 .addDisplacementMarker(() -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING)
+                .build();
+
+        driveToAudienceAlt = drive.trajectorySequenceBuilder(new Pose2d(42, 48, Math.toRadians(270)))
+                .lineToConstantHeading(new Vector2d(40, 32))
+                .lineToConstantHeading(new Vector2d(58, 32))
+                .lineToConstantHeading(new Vector2d(58, -48))
+                .lineToConstantHeading(new Vector2d(36, -58), (v, pose2d, pose2d1, pose2d2) -> 12, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .setReversed(true)
+                .splineToSplineHeading(new Pose2d(58, -36, Math.toRadians(270)), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(58, 3), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(50, 23, Math.toRadians(300)), Math.toRadians(90))
+                .lineToConstantHeading(new Vector2d(40, 36))
+                .splineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270)), Math.toRadians(90))
                 .build();
 
         waitForStart();

@@ -101,6 +101,8 @@ public class CenterStageLowerAutoRed extends LinearOpMode {
                 })
                 .splineToConstantHeading(new Vector2d(34, 49.5), Math.toRadians(90)).build();
 
+
+
         Thread inOutThread = new Thread(intakeOuttake);
         inOutThread.start();
         IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;

@@ -20,10 +20,17 @@ public class MyClass {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .setColorScheme(new ColorSchemeBlueDark())
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(50, 23, Math.toRadians(120)))
-                                .lineToSplineHeading(new Pose2d(59, -30, Math.toRadians(-90)))
-                                .lineToConstantHeading(new Vector2d(59, 12))
-                                .splineToConstantHeading(new Vector2d(42, 47), Math.toRadians(180))
+                        drive.trajectorySequenceBuilder(new Pose2d(42, 48, Math.toRadians(270)))
+                                .lineToConstantHeading(new Vector2d(40, 32))
+                                .lineToConstantHeading(new Vector2d(58, 32))
+                                .lineToConstantHeading(new Vector2d(58, -48))
+                                .lineToConstantHeading(new Vector2d(36, -58), (v, pose2d, pose2d1, pose2d2) -> 12, (v, pose2d, pose2d1, pose2d2) -> 4)
+                                .setReversed(true)
+                                .splineToSplineHeading(new Pose2d(58, -36, Math.toRadians(270)), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(58, 3), Math.toRadians(90))
+                                .splineToSplineHeading(new Pose2d(50, 23, Math.toRadians(300)), Math.toRadians(90))
+                                .lineToConstantHeading(new Vector2d(40, 36))
+                                .splineToSplineHeading(new Pose2d(30, 48, Math.toRadians(270)), Math.toRadians(90))
                                 .build()
                 );
 //

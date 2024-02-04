@@ -30,13 +30,13 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
     public static double SPIKE_LEFT_X = -45;
     public static double SPIKE_LEFT_Y = 24;
-    public static double SPIKE_CENTER_X = -23;
+    public static double SPIKE_CENTER_X = -23.7;
     public static double SPIKE_CENTER_Y = 28;
     public static double SPIKE_RIGHT_X = -34.5;
-    public static double SPIKE_RIGHT_Y = 13;
+    public static double SPIKE_RIGHT_Y = 12.8;
     public static double BACKDROP_LEFT_X = -42;
     public static double BACKDROP_LEFT_Y = 48.5;
-    public static double BACKDROP_CENTER_X = -36;
+    public static double BACKDROP_CENTER_X = -37;
     public static double BACKDROP_CENTER_Y = 48.5;
     public static double BACKDROP_RIGHT_X = -31.5;
     public static double BACKDROP_RIGHT_Y = 48.5;
@@ -48,19 +48,19 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public static double LEFT_CYCLE_STRAFE_DIST = 10;
     public static double LEFT_CYCLE_WAYPOINT_X = -8;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
-    public static double LEFT_CYCLE_END_Y = -55.5;
+    public static double LEFT_CYCLE_END_Y = -53.5;
     public static double RIGHT_CYCLE_STRAFE_DIST = 17;
     public static double RIGHT_CYCLE_WAYPOINT_X = -8;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
-    public static double RIGHT_CYCLE_END_Y = -53;
+    public static double RIGHT_CYCLE_END_Y = -51;
     public static double CENTER_CYCLE_STRAFE_DIST = 13.5;
     public static double CENTER_CYCLE_WAYPOINT_X = -8;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -53;
+    public static double CENTER_CYCLE_END_Y = -51;
     public static double RETURN_CYCLE_STRAFE_DIST = 13.5;
     public static double RETURN_CYCLE_WAYPOINT_X = -11;
     public static double RETURN_CYCLE_WAYPOINT_Y = 10;
-    public static double RETURN_CYCLE_END_Y = -53.0;
+    public static double RETURN_CYCLE_END_Y = -51.5;
 
     public static double TO_BD_WAYPOINT_Y = 0;
     public static double TO_BD_END_X = -13;
@@ -91,7 +91,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
     public int whitePixelLocation = -10; // change when necessary to 24 or 36 to avoid conflicting with other alliance
     public int backdropX = 0;
 
-    public static boolean parking = false;
+    public static boolean parking = true;
     public boolean stopped = false;
 
     AprilTagProcessor aprilTag;
@@ -118,7 +118,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                 .addTemporalMarker(0.1, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
-                .splineTo(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(135))
+                .splineTo(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(132))
                 .UNSTABLE_addDisplacementMarkerOffset(0.1, () -> {
                     visionPortal.saveNextFrameRaw("asdf");
                     aprilTag.getDetections();
@@ -133,7 +133,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.EVENHIGHER;
                 })
-                .splineToSplineHeading(new Pose2d(BACKDROP_RIGHT_X - 2, BACKDROP_RIGHT_Y, Math.toRadians(270)), Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(BACKDROP_RIGHT_X - 2, BACKDROP_RIGHT_Y-0.5, Math.toRadians(270)), Math.toRadians(90))
                 .setReversed(false)
                 .build();
 
@@ -329,6 +329,8 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
             else {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-12, 48)).back(12).build());
                 return;
+//                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-61, 48)).back(12).build());
+
             }
 
 
@@ -393,6 +395,8 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
             else {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-12, 48)).back(12).build());
                 return;
+//                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-61, 48)).back(12).build());
+
             }
 
         } else if (bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.RIGHT || bluePropPipeline.position ==  bluePropLeft.PROPPOSITION.NONE) { // right, opposite trajectories intended
@@ -459,6 +463,8 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
             else {
                 drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(-12, 48)).back(12).build());
                 return;
+//                drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate()).lineToConstantHeading(new Vector2d(61, 48)).back(12).build());
+
             }
 
         }
