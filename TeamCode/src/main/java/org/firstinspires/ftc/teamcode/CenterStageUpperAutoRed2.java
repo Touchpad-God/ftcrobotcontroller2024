@@ -27,12 +27,17 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 @Config
 @Autonomous
 public class CenterStageUpperAutoRed2 extends OpMode {
 
+    FileWriter pose = new FileWriter("pose.txt");
+    BufferedWriter bufferedWriter = new BufferedWriter(pose);
     public static double SPIKE_LEFT_X = 39.5;
     public static double SPIKE_LEFT_Y = 12.7;
     public static double SPIKE_CENTER_X = 24.3;
@@ -40,7 +45,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double SPIKE_RIGHT_X = 45;
     public static double SPIKE_RIGHT_Y = 23.5;
     public static double BACKDROP_LEFT_X = 28;
-    public static double BACKDROP_LEFT_Y = 50;
+    public static double BACKDROP_LEFT_Y = 49;
     public static double BACKDROP_CENTER_X = 34;
     public static double BACKDROP_CENTER_Y = 50;
     public static double BACKDROP_RIGHT_X = 40;
@@ -110,6 +115,10 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //    private OpenCvCamera aprilTagCamera;
 
     Thread.UncaughtExceptionHandler h = (th, ex) -> {throw new RuntimeException("Uncaught", ex);};
+
+    public CenterStageUpperAutoRed2() throws IOException {
+    }
+
     @Override
     public void init() {
         butterflyLeft = hardwareMap.get(Servo.class, "butterflyL");
@@ -287,6 +296,13 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     @Override
     public void stop() {
         poseStorage.currentPose = drive.getPoseEstimate();
+        try {
+            bufferedWriter.write(drive.getPoseEstimate().toString());
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         intakeOuttake.stop();
         drive.imu.stop();
         visionPortal.close();
