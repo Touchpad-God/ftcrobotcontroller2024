@@ -9,9 +9,15 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.drive.ThreadedIMU;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
 @Config
 @TeleOp
 public class CenterStageTeleOp2 extends LinearOpMode {
+    public static BufferedReader bw;
+
     protected DcMotor motorLf;
     protected DcMotor motorLb;
     protected DcMotor motorRf;
@@ -76,6 +82,12 @@ public class CenterStageTeleOp2 extends LinearOpMode {
         Servo drone = hardwareMap.get(Servo.class, "drone");
         drone.setPosition(1);
 
+//        try {
+//            bw = new BufferedReader(new FileReader("pose.txt"));
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
@@ -85,7 +97,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             y = Math.pow(-gamepad1.left_stick_y, 3);
             rot = Math.pow(gamepad1.right_stick_x, 3);
             double currHeading = imu.getYaw();
-            double theta = -(currHeading - headingOffset + INITIALOFFSET);
+            double theta = 0; // -(currHeading - headingOffset + INITIALOFFSET);
             double rotX = x * Math.cos(theta) - y * Math.sin(theta);
             double rotY = (x * Math.sin(theta) + y * Math.cos(theta));
 

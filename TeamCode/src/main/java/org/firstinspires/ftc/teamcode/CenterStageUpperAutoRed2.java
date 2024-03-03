@@ -35,9 +35,9 @@ import java.util.concurrent.TimeUnit;
 @Config
 @Autonomous
 public class CenterStageUpperAutoRed2 extends OpMode {
-
-    FileWriter pose = new FileWriter("pose.txt");
-    BufferedWriter bufferedWriter = new BufferedWriter(pose);
+//
+//    FileWriter pose = new FileWriter("pose.txt");
+//    BufferedWriter bufferedWriter = new BufferedWriter(pose);
     public static double SPIKE_LEFT_X = 39.5;
     public static double SPIKE_LEFT_Y = 12.7;
     public static double SPIKE_CENTER_X = 24.3;
@@ -296,13 +296,14 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     @Override
     public void stop() {
         poseStorage.currentPose = drive.getPoseEstimate();
-        try {
-            bufferedWriter.write(drive.getPoseEstimate().toString());
-            bufferedWriter.flush();
-            bufferedWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String[] xydeg = drive.getPoseEstimate().toString().split(", ");
+//        try {
+//            bufferedWriter.write(xydeg[2].substring(0, xydeg.length-2));
+//            bufferedWriter.flush();
+//            bufferedWriter.close();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         intakeOuttake.stop();
         drive.imu.stop();
         visionPortal.close();
