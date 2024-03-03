@@ -104,7 +104,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     AprilTagProcessor aprilTag;
     VisionPortal visionPortal;
 
-    public static boolean parking = true;
+    public static boolean parking = false;
     public boolean stopped = false;
 
     public int whitePixelLocation = 10; // change when necessary to 24 or 36 to avoid conflicting with other alliance
@@ -214,7 +214,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
-                .splineTo(new Vector2d(whitePixelLocation, CENTER_CYCLE_END_Y), Math.toRadians(270))
+                .splineTo(new Vector2d(whitePixelLocation, CENTER_CYCLE_END_Y+3), Math.toRadians(270))
                 .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
@@ -226,7 +226,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
-                .splineTo(new Vector2d(whitePixelLocation - 3, RETURN_CYCLE_END_Y), Math.toRadians(270))
+                .splineTo(new Vector2d(whitePixelLocation - 3, RETURN_CYCLE_END_Y+3), Math.toRadians(270))
                 .forward(6.0 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
@@ -444,44 +444,40 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 
         }
 
-//        drive.followTrajectorySequence(drive.trajectorySequenceBuilder(cycleEnd)
-//                .forward(3.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 12.0, (v, pose2d, pose2d1, pose2d2) -> 4)
-//                .build());
-        drive.setMotorPowers(0, 0, 0, 0);
         t.markReady();
         if (intakeOuttake.locationPixel == 4) {
             intakeOuttake.locationPixel--;
         }
         IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
         drive.followTrajectorySequence(driveToBackdropReturn);
-        drive.setMotorPowers(0, 0, 0, 0);
+//        drive.setMotorPowers(0, 0, 0, 0);
+//
+//        t.start(3000);
+//        while (!t.finished() && stopped && aprilTag.getDetections().size() < 2) {
+//            telemetry.addData("FPS", visionPortal.getFps());
+//            telemetry.addData("Detections", aprilTag.getDetections());
+////            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
+////            telemetry.addData("Loops", apriltag.loops);
+//            telemetry.update();
+//        }
+//        t.markReady();
+//
+//        t.start(200);
+//        while (!t.finished()) {}
+//        t.markReady();
 
-        t.start(3000);
-        while (!t.finished() && stopped && aprilTag.getDetections().size() < 2) {
-            telemetry.addData("FPS", visionPortal.getFps());
-            telemetry.addData("Detections", aprilTag.getDetections());
-//            telemetry.addData("Current apriltags", apriltag.getCurrentDetections().size());
-//            telemetry.addData("Loops", apriltag.loops);
-            telemetry.update();
-        }
-        t.markReady();
-
-        t.start(200);
-        while (!t.finished()) {}
-        t.markReady();
-
-        drive.getPoseEstimate();
-        if (stopped) {
-            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                    .setReversed(true)
-                    .addDisplacementMarker(() -> {
-                        IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
-                        IntakeOuttake.transferState = IntakeOuttake.TransferState.EVENHIGHER;
-                    })
-                    .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(270))
-                    .setReversed(false)
-                    .build());
-        }
+//        drive.getPoseEstimate();
+//        if (stopped) {
+//            drive.followTrajectorySequence(drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+//                    .setReversed(true)
+//                    .addDisplacementMarker(() -> {
+//                        IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
+//                        IntakeOuttake.transferState = IntakeOuttake.TransferState.EVENHIGHER;
+//                    })
+//                    .splineToSplineHeading(new Pose2d(BACKDROP_CENTER_X, BACKDROP_CENTER_Y, Math.toRadians(270)), Math.toRadians(270))
+//                    .setReversed(false)
+//                    .build());
+//        }
 
         stopped = false;
 
@@ -518,7 +514,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
             intakeOuttake.locationPixel--;
         }
         drive.followTrajectorySequence(driveToBackdropReturn);
-        drive.setMotorPowers(0, 0, 0, 0);
+//        drive.setMotorPowers(0, 0, 0, 0);
 
 //        while (stopped && aprilTag.getDetections().size() < 2) {
 ////            apriltagBackdrop.processFrame();
