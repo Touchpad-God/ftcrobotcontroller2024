@@ -115,7 +115,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
 
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .addDisplacementMarker(() -> IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS)
-                .addTemporalMarker(0.1, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
+                .addTemporalMarker(0.15, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, TO_BD_WAYPOINT_Y), Math.toRadians(90))
                 .splineTo(new Vector2d(TO_BD_END_X, TO_BD_END_Y), Math.toRadians(132))

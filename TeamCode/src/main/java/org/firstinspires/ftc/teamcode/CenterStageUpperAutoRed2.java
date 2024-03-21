@@ -38,18 +38,18 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //
 //    FileWriter pose = new FileWriter("pose.txt");
 //    BufferedWriter bufferedWriter = new BufferedWriter(pose);
-    public static double SPIKE_LEFT_X = 39.5;
-    public static double SPIKE_LEFT_Y = 12.7;
+    public static double SPIKE_LEFT_X = 34.5;
+    public static double SPIKE_LEFT_Y = 11.7;
     public static double SPIKE_CENTER_X = 24.3;
     public static double SPIKE_CENTER_Y = 28.5;
     public static double SPIKE_RIGHT_X = 45;
     public static double SPIKE_RIGHT_Y = 23.5;
-    public static double BACKDROP_LEFT_X = 28;
-    public static double BACKDROP_LEFT_Y = 49;
+    public static double BACKDROP_LEFT_X = 29;
+    public static double BACKDROP_LEFT_Y = 50.5;
     public static double BACKDROP_CENTER_X = 34;
-    public static double BACKDROP_CENTER_Y = 50;
+    public static double BACKDROP_CENTER_Y = 50.5;
     public static double BACKDROP_RIGHT_X = 40;
-    public static double BACKDROP_RIGHT_Y = 49;
+    public static double BACKDROP_RIGHT_Y = 50.5;
 
     public static double CENTER_MOVEMENT_OFFSET = 2.0;
     public static double LEFT_MOVEMENT_OFFSET = 0.0;
@@ -58,19 +58,19 @@ public class CenterStageUpperAutoRed2 extends OpMode {
     public static double LEFT_CYCLE_STRAFE_DIST = 10;
     public static double LEFT_CYCLE_WAYPOINT_X = 12;
     public static double LEFT_CYCLE_WAYPOINT_Y = 12;
-    public static double LEFT_CYCLE_END_Y = -51.5;
+    public static double LEFT_CYCLE_END_Y = -49.0;
     public static double RIGHT_CYCLE_STRAFE_DIST = 16;
     public static double RIGHT_CYCLE_WAYPOINT_X = 11;
     public static double RIGHT_CYCLE_WAYPOINT_Y = 12;
-    public static double RIGHT_CYCLE_END_Y = -51.5;
+    public static double RIGHT_CYCLE_END_Y = -50;
     public static double CENTER_CYCLE_STRAFE_DIST = 13;
     public static double CENTER_CYCLE_WAYPOINT_X = 11;
     public static double CENTER_CYCLE_WAYPOINT_Y = 12;
-    public static double CENTER_CYCLE_END_Y = -51.5;
+    public static double CENTER_CYCLE_END_Y = -50;
     public static double RETURN_CYCLE_STRAFE_DIST = 17;
     public static double RETURN_CYCLE_WAYPOINT_X = 11;
     public static double RETURN_CYCLE_WAYPOINT_Y = 12;
-    public static double RETURN_CYCLE_END_Y = -51.5;
+    public static double RETURN_CYCLE_END_Y = -49.5;
 
     public static double TO_BD_WAYPOINT_Y = 0;
     public static double TO_BD_END_X = 12;
@@ -191,7 +191,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, LEFT_CYCLE_END_Y), Math.toRadians(270))
-                .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .forward(6 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceRight = drive.trajectorySequenceBuilder(driveToBackdropFromVisionRight.end())
@@ -203,7 +203,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, RIGHT_CYCLE_END_Y), Math.toRadians(270))
-                .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .forward(6 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceCenter = drive.trajectorySequenceBuilder(driveToBackdropFromVisionCenter.end())
@@ -215,7 +215,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineTo(new Vector2d(whitePixelLocation, CENTER_CYCLE_END_Y+3), Math.toRadians(270))
-                .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .forward(6 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
         driveToAudienceCycle = drive.trajectorySequenceBuilder(driveToBackdropReturn.end())

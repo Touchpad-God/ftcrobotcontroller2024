@@ -35,7 +35,7 @@ public class IntakeOuttake {
     double intakePos1 = 0.4150;
     double intakePos2 = 0.4267;
     double intakePos3 = 0.4844;
-    double intakePos4 = 0.5250;
+    double intakePos4 = 0.5300;
     double intakePos5 = 0.5550;
     public int locationPixel = 0;
     public double[] intakePositions = {intakePos1, intakePos2, intakePos3, intakePos4, intakePos5, intakeStowed};

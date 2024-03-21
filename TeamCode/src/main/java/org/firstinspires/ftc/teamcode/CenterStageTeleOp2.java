@@ -30,7 +30,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
     double tankPosR = 0.0478;
     double mecanumPosL = 0.3022;
     double mecanumPosR = 0.62;
-    double headingOffset = poseStorage.currentPose.getHeading() + Math.PI/2;
+    double headingOffset = 0;//poseStorage.currentPose.getHeading() + Math.PI/2;
 
     final double INITIALOFFSET = 0.0;
 
@@ -48,7 +48,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
 
     int hangPos = 0;
 
-    public static double droneLaunchPos = 0.52;
+    public static double droneLaunchPos = 0.48;
 
     public double[] leftHang = {0.122, droneLaunchPos, 0.7065};
     public double[] rightHang = {0.7686, 0.7686, 0.1972};
@@ -97,7 +97,7 @@ public class CenterStageTeleOp2 extends LinearOpMode {
             y = Math.pow(-gamepad1.left_stick_y, 3);
             rot = Math.pow(gamepad1.right_stick_x, 3);
             double currHeading = imu.getYaw();
-            double theta = 0; // -(currHeading - headingOffset + INITIALOFFSET);
+            double theta = -(currHeading - headingOffset + INITIALOFFSET);
             double rotX = x * Math.cos(theta) - y * Math.sin(theta);
             double rotY = (x * Math.sin(theta) + y * Math.cos(theta));
 
