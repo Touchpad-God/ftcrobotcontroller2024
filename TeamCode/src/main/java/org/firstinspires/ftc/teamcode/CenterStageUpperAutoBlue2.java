@@ -200,7 +200,7 @@ public class CenterStageUpperAutoBlue2 extends OpMode {
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
                 .splineToConstantHeading(new Vector2d(whitePixelLocation, CENTER_CYCLE_END_Y), Math.toRadians(270))
-                .forward(4.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
+                .forward(6.5 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .UNSTABLE_addDisplacementMarkerOffset(0, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP)
                 .build();
 

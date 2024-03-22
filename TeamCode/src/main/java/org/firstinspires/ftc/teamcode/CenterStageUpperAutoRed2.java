@@ -39,7 +39,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //    FileWriter pose = new FileWriter("pose.txt");
 //    BufferedWriter bufferedWriter = new BufferedWriter(pose);
     public static double SPIKE_LEFT_X = 34.5;
-    public static double SPIKE_LEFT_Y = 11.7;
+    public static double SPIKE_LEFT_Y = 11.0;
     public static double SPIKE_CENTER_X = 24.3;
     public static double SPIKE_CENTER_Y = 28.5;
     public static double SPIKE_RIGHT_X = 45;
@@ -136,8 +136,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         driveToBackdropReturn = drive.trajectorySequenceBuilder(new Pose2d(whitePixelLocation, -53, Math.toRadians(270)))
                 .addDisplacementMarker(() -> {
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.MOTORS;
-                    IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
                 })
+                .addTemporalMarker(0.1, () -> IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING)
                 .addTemporalMarker(0.7, 0.0, () -> {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.STOP;
                     IntakeOuttake.transferState = IntakeOuttake.TransferState.EVENHIGHER;
@@ -226,7 +226,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
                     IntakeOuttake.intakeState = IntakeOuttake.IntakeState.AUTOINTAKING;
                     IntakeOuttake.outtakeTicks = intakingOffset;
                 })
-                .splineTo(new Vector2d(whitePixelLocation - 3, RETURN_CYCLE_END_Y+3), Math.toRadians(270))
+                .splineTo(new Vector2d(whitePixelLocation - 3, RETURN_CYCLE_END_Y+1.5), Math.toRadians(270))
                 .forward(6.0 + movementOffset, (v, pose2d, pose2d1, pose2d2) -> 6.0, (v, pose2d, pose2d1, pose2d2) -> 4)
                 .build();
 
