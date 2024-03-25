@@ -194,11 +194,11 @@ class SubsystemThread extends IntakeOuttake implements Runnable {
     public void run() {
         while (running) {
             this.time = System.currentTimeMillis() / 1000.0 - this.timeZero;
+            runTo(outtakeTicks, this.time);
             intake(this.time);
             transfer(this.time);
             outtake(this.time);
             this.led.update();
-            runTo(outtakeTicks, this.time);
         }
     }
     public void updateTime(double currTime) {

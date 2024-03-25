@@ -190,7 +190,7 @@ public class IntakeOuttake {
             case IDLE:
                 break;
             case INTAKING:
-                outtakeTicks = 10;
+                outtakeTicks = 12;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);
@@ -202,7 +202,7 @@ public class IntakeOuttake {
                 }
                 break;
             case AUTOINTAKING:
-                outtakeTicks = 13;
+                outtakeTicks = 12;
                 intakeIntake.setPower(intakePower);
                 intakeTransfer.setPower(transferPower);
                 intakeServo.setPosition(intakePositions[locationPixel]);

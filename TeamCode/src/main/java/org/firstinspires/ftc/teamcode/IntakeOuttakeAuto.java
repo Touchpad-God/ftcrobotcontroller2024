@@ -64,12 +64,12 @@ public class IntakeOuttakeAuto extends IntakeOuttake implements Runnable {
     public void run() {
         while (running) {
             try {
+                currTime = ((double) System.currentTimeMillis() / 1000) - startTime;
+                runTo(outtakeTicks, currTime);
                 outtake(currTime);
                 intake(currTime);
                 transfer(currTime);
                 sensors();
-                currTime = ((double) System.currentTimeMillis() / 1000) - startTime;
-                runTo(outtakeTicks, currTime);
             } catch (Exception e) {
                 RobotLog.ee("TEAMCODE", e, e.toString());
             }

@@ -38,8 +38,8 @@ public class CenterStageUpperAutoRed2 extends OpMode {
 //
 //    FileWriter pose = new FileWriter("pose.txt");
 //    BufferedWriter bufferedWriter = new BufferedWriter(pose);
-    public static double SPIKE_LEFT_X = 34.5;
-    public static double SPIKE_LEFT_Y = 11.0;
+    public static double SPIKE_LEFT_X = 32.0;
+    public static double SPIKE_LEFT_Y = 11.6;
     public static double SPIKE_CENTER_X = 24.3;
     public static double SPIKE_CENTER_Y = 28.5;
     public static double SPIKE_RIGHT_X = 45;
@@ -448,7 +448,7 @@ public class CenterStageUpperAutoRed2 extends OpMode {
         if (intakeOuttake.locationPixel == 4) {
             intakeOuttake.locationPixel--;
         }
-        IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
+        //IntakeOuttake.intakeState = IntakeOuttake.IntakeState.EJECTING;
         drive.followTrajectorySequence(driveToBackdropReturn);
 //        drive.setMotorPowers(0, 0, 0, 0);
 //
